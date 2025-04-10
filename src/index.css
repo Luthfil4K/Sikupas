@@ -1,5 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -13,6 +18,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 
 a {
   font-weight: 500;
   color: #646cff;
@@ -65,4 +71,79 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+} */
+/* From Uiverse.io by codebykay101 */ 
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.container .glass {
+  position: relative;
+  width: 180px;
+  height: 200px;
+  background: linear-gradient(#fff2, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.1s;
+  border-radius: 10px;
+  margin: 0 -45px;
+  backdrop-filter: blur(10px);
+  transform: rotate(calc(var(--15) * 1deg));
+}
+
+.container:hover .glass {
+  transform: rotate(0deg);
+  margin: 0 10px;
+}
+
+.container .glass::before {
+  content: attr(data-text);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+.container .glass svg {
+  font-size: 2.5em;
+  fill: #fff;
+}
+
+/* From Uiverse.io by Tiagoadag */ 
+.card {
+  width: 240px;
+  height: 100px;
+  background-image: linear-gradient(163deg, #ffffff 0%, #132f45 100%);
+  border-radius: 15px;
+  transition: all .1s;
+ }
+ 
+ .card2 {
+  width: 240px;
+  height: 100px;
+  /* background-color: #4e494e; */
+  background-image: linear-gradient(163deg, #ffffff 0%, #91989e 100%);
+  border-radius:15px;
+  transition: all .1s;
+  padding: 16px;
+ }
+ 
+ .card2:hover {
+  transform: scale(0.98);
+  border-radius: 15px;
+ }
+ 
+ .card:hover {
+
+  box-shadow: 0px 0px 30px 1px rgba(90, 90, 90, 0.649);
+ }
