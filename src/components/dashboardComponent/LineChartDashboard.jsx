@@ -29,31 +29,31 @@ const LineChartDashboard = () => {
   );
   const data = [
     {
-      name: "Page A",
+      name: "Minggu 1",
       uv: 4000,
       pv: 2400,
       amt: 2400,
     },
     {
-      name: "Page B",
+      name: "Minggu 2",
       uv: 3000,
       pv: 1398,
       amt: 2210,
     },
     {
-      name: "Page C",
+      name: "Minggu 3",
       uv: 2000,
       pv: 9800,
       amt: 2290,
     },
     {
-      name: "Page D",
+      name: "Minggu 4",
       uv: 2780,
       pv: 3908,
       amt: 2000,
     },
     {
-      name: "Page E",
+      name: "Minggu 5",
       uv: 1890,
       pv: 4800,
       amt: 2181,
@@ -63,8 +63,8 @@ const LineChartDashboard = () => {
   return (
     <div>
       <CardContent>
-        <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
-          Line Chart
+        <Typography mb={2} gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
+          Line Chart Aktivitas Kinerja Pegawai
         </Typography>
 
         <Box sx={{ width: "100%", height: 300 }}>

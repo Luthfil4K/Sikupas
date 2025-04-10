@@ -34,7 +34,12 @@ const DashboardPages = () => {
             spacing={4}
             sx={{ paddingLeft: 2, paddingRight: 2 }}
           >
-            <Grid item md={12} xs={12} sx={{display:"flex",justifyContent:'end',alignItems:"end"}}>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}
+            >
               <FilterButtons></FilterButtons>
             </Grid>
             <Grid item md={3} xs={6}>
@@ -61,7 +66,18 @@ const DashboardPages = () => {
               </Card>
             </Grid>
             <Grid item md={4} xs={6}>
-              <TableRank></TableRank>
+              <Card sx={{ minWidth: 75 }}>
+                <CardContent>
+                  <Typography
+                    mb={2}
+                    gutterBottom
+                    sx={{ color: "text.secondary", fontSize: 14 }}
+                  >
+                    Jumlah Aktivitas Kinerja Pegawai
+                  </Typography>
+                  <TableRank></TableRank>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
           <Grid
@@ -72,9 +88,14 @@ const DashboardPages = () => {
             <Grid item md={12}>
               <Card sx={{ minWidth: 75, marginBottom: 5 }}>
                 <CardContent>
-                  <Typography variant="h5" component="div">
-                    <TableBottom></TableBottom>
+                  <Typography
+                    mb={2}
+                    gutterBottom
+                    sx={{ color: "text.secondary", fontSize: 14 }}
+                  >
+                    Pelaksanaan Kinerja Pegawai
                   </Typography>
+                  <TableBottom></TableBottom>
                 </CardContent>
               </Card>
             </Grid>
