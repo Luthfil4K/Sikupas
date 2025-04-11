@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { Route, Routes,useLocation } from 'react-router-dom'
 import DashboardPages from './pages/DashboardPages'
 import ProfilePages from './pages/ProfilePages'
+import OrganisasiPages from './pages/OrganisasiPages'
+
 import Sidebar from './components/Sidebar'
 import reactLogo from './assets/react.svg'
 import Header from './components/Header'
@@ -31,6 +33,7 @@ function App() {
           <Route path='/' element={<DashboardPages></DashboardPages>}></Route>
           <Route path='/Dashboard' element={<DashboardPages></DashboardPages>}></Route>
           <Route path='/Profile' element={<ProfilePages></ProfilePages>}></Route>
+          <Route path='/Organisasi' element={<OrganisasiPages></OrganisasiPages>}></Route>
         </Routes>
         </div>
       </div>

@@ -18,10 +18,10 @@ const SIDEBAR_ITEMS = [
         path: "/profile",
     },
     {
-        name : "Task",
+        name : "Organisasi",
         icon : Users,
         color : "#EC4899",
-        path: "/document",
+        path: "/organisasi",
     },
     {
         name : "Paper",

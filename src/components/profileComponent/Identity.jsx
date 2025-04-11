@@ -41,7 +41,7 @@ const Identity = () => {
       }}
     >
       <CardMedia
-        sx={{ height: 300 }}
+        sx={{ height: 200 }}
         image="/src/assets/image/Feels.png"
         title="Profile Photo"
       />
