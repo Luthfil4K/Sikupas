@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("mysql://root@localhost:3306/dashboard")
+}
+
+model tbl_tim {
+  tim_id   Int    @id @default(autoincrement())
+  tim_nama String @db.Text
+}
+
+model tbl_timkerja {
+  id              Int               @id @default(autoincrement())
+  tk_nip          Int               @db.Int
+  tk_tim          Int               @db.Int
+  TimKerjaPegawai TimKerjaPegawai[]
+}
+
+model skp_skp {
+  id              Int    @id @default(autoincrement())
+  sasaran_kinerja String @db.Text
+  indikator       String @db.Text
+  realisasi       String @db.Text
+  umpan_balik     String @db.Text
+  bulan           String @db.VarChar(64)
+  tahun           Int    @db.Int
+  jenis           String @db.Text
+  pegawai_nama    String @db.Text
+  pegawai_nip     Int    @db.Int
+  pegawai_gol     String @db.VarChar(64)
+  pegawai_jabatan String @db.Text
+  pegawai_unit    String @db.VarChar(64)
+  pejabat_nama    String @db.Text
+  pejabat_nip     Int    @db.Int
+  pejabat_gol     String @db.VarChar(64)
+  pejabat_jabatan String @db.VarChar(64)
+  pejabat_unit    String @db.VarChar(64)
+}
+
+model skp_uploadedfile {
+  id          Int    @id @default(autoincrement())
+  file        String @db.Text
+  uploaded_at String @db.Text
+}
+
+model pegawai {
+  id              Int               @id @default(autoincrement())
+  nip             String            @db.Text
+  nama            String            @db.Text
+  jabatan         String            @db.VarChar(64)
+  wilayah         String            @db.VarChar(64)
+  golongan        String            @db.VarChar(64)
+  tmt             String            @db.VarChar(64)
+  status          String            @db.VarChar(64)
+  TimKerjaPegawai TimKerjaPegawai[]
+}
+
+model TimKerjaPegawai {
+  id            Int          @id @default(autoincrement())
+  userId_fkey   pegawai      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId        Int
+  timKerja_fkey tbl_timkerja @relation(fields: [timKerjaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  timKerjaId    Int
+}

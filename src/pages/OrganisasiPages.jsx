@@ -33,19 +33,19 @@ const OrganisasiPages = () => {
   const handleYearChange = (e) => setSelectedYear(e.target.value);
 
   const teams = [
-    { namaTim: "Tim Data", jumlahAnggota: 10 },
-    { namaTim: "Tim Keuangan", jumlahAnggota: 8 },
-    { namaTim: "Tim Pengembangan", jumlahAnggota: 15 },
-    { namaTim: "Tim Admin", jumlahAnggota: 6 },
-    { namaTim: "Tim Admin", jumlahAnggota: 6 },
+    { namaTim: "Tim Statistik Harga", jumlahAnggota: 10 },
+    { namaTim: "Tim Humas", jumlahAnggota: 8 },
+    { namaTim: "Tim Bagian Umum", jumlahAnggota: 15 },
+    { namaTim: "Tim Tim Neraca Wilayah", jumlahAnggota: 6 },
+    { namaTim: "Tim Statistik Harga", jumlahAnggota: 6 },
   ];
 
   const staffs = [
-    { namaPegawai: "Test 1", jumlahTim: 10 },
-    { namaPegawai: "Test 12", jumlahTim: 8 },
-    { namaPegawai: "Test 13", jumlahTim: 15 },
-    { namaPegawai: "Test 14", jumlahTim: 6 },
-    { namaPegawai: "Test 15", jumlahTim: 10 },
+    { namaPegawai: "Luthfil Kasyful Azhim", jumlahTim: 10 },
+    { namaPegawai: "I Gede Dewangga Jati Suma", jumlahTim: 8 },
+    { namaPegawai: "Ni Made Desy Parwati Utami", jumlahTim: 15 },
+    { namaPegawai: "Azarine Zada Kalonica Widyadhana", jumlahTim: 6 },
+    { namaPegawai: "Anak Agung Gede Dirga Kardita", jumlahTim: 10 },
   ];
 
   // Filter berdasarkan search

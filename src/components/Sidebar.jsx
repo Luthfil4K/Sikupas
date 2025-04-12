@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState}from 'react'
-import { BarChart,BarChart2, Menu,Users, Settings, File } from 'lucide-react'
+import { BarChart,BarChart2, Menu,Users, Settings, File,LogOut  } from 'lucide-react'
 import {AnimatePresence, motion} from 'framer-motion'
 import { Link } from 'react-router-dom'
 
@@ -15,20 +15,21 @@ const SIDEBAR_ITEMS = [
         name : "Profile",
         icon : File,
         color : "#6EE7B7",
-        path: "/profile",
+        path: "/Profile",
     },
     {
         name : "Organisasi",
-        icon : Users,
-        color : "#EC4899",
-        path: "/organisasi",
-    },
-    {
-        name : "Paper",
         icon : Settings,
-        color : "#3B82F6",
-        path: "/",
+        color : "#EC4899",
+        path: "/Organisasi",
     },
+   
+    {
+      name : "Logout",
+      icon : LogOut,
+      color : "#3B82F6",
+      path: "/Login",
+  },
 ]
 
 const Sidebar = () => {
@@ -51,7 +52,7 @@ const Sidebar = () => {
 
         <nav className='mt-8 flex-grow'>
           {SIDEBAR_ITEMS.map((a)=>(
-            <Link className='' key={a.name} to={a.name}>
+            <Link className='' key={a.name} to={a.path}>
               <motion.div
               className='mb-2 flex items-center p-4 text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors'
               whileHover={{x:4,scale:1}}

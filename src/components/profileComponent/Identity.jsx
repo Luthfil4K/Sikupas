@@ -41,7 +41,7 @@ const Identity = () => {
       }}
     >
       <CardMedia
-        sx={{ height: 200 }}
+        sx={{ height: 245 }}
         image="/src/assets/image/Feels.png"
         title="Profile Photo"
       />
@@ -49,13 +49,13 @@ const Identity = () => {
       sx={{ height: 290 }}>
         {/* Info Pegawai */}
         <Typography variant="h6" component="div" gutterBottom>
-          Budi Santoso
+          Luthfil Kasyful Azhim
         </Typography>
         <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
-          Jabatan: Analis Kepegawaian
+          Jabatan: Pranata Komputer
         </Typography>
         <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
-          Satuan Kerja: Kota Surabaya
+          Satuan Kerja: Provinsi Denpasar
         </Typography>
 
         {/* Ringkasan Jumlah Pekerjaan */}
@@ -197,11 +197,11 @@ const Identity = () => {
         </Grid>
       </CardContent>
 
-      <CardActions>
+      {/* <CardActions>
         <Button  color="success" size="small" fullWidth variant="outlined">
           Lihat Detail
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };

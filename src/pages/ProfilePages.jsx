@@ -24,11 +24,11 @@ const ProfilePages = () => {
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
   const teams = [
-    { namaTim: "Tim Data", jumlahAnggota: 10 },
-    { namaTim: "Tim Keuangan", jumlahAnggota: 8 },
-    { namaTim: "Tim Pengembangan", jumlahAnggota: 15 },
-    { namaTim: "Tim Admin", jumlahAnggota: 6 },
-    { namaTim: "Tim Admin", jumlahAnggota: 6 },
+    { namaTim: "Tim Statistik Harga", jumlahAnggota: 10 },
+    { namaTim: "Tim Humas", jumlahAnggota: 8 },
+    { namaTim: "Tim Bagian Umum", jumlahAnggota: 15 },
+    { namaTim: "Tim Tim Neraca Wilayah", jumlahAnggota: 6 },
+    { namaTim: "Tim Statistik Harga", jumlahAnggota: 6 },
   ];
 
   const filteredTeams = teams.filter((team) =>
