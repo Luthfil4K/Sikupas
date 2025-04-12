@@ -15,20 +15,20 @@ const SIDEBAR_ITEMS = [
         name : "Profile",
         icon : File,
         color : "#6EE7B7",
-        path: "/Profile",
+        path: "/profile",
     },
     {
         name : "Organisasi",
         icon : Settings,
         color : "#EC4899",
-        path: "/Organisasi",
+        path: "/organisasi",
     },
    
     {
       name : "Logout",
       icon : LogOut,
       color : "#3B82F6",
-      path: "/Login",
+      path: "/login",
   },
 ]
 

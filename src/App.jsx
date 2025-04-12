@@ -16,17 +16,14 @@ function App() {
   const [count, setCount] = useState(0);
   const location = useLocation();
 
-  console.log(location);
-  console.log("pathname: " + location.pathname);
-  console.log(location);
   return (
     <div>
-      {location.pathname === "/Login" ? (
+      {location.pathname === "/login" ? (
         // Halaman Login tanpa Sidebar dan Header
         <div className="">
          
           <Routes>
-            <Route path="/Login" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
         </div>
       ) : (
@@ -45,7 +42,7 @@ function App() {
             <Header
               title={
                 location.pathname === "/"
-                  ? "Dashboard"
+                  ? "dasboard"
                   : location.pathname.split("/")[1]
               }
             />
@@ -53,9 +50,9 @@ function App() {
             {/* Routes untuk halaman lainnya */}
             <Routes>
               <Route path="/" element={<DashboardPages />} />
-              <Route path="/Dashboard" element={<DashboardPages />} />
-              <Route path="/Profile" element={<ProfilePages />} />
-              <Route path="/Organisasi" element={<OrganisasiPages />} />
+              <Route path="/dashboard" element={<DashboardPages />} />
+              <Route path="/profile/:id" element={<ProfilePages />} />
+              <Route path="/organisasi" element={<OrganisasiPages />} />
             </Routes>
           </div>
         </div>

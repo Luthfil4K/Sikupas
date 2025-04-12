@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { CalendarDays, Calendar, BarChart3 } from "lucide-react"; // Import ikon dari lucide
 import { BarChart, BarChart2, Menu, Users, Settings, File } from "lucide-react";
-const Identity = () => {
+const Identity = ({nama,jabatan,wilayah}) => {
   const [size, setSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -49,13 +49,13 @@ const Identity = () => {
       sx={{ height: 290 }}>
         {/* Info Pegawai */}
         <Typography variant="h6" component="div" gutterBottom>
-          Luthfil Kasyful Azhim
+          {nama}
         </Typography>
         <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
-          Jabatan: Pranata Komputer
+          Jabatan: {jabatan}
         </Typography>
         <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
-          Satuan Kerja: Provinsi Denpasar
+          Satuan Kerja: {wilayah}
         </Typography>
 
         {/* Ringkasan Jumlah Pekerjaan */}

@@ -27,7 +27,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim = [] }) => {
   const id = open ? `popover-${namaTim}` : undefined;
 
   return (
-    <Card sx={{ p: 2, boxShadow: "0 1px 15px rgba(0,0,0,0.15)" }}>
+    <Card sx={{ p: 2, boxShadow: "0 1px 15px rgba(0,0,0,0.15)", maxHeight:200,height:200 }}>
       <CardContent>
         {/* Icon dan Nama Tim */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>

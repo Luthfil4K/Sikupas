@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import {
   Box,
@@ -13,12 +13,51 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Pagination,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
 import CardPegawai from "../components/organisasiComponent/CardPegawai";
 
+// req data
+import { getAllTimKerja } from "../services/timKerjaServices";
+import { getAllPegawai } from "../services/pegawaiServices";
+
 const OrganisasiPages = () => {
+  const [timKerja, setTimKerja] = useState([]);
+  const [pegawai, setPegawai] = useState([]);
+
+  useEffect(() => {
+    const fetchTimKerja = async () => {
+      try {
+        const data = await getAllTimKerja();
+        setTimKerja(data);
+      } catch (err) {
+        setError("Gagal mengambil data tim kerja");
+      } finally {
+        console.log("final");
+      }
+    };
+
+    fetchTimKerja();
+  }, []);
+
+  useEffect(() => {
+    const fetchPegawai = async () => {
+      try {
+        const data = await getAllPegawai();
+        console.log(data); // Menggunakan service yang sudah dibuat
+        setPegawai(data); // Simpan data tim kerja di state
+      } catch (err) {
+        console.log(err);
+      } finally {
+        console.log(pegawai);
+      }
+    };
+
+    fetchPegawai(); // Panggil fungsi untuk mengambil data
+  }, []);
+
   const [tabIndex, setTabIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
@@ -30,15 +69,6 @@ const OrganisasiPages = () => {
 
   const handleSearchStaff = (e) => setSearchTerm2(e.target.value);
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
-  const handleYearChange = (e) => setSelectedYear(e.target.value);
-
-  const teams = [
-    { namaTim: "Tim Statistik Harga", jumlahAnggota: 10 },
-    { namaTim: "Tim Humas", jumlahAnggota: 8 },
-    { namaTim: "Tim Bagian Umum", jumlahAnggota: 15 },
-    { namaTim: "Tim Tim Neraca Wilayah", jumlahAnggota: 6 },
-    { namaTim: "Tim Statistik Harga", jumlahAnggota: 6 },
-  ];
 
   const staffs = [
     { namaPegawai: "Luthfil Kasyful Azhim", jumlahTim: 10 },
@@ -49,12 +79,12 @@ const OrganisasiPages = () => {
   ];
 
   // Filter berdasarkan search
-  const filteredTeams = teams.filter((team) =>
-    team.namaTim.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTeams = timKerja.filter((team) =>
+    team.tim_nama.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredStaffs = staffs.filter((team) =>
-    team.namaPegawai.toLowerCase().includes(searchTerm2.toLowerCase())
+  const filteredStaffs = pegawai.filter((team) =>
+    team.nama.toLowerCase().includes(searchTerm2.toLowerCase())
   );
 
   const TabPanel = ({ children, value, index }) => {
@@ -69,6 +99,24 @@ const OrganisasiPages = () => {
     );
   };
 
+
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Ambil data sesuai halaman saat ini
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedTeams = filteredTeams.slice(indexOfFirstItem, indexOfLastItem);
+  const paginatedStaffs = filteredStaffs.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   return (
     <main className="w-full px-4">
       <motion.div
@@ -76,7 +124,15 @@ const OrganisasiPages = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card sx={{ marginTop: 4, marginLeft: 2, marginRight: 2, height: 800 }}>
+        <Card
+          sx={{
+            marginTop: 4,
+            marginLeft: 2,
+            marginRight: 2,
+            height: 800,
+            overflowY: "scroll",
+          }}
+        >
           <Grid container sx={{ padding: 4 }}>
             <Grid item md={12}>
               <Typography variant="h5">Struktur Organisasi</Typography>
@@ -135,48 +191,109 @@ const OrganisasiPages = () => {
                       />
                     )}
                   </Grid>
-                  <Grid item xs={12} md={3}>
-                    {/* <FormControl fullWidth size="small">
-                      <InputLabel id="tahun-label">Tahun</InputLabel>
-                      <Select
-                        labelId="tahun-label"
-                        value={selectedYear}
-                        label="Tahun"
-                        onChange={handleYearChange}
-                      >
-                        <MenuItem value="2022">2022</MenuItem>
-                        <MenuItem value="2023">2023</MenuItem>
-                        <MenuItem value="2024">2024</MenuItem>
-                      </Select>
-                    </FormControl> */}
-                  </Grid>
+                  <Grid item xs={12} md={3}></Grid>
                 </Grid>
 
                 {/* Tabs Content */}
                 <TabPanel value={tabIndex} index={0}>
                   <Grid container spacing={4}>
-                    {filteredTeams.map((team, index) => (
+                    {paginatedTeams.map((team, index) => (
                       <Grid item xs={12} md={3} key={index}>
                         <CardTimKerja
-                          namaTim={team.namaTim}
-                          jumlahAnggota={team.jumlahAnggota}
+                          namaTim={team.tim_nama}
+                          jumlahAnggota={team.timKerja?.length}
                           anggotaTim={["Budi", "Ani", "Joko"]}
                         />
                       </Grid>
                     ))}
                   </Grid>
+                  <Grid
+                    container
+                    justifyContent="end"
+                    alignItems="end"
+                    spacing={1}
+                    sx={{ mb: 2 }}
+                  >
+                    <Grid item>
+                      <FormControl sx={{ minWidth: 120 }}>
+                        <InputLabel id="items-per-page-label">
+                          Tampilkan
+                        </InputLabel>
+                        <Select
+                          labelId="items-per-page-label"
+                           label="Tampilkan"
+                          value={itemsPerPage}
+                          onChange={(e) => {
+                            setItemsPerPage(Number(e.target.value));
+                            setCurrentPage(1);
+                          }}
+                          size="small"
+                        >
+                          <MenuItem value={5}>5</MenuItem>
+                          <MenuItem value={10}>10</MenuItem>
+                          <MenuItem value={15}>15</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <Pagination
+                        count={Math.ceil(tabIndex==0?filteredTeams.length:paginatedStaffs / itemsPerPage)}
+                        page={currentPage}
+                        onChange={handlePageChange}
+                        color="primary"
+                      />
+                    </Grid>
+                  </Grid>
                 </TabPanel>
                 <TabPanel value={tabIndex} index={1}>
                   <Grid container spacing={2} sx={{ mb: 2 }}></Grid>
                   <Grid container spacing={4}>
-                    {filteredStaffs.map((team, index) => (
+                    {paginatedStaffs.map((staff, index) => (
                       <Grid item xs={12} md={3} key={index}>
                         <CardPegawai
-                          namaPegawai={team.namaPegawai}
-                          jumlahTim={team.jumlahTim}
+                          namaPegawai={staff.nama}
+                          jumlahTim={staff.timkerja?.length}
+                          nipPegawai={staff.nip}
                         />
                       </Grid>
                     ))}
+                  </Grid>
+                  <Grid
+                    container
+                    justifyContent="end"
+                    alignItems="end"
+                    spacing={1}
+                    sx={{ mb: 2 }}
+                  >
+                    <Grid item>
+                      <FormControl sx={{ minWidth: 120 }}>
+                        <InputLabel id="items-per-page-label">
+                          Tampilkan
+                        </InputLabel>
+                        <Select
+                          labelId="items-per-page-label"
+                           label="Tampilkan"
+                          value={itemsPerPage}
+                          onChange={(e) => {
+                            setItemsPerPage(Number(e.target.value));
+                            setCurrentPage(1);
+                          }}
+                          size="small"
+                        >
+                          <MenuItem value={5}>5</MenuItem>
+                          <MenuItem value={10}>10</MenuItem>
+                          <MenuItem value={15}>15</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <Pagination
+                        count={Math.ceil(filteredStaffs / itemsPerPage)}
+                        page={currentPage}
+                        onChange={handlePageChange}
+                        color="primary"
+                      />
+                    </Grid>
                   </Grid>
                 </TabPanel>
               </Box>
