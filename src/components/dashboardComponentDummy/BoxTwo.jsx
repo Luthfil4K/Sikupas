@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useState, useEffect } from "react";
-const BoxTwo = ({ nama, jumlah }) => {
+const BoxTwo = () => {
   const [size, setSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -31,20 +31,14 @@ const BoxTwo = ({ nama, jumlah }) => {
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
           Pegawai Paling Aktif
         </Typography>
-        <Typography variant="h6" component="div">
-          {nama}
-        </Typography>
-        {/* <Typography variant="h6" component="div">
-          {jumlah} aktivitas
-        </Typography> */}
-         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
-         {jumlah} aktivitas
+        <Typography variant="h5" component="div">
+          Syahrul
         </Typography>
       </CardContent>
       <CardActions>
-        <Button color="success" size="small" variant="outlined">
-          Lihat Detail
-        </Button>
+       <Button color="success" size="small" variant="outlined">
+                 Lihat Detail
+               </Button>
       </CardActions>
     </Card>
   );

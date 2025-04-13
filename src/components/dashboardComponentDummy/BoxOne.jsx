@@ -6,8 +6,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
-const BoxOne = ({total}) => {
+const BoxOne = () => {
 
     const [size, setSize] = useState({
         width: window.innerWidth,
@@ -35,8 +34,8 @@ const BoxOne = ({total}) => {
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
           Total Aktivitas Hari Ini
         </Typography>
-        <Typography variant="h6" component="div">
-          {total} Aktivitas
+        <Typography variant="h5" component="div">
+          125 Aktivitas
         </Typography>
       </CardContent>
       <CardActions>

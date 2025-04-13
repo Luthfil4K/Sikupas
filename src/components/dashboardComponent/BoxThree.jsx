@@ -4,7 +4,7 @@ import {
   CardActions, Popover, List, ListItem, ListItemText
 } from "@mui/material";
 
-const BoxFour = () => {
+const BoxFour = ({jumlah}) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -26,7 +26,7 @@ const BoxFour = () => {
           <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
             Jumlah Pegawai yang Sudah Isi Aktivitas
           </Typography>
-          <Typography variant="h5">8 Pegawai</Typography>
+          <Typography variant="h6">{jumlah} Pegawai</Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "space-between" }}>
           <Button
