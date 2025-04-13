@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import LineChartDashboard from "../components/dashboardComponent/LineChartDashboard";
@@ -18,6 +19,12 @@ import TableBottom from "../components/dashboardComponent/TableBottom";
 import FilterButtons from "../components/dashboardComponent/FilterButtons";
 
 const DashboardPages = () => {
+
+   const [activeFilter, setActiveFilter] = useState('minggu');
+  
+    const handleClick = (filter) => {
+      setActiveFilter(filter);
+    }
   return (
     <>
       <main className="w-full px-4">
@@ -40,7 +47,31 @@ const DashboardPages = () => {
               xs={12}
               sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}
             >
-              <FilterButtons></FilterButtons>
+              <Box >
+      <Stack direction="row" spacing={1}>
+        <Button
+          variant={activeFilter === 'minggu' ? 'contained' : 'outlined'}
+          color={activeFilter === 'minggu' ? 'success' : 'inherit'}
+          onClick={() => handleClick('minggu')}
+        >
+          Minggu Ini
+        </Button>
+        <Button
+          variant={activeFilter === 'bulan' ? 'contained' : 'outlined'}
+          color={activeFilter === 'bulan' ? 'success' : 'inherit'}
+          onClick={() => handleClick('bulan')}
+        >
+          Bulan Ini
+        </Button>
+        <Button
+          variant={activeFilter === 'tahun' ? 'contained' : 'outlined'}
+          color={activeFilter === 'tahun' ? 'success' : 'inherit'}
+          onClick={() => handleClick('tahun')}
+        >
+          Tahun Ini
+        </Button>
+      </Stack>
+    </Box>
             </Grid>
             <Grid item md={3} xs={6}>
               <BoxOne></BoxOne>

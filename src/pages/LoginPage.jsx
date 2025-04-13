@@ -58,6 +58,19 @@ const LoginPage = () => {
             margin="normal"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#1DA57A",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#1DA57A",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#1DA57A",
+                },
+              },
+            }}
             required
           />
           <TextField
@@ -69,14 +82,26 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#1DA57A",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#1DA57A",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#1DA57A",
+                },
+              },
+            }}
           />
 
           <Button
             type="submit"
             variant="contained"
-            color="primary"
             fullWidth
-            sx={{ marginTop: 2 }}
+            sx={{ marginTop: 2,backgroundColor:'#1DA57A' }}
             component={Link}
             to="/Dashboard"
           >

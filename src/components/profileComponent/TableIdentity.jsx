@@ -1,75 +1,247 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
-import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
+import { useState, useMemo, useEffect } from "react";
+import Box from "@mui/material/Box";
+import { DataGrid } from "@mui/x-data-grid";
+import Button from "@mui/material/Button";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Typography from "@mui/material/Typography";
 
 const columns = [
-  { field: "id", headerName: "No", width: 90 },
-  { field: "rkAtasan", headerName: "Rencana Kinerja Atasan", width: 300 },
-  { field: "tanggal", headerName: "Tanggal", width: 150 },
-  { field: "rencanaKinerja", headerName: "Rencana Kinerja", width: 300 },
-  { field: "kegiatan", headerName: "Kegiatan", width: 300 },
-  { field: "capaian", headerName: "Capaian", width: 300 },
+  {
+    field: "id",
+    headerName: "No",
+    width: 40,
+    sortable: false,
+    filterable: false,
+    renderCell: (params) =>
+      `${params.api.getAllRowIds().indexOf(params.id) + 1}`,
+  },
+  { field: "tanggal", headerName: "Tanggal", width: 120 },
+  {
+    field: "sasaran_kinerja",
+    headerName: "Sasaran Kinerja",
+    width: 400,
+    renderCell: (params) => <div style={cellStyle}>{params.value}</div>,
+  },
+  {
+    field: "indikator",
+    headerName: "Indikator",
+    width: 500,
+    renderCell: (params) => {
+      const cleanedText = params.value
+        ?.replace(
+          "Ukuran keberhasilan/ indikator kinerja individu dan Target:",
+          ""
+        )
+        .trim();
+
+      return (
+        <div style={multiLineCellStyle}>
+          {cleanedText
+            .split("•")
+            .filter((text) => text.trim() !== "")
+            .map((part, i) => (
+              <div key={i}>
+                <strong>•</strong> {part.trim()}
+              </div>
+            ))}
+        </div>
+      );
+    },
+  },
+  {
+    field: "realisasi",
+    headerName: "Realisasi",
+    width: 400,
+    flex: 1,
+    renderCell: (params) => <div style={cellStyle}>{params.value}</div>,
+  },
   {
     field: "buktiDukung",
     headerName: "Bukti Dukung",
     width: 150,
-    renderCell: (params) => (
-      <Button variant="contained" color="success" size="small">
-        Lihat
-      </Button>
-    ),
+    renderCell: (params) =>
+      params.value ? (
+        <Button
+          variant="contained"
+          color="success"
+          size="small"
+          onClick={() => window.open(params.value, "_blank")}
+        >
+          Lihat
+        </Button>
+      ) : (
+        <Typography variant="body2" color="textSecondary">
+          -
+        </Typography>
+      ),
   },
 ];
 
-const rows = [
-  { id: 1, rkAtasan: 'Jon', tanggal: '2024-04-10', rencanaKinerja:"a", kegiatan:"b", capaian:'c', buktiDukung:""  },
-  { id: 2, rkAtasan: 'Jong', tanggal: '2024-03-12', rencanaKinerja:"a", kegiatan:"b", capaian:'c', buktiDukung:""  },
-  { id: 3, rkAtasan: 'Wong', tanggal: '2024-04-05', rencanaKinerja:"a", kegiatan:"b", capaian:'c', buktiDukung:""  },
-  { id: 4, rkAtasan: 'Don', tanggal: '2024-02-15', rencanaKinerja:"a", kegiatan:"b", capaian:'c', buktiDukung:""  },
-  { id: 5, rkAtasan: 'Son', tanggal: '2024-04-22', rencanaKinerja:"a", kegiatan:"b", capaian:'c', buktiDukung:""  },
-];
-
-// Fungsi menentukan minggu ke berapa dari suatu tanggal
-const getWeekOfMonth = (dateString) => {
-  const date = new Date(dateString);
-  const day = date.getDate();
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  return Math.ceil((day + firstDay) / 7);
+const cellStyle = {
+  whiteSpace: "normal",
+  wordBreak: "break-word",
+  lineHeight: 1.3,
+  display: "flex",
+  alignItems: "center",
+  height: "100%",
 };
 
-const TableIdentity = () => {
-  const [selectedMonth, setSelectedMonth] = React.useState("");
-  const [selectedWeek, setSelectedWeek] = React.useState("");
+const multiLineCellStyle = {
+  whiteSpace: "normal",
+  wordBreak: "break-word",
+  lineHeight: 1.3,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  height: "100%",
+};
 
-  const handleMonthChange = (e) => {
-    setSelectedMonth(e.target.value);
-    setSelectedWeek(""); // reset minggu ketika bulan berubah
+// Array bulan dalam Bahasa Indonesia
+const bulanIndonesia = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
+const TableIdentity = ({ pegawai }) => {
+  const today = new Date();
+  // Set default values directly in state
+  const [selectedYear, setSelectedYear] = useState("2025");
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
+  const [selectedWeek, setSelectedWeek] = useState(Math.ceil((today.getDate() / 7)+1));
+
+  // Menentukan minggu berdasarkan tanggal
+  const getWeekOfMonth = (tanggal) => {
+    const [monthName, year] = tanggal.split("/");
+    const monthIndex = bulanIndonesia.indexOf(monthName);
+    const date = new Date(year, monthIndex, 1); // Tanggal pertama bulan tersebut
+    const firstDay = date.getDay();
+    const day = new Date(year, monthIndex, 13).getDate(); // Tanggal tengah bulan
+    return Math.ceil((day + firstDay) / 7); // Hitung minggu keberapa
   };
 
-  const handleWeekChange = (e) => {
-    setSelectedWeek(e.target.value);
-  };
+  // Ambil tahun yang ada dalam data untuk populasi filter tahun
+  const years = useMemo(() => {
+    const uniqueYears = new Set();
+    if (pegawai && pegawai.skp) {
+      pegawai.skp.forEach((item) => {
+        uniqueYears.add(item.tahun); // Menambahkan tahun dari data
+      });
+    }
+    return Array.from(uniqueYears).sort((a, b) => b - a); // Urutkan tahun secara descending
+  }, [pegawai]);
 
-  // Filter berdasarkan bulan dan minggu
-  const filteredRows = rows.filter((row) => {
-    const rowDate = new Date(row.tanggal);
-    const rowMonth = rowDate.getMonth() + 1;
+  // Memformat data pegawai
+  const rows = useMemo(() => {
+    if (!pegawai || !pegawai.skp) return [];
 
-    const isMonthMatch = selectedMonth === "" || rowMonth === parseInt(selectedMonth);
-    const isWeekMatch = selectedWeek === "" || getWeekOfMonth(row.tanggal) === parseInt(selectedWeek);
+    const formatted = [];
 
-    return isMonthMatch && isWeekMatch;
-  });
+    pegawai.skp.forEach((item) => {
+      const realisasiList = item.realisasi
+        ?.split("•")
+        .filter((val) => val.trim() !== "");
+
+      realisasiList?.forEach((realisasi, idx) => {
+        const buktiMatch = realisasi.match(
+          /\(Bukti dukung:\s*(https?:\/\/[^\s)]+)\)/
+        );
+        const buktiLink = buktiMatch ? buktiMatch[1] : "";
+        const cleanedRealisasi = realisasi
+          .replace(/\(Bukti dukung:\s*https?:\/\/[^\s)]+\)/, "")
+          .trim();
+
+        formatted.push({
+          id: `${item.id}-${idx}`,
+          sasaran_kinerja: item.sasaran_kinerja,
+          indikator: item.indikator,
+          realisasi: cleanedRealisasi,
+          tanggal: `${item.bulan}/${item.tahun}`,
+          buktiDukung: buktiLink,
+          tahun: item.tahun, // Menambahkan tahun di data
+        });
+      });
+    });
+
+    return formatted;
+  }, [pegawai]);
+
+  // Filter bulan, tahun, dan minggu
+  const filteredRows = useMemo(() => {
+    return rows.filter((row) => {
+      const [monthName] = row.tanggal.split("/"); // Ambil nama bulan dari tanggal
+      const monthIndex = bulanIndonesia.indexOf(monthName); // Dapatkan index bulan dalam bahasa Indonesia
+
+      const isYearMatch = selectedYear === "" || row.tahun === selectedYear; // Filter berdasarkan tahun
+      const isMonthMatch =
+        selectedMonth === "" || monthIndex === selectedMonth - 1; // Filter berdasarkan bulan
+      const isWeekMatch =
+        selectedWeek === "" ||
+        getWeekOfMonth(row.tanggal) === parseInt(selectedWeek); // Filter berdasarkan minggu
+
+      return isYearMatch && isMonthMatch && isWeekMatch;
+    });
+  }, [rows, selectedYear, selectedMonth, selectedWeek]);
+
+  // Update selectedYear if 2025 is not available in years
+  useEffect(() => {
+    if (years.length > 0 && !years.includes("2025")) {
+      setSelectedYear(years[0]);
+    }
+  }, [years]);
+
+  if (!pegawai || !pegawai.skp) {
+    return <Typography variant="body2">Memuat data SKP...</Typography>;
+  }
 
   return (
-    <Box sx={{ backgroundColor: 'white', minHeight: 400, width: '100%', borderRadius: 2, p: 2 }}>
-      {/* Filter Header */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'flex-end', mb: 2 }}>
+    <Box
+      sx={{
+        backgroundColor: "white",
+        minHeight: 400,
+        width: "100%",
+        borderRadius: 2,
+        p: 2,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+          justifyContent: "flex-start",
+          mb: 2,
+        }}
+      >
+        {/* Filter Tahun */}
+        <FormControl size="small" sx={{ minWidth: 150 }}>
+          <InputLabel id="filter-tahun">Tahun</InputLabel>
+          <Select
+            labelId="filter-tahun"
+            value={selectedYear}
+            label="Filter Tahun"
+            onChange={(e) => setSelectedYear(e.target.value)}
+          >
+            {years.map((year) => (
+              <MenuItem key={year} value={year}>
+                {year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         {/* Filter Bulan */}
         <FormControl size="small" sx={{ minWidth: 150 }}>
           <InputLabel id="filter-bulan">Periode SKP</InputLabel>
@@ -77,58 +249,44 @@ const TableIdentity = () => {
             labelId="filter-bulan"
             value={selectedMonth}
             label="Filter Bulan"
-            onChange={handleMonthChange}
+            onChange={(e) => setSelectedMonth(e.target.value)}
           >
-            <MenuItem value="">Semua Bulan</MenuItem>
-            <MenuItem value="1">Januari</MenuItem>
-            <MenuItem value="2">Februari</MenuItem>
-            <MenuItem value="3">Maret</MenuItem>
-            <MenuItem value="4">April</MenuItem>
-            <MenuItem value="5">Mei</MenuItem>
-            <MenuItem value="6">Juni</MenuItem>
-            <MenuItem value="7">Juli</MenuItem>
-            <MenuItem value="8">Agustus</MenuItem>
-            <MenuItem value="9">September</MenuItem>
-            <MenuItem value="10">Oktober</MenuItem>
-            <MenuItem value="11">November</MenuItem>
-            <MenuItem value="12">Desember</MenuItem>
+            {bulanIndonesia.map((bulan, index) => (
+              <MenuItem key={index} value={index + 1}>
+                {bulan}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
         {/* Filter Minggu */}
-        <FormControl size="small" sx={{ minWidth: 150 }} disabled={!selectedMonth}>
-          <InputLabel id="filter-minggu">Filter Mingguan</InputLabel>
+        <FormControl size="small" sx={{ minWidth: 120 }}>
+          <InputLabel id="filter-week">Minggu</InputLabel>
           <Select
-            labelId="filter-minggu"
+            labelId="filter-week"
             value={selectedWeek}
-            label="Filter Mingguan"
-            onChange={handleWeekChange}
+            label="Minggu"
+            onChange={(e) => setSelectedWeek(e.target.value)}
           >
-            <MenuItem value="">Semua Minggu</MenuItem>
-            <MenuItem value="1">Minggu 1</MenuItem>
-            <MenuItem value="2">Minggu 2</MenuItem>
-            <MenuItem value="3">Minggu 3</MenuItem>
-            <MenuItem value="4">Minggu 4</MenuItem>
-            <MenuItem value="5">Minggu 5</MenuItem>
+            {Array.from({ length: 4 }, (_, i) => (
+              <MenuItem key={i} value={i + 1}>
+                Minggu {i + 1}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>
 
-      {/* Table */}
-      <DataGrid
-        sx={{ borderRadius: 2 }}
-        rows={filteredRows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-      />
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={filteredRows}
+          columns={columns}
+          rowHeight={70}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          disableSelectionOnClick
+        />
+      </div>
     </Box>
   );
 };

@@ -10,8 +10,96 @@ import {
   Grid,
 } from "@mui/material";
 import { CalendarDays, Calendar, BarChart3 } from "lucide-react"; // Import ikon dari lucide
-import { BarChart, BarChart2, Menu, Users, Settings, File } from "lucide-react";
-const Identity = ({nama,jabatan,wilayah}) => {
+import { File } from "lucide-react";
+
+
+const isToday = (date) => {
+  const today = new Date();
+  const targetDate = new Date(date);
+
+  return (
+    today.getFullYear() === targetDate.getFullYear() &&
+    today.getMonth() === targetDate.getMonth() &&
+    today.getDate() === targetDate.getDate()
+  );
+};
+
+const isThisWeek = (date) => {
+  const today = new Date();
+  const currentWeekStart = new Date(
+    today.setDate(today.getDate() - today.getDay())
+  );
+  const currentWeekEnd = new Date(currentWeekStart);
+  currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+
+  return date >= currentWeekStart && date <= currentWeekEnd;
+};
+
+const isThisMonth = (date) => {
+  const today = new Date();
+  return (
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+};
+
+const isThisYear = (date) => {
+  const today = new Date();
+  return date.getFullYear() === today.getFullYear();
+};
+
+const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
+  const [jumlahAktivitasHariIni, setJumlahAktivitasHariIni] = useState(0);
+  const [jumlahAktivitasMingguIni, setJumlahAktivitasMingguIni] = useState(0);
+  const [jumlahAktivitasBulanIni, setJumlahAktivitasBulanIni] = useState(0);
+  const [jumlahAktivitasTahunIni, setJumlahAktivitasTahunIni] = useState(0);
+
+  useEffect(() => {
+    if (pegawai && pegawai.skp) {
+      let hariIni = 0;
+      let mingguIni = 0;
+      let bulanIni = 0;
+      let tahunIni = 0;
+
+      pegawai.skp.forEach((skpItem, index) => {
+        const bulan = skpItem.bulan;
+        const tahun = skpItem.tahun;
+        const date = new Date(`${tahun}-${bulan}-13`); // tanggal dummy untuk representasi bulan
+
+        // Split realisasi dan filter yang kosong
+        const aktivitasList =
+          skpItem.realisasi?.split("•").filter((item) => item.trim() !== "") ||
+          [];
+
+        const aktivitasCount = aktivitasList.length;
+
+        console.log(
+          `(${index + 1}) ${skpItem.realisasi} ➜ ${aktivitasCount} aktivitas`
+        );
+
+        if(isToday(date)){
+          hariIni+=aktivitasCount;
+        }
+        if (isThisWeek(date)) {
+          mingguIni += aktivitasCount;
+        }
+        if (isThisMonth(date)) {
+          bulanIni += aktivitasCount;
+        }
+        if (isThisYear(date)) {
+          tahunIni += aktivitasCount;
+        }
+      });
+      console.log("mingguini:" + mingguIni);
+      console.log("bulan ini:" + bulanIni);
+
+      setJumlahAktivitasHariIni(hariIni)
+      setJumlahAktivitasMingguIni(mingguIni);
+      setJumlahAktivitasBulanIni(bulanIni);
+      setJumlahAktivitasTahunIni(tahunIni);
+    }
+  }, [pegawai]);
+
   const [size, setSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -33,7 +121,8 @@ const Identity = ({nama,jabatan,wilayah}) => {
     <Card
       sx={{
         height: "auto",
-        minWidth: 275,
+        minWidth: 330,
+       
         minHeight: size.width < 800 ? 300 : 365,
         display: "flex",
         flexDirection: "column",
@@ -45,8 +134,7 @@ const Identity = ({nama,jabatan,wilayah}) => {
         image="/src/assets/image/Feels.png"
         title="Profile Photo"
       />
-      <CardContent
-      sx={{ height: 290 }}>
+      <CardContent sx={{ height: 290 }}>
         {/* Info Pegawai */}
         <Typography variant="h6" component="div" gutterBottom>
           {nama}
@@ -60,138 +148,203 @@ const Identity = ({nama,jabatan,wilayah}) => {
 
         {/* Ringkasan Jumlah Pekerjaan */}
         <Grid container spacing={2} sx={{ mt: 2 }}>
-          <Grid item xs={12} md={4}>
+        <Grid item xs={6} md={3}>
             <Box
               sx={{
-                p: 2,
-                borderRadius: 2,
+                height: 120, // Atur tinggi sesuai kebutuhanmu
+                width: "100%",
+                borderRadius: 1,
                 bgcolor: "#ffffff",
                 boxShadow: "0 1px 15px rgba(0,0,0,0.15)",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start", // tetap rata kiri
-                textAlign: "left",
+                overflow: "hidden", // Supaya radius rapi
               }}
             >
+              {/* Bagian Angka (Atas - Putih) */}
               <Box
                 sx={{
-                  width: "100%",
+                
+                  p: 1,
                   display: "flex",
                   justifyContent: "center",
-                  mb: 1,
+                  alignItems: "center",
+                  fontWeight: 600,
+                  fontSize: 24,
+                  bgcolor: "#ffffff", 
+                  color:'#1DA57A'
                 }}
               >
-                <CalendarDays size={28} color="#6366f1" />
+                {jumlahAktivitasHariIni}
               </Box>
-              <Typography variant="subtitle1">
-                <Box component="span" sx={{ fontWeight: 600, mr: 1 }}>
-                  14
-                </Box>
-                <Box
-                  component="span"
-                  sx={{
-                    fontSize: 13,
-                    color: "text.secondary",
-                    fontWeight: 400,
-                  }}
-                >
-                  Aktivitas
-                </Box>
-              </Typography>
 
-              <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
-                Minggu Ini
-              </Typography>
+              <Box
+                sx={{
+                  bgcolor: "#EFEFEF",
+                  flex: 1, // Ini yang bikin bagian bawah isi seluruh sisa tinggi
+                  display: "flex",
+                 
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Aktivitas
+                </Typography>
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Hari Ini
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <Box
+              sx={{
+                height: 120, // Atur tinggi sesuai kebutuhanmu
+                width: "100%",
+                borderRadius: 1,
+                bgcolor: "#ffffff",
+                boxShadow: "0 1px 15px rgba(0,0,0,0.15)",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden", // Supaya radius rapi
+              }}
+            >
+              {/* Bagian Angka (Atas - Putih) */}
+              <Box
+                sx={{
+                  p: 1,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontWeight: 600,
+                  fontSize: 24,
+                  bgcolor: "#ffffff", 
+                  color:'#1DA57A'
+                }}
+              >
+                {jumlahAktivitasMingguIni}
+              </Box>
+
+              {/* Bagian Aktivitas (Bawah - Abu-Abu) */}
+              <Box
+                sx={{
+                  bgcolor: "#EFEFEF",
+                  flex: 1, // Ini yang bikin bagian bawah isi seluruh sisa tinggi
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Aktivitas
+                </Typography>
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Minggu Ini
+                </Typography>
+              </Box>
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={6} md={3}>
             <Box
               sx={{
-                p: 2,
-                borderRadius: 2,
+                height: 120, // Atur tinggi sesuai kebutuhanmu
+                width: "100%",
+                borderRadius: 1,
                 bgcolor: "#ffffff",
                 boxShadow: "0 1px 15px rgba(0,0,0,0.15)",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start", // tetap rata kiri
-                textAlign: "left",
+                overflow: "hidden", // Supaya radius rapi
               }}
             >
+              {/* Bagian Angka (Atas - Putih) */}
               <Box
                 sx={{
-                  width: "100%",
+                  p: 1,
                   display: "flex",
                   justifyContent: "center",
-                  mb: 1,
+                  alignItems: "center",
+                  fontWeight: 600,
+                  fontSize: 24,
+                  bgcolor: "#ffffff",
+                  color:'#1DA57A' // Warna putih eksplisit
                 }}
               >
-                <File size={28} color="#6366f1" />
+                {jumlahAktivitasBulanIni}
               </Box>
-              <Typography variant="subtitle1">
-                <Box component="span" sx={{ fontWeight: 600, mr: 1 }}>
-                  45
-                </Box>
-                <Box
-                  component="span"
-                  sx={{
-                    fontSize: 13,
-                    color: "text.secondary",
-                    fontWeight: 400,
-                  }}
-                >
-                  Aktivitas
-                </Box>
-              </Typography>
 
-              <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
-                Bulan Ini
-              </Typography>
+              {/* Bagian Aktivitas (Bawah - Abu-Abu) */}
+              <Box
+                sx={{
+                  bgcolor: "#EFEFEF",
+                  flex: 1, // Ini yang bikin bagian bawah isi seluruh sisa tinggi
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Aktivitas
+                </Typography>
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Bulan Ini
+                </Typography>
+              </Box>
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={6} md={3}>
             <Box
               sx={{
-                p: 2,
-                borderRadius: 2,
+                height: 120, // Atur tinggi sesuai kebutuhanmu
+                width: "100%",
+                borderRadius: 1,
                 bgcolor: "#ffffff",
                 boxShadow: "0 1px 15px rgba(0,0,0,0.15)",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start",
-                textAlign: "left",
+                overflow: "hidden", // Supaya radius rapi
               }}
             >
+              {/* Bagian Angka (Atas - Putih) */}
               <Box
                 sx={{
-                  width: "100%",
+                  p: 1,
                   display: "flex",
                   justifyContent: "center",
-                  mb: 1,
+                  alignItems: "center",
+                  fontWeight: 600,
+                  fontSize: 24,
+                  bgcolor: "#ffffff",
+                  color:'#1DA57A' // Warna putih eksplisit
                 }}
               >
-                <BarChart3 size={28} color="#6366f1" />
+                {jumlahAktivitasTahunIni}
               </Box>
-              <Typography variant="subtitle1">
-                <Box component="span" sx={{ fontWeight: 600, mr: 1 }}>
-                  144
-                </Box>
-                <Box
-                  component="span"
-                  sx={{
-                    fontSize: 13,
-                    color: "text.secondary",
-                    fontWeight: 400,
-                  }}
-                >
-                  Aktivitas
-                </Box>
-              </Typography>
 
-              <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
-                Tahun Ini
-              </Typography>
+              {/* Bagian Aktivitas (Bawah - Abu-Abu) */}
+              <Box
+                sx={{
+                  bgcolor: "#EFEFEF",
+                  flex: 1, // Ini yang bikin bagian bawah isi seluruh sisa tinggi
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Aktivitas
+                </Typography>
+                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                  Tahun Ini
+                </Typography>
+              </Box>
             </Box>
           </Grid>
         </Grid>
