@@ -18,7 +18,12 @@ const columns = [
     renderCell: (params) =>
       `${params.api.getAllRowIds().indexOf(params.id) + 1}`,
   },
-  { field: "tanggal", headerName: "Tanggal", width: 120 },
+  { field: "tanggal", headerName: "Periode SKP", width: 120,
+    renderCell: (params) => {
+      const [bulan, tahun] = params.value.split("/");
+      return `${bulan} ${tahun}`;
+    },
+   },
   {
     field: "sasaran_kinerja",
     headerName: "Sasaran Kinerja",

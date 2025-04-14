@@ -24,7 +24,7 @@ import { getAllTimKerja } from "../services/timKerjaServices";
 import { getAllPegawai } from "../services/pegawaiServices";
 
 const OrganisasiPages = () => {
-  const [filterRole, setFilterRole] = useState("ahli madya"); 
+  const [filterRole, setFilterRole] = useState("all"); 
   const [timKerja, setTimKerja] = useState([]);
   const [pegawai, setPegawai] = useState([]);
 
@@ -36,7 +36,7 @@ const OrganisasiPages = () => {
 
         setTimKerja(data);
       } catch (err) {
-        setError("Gagal mengambil data tim kerja");
+        console.log("Gagal mengambil data tim kerja");
       } finally {
         console.log("final");
       }

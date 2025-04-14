@@ -44,6 +44,10 @@ const ProfilePages = () => {
     fetchPegawai();
   }, [id]);
 
+  console.log("pegawai")
+  console.log(pegawai)
+  console.log("pegawai")
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
@@ -190,7 +194,7 @@ const ProfilePages = () => {
                 <Divider></Divider>
                 <CardContent>
                   <TabPanel value={tabIndex} index={1}>
-                    <TableActivity></TableActivity>
+                    <TableActivity pegawai={pegawai}></TableActivity>
                   </TabPanel>
                   <TabPanel value={tabIndex} index={0}>
                     <TableIdentity

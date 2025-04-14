@@ -103,7 +103,7 @@ const LoginPage = () => {
             fullWidth
             sx={{ marginTop: 2,backgroundColor:'#1DA57A' }}
             component={Link}
-            to="/Dashboard"
+            to="/organisasi"
           >
             Login
           </Button>

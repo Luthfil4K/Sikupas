@@ -26,14 +26,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
   const open = Boolean(anchorEl);
   const id = open ? `popover-${namaTim}` : undefined;
 
-  console.log("anggotaTim");
-  console.log("anggotaTim");
-  console.log(anggotaTim);
-  console.log(anggotaTim);
-  console.log(anggotaTim);
-  console.log("anggotaTim");
-  console.log("anggotaTim");
-  console.log("anggotaTim");
+
   return (
     <Card
       sx={{
@@ -99,7 +92,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
                 ))
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  Tidak ada anggota.
+                  ....
                 </Typography>
               )}
             </List>
