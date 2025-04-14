@@ -5,12 +5,12 @@ import {AnimatePresence, motion} from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 const SIDEBAR_ITEMS = [
-    {
-        name : "Dashboard",
-        icon : BarChart2,
-        color : "#6366f1",
-        path: "/",
-    },
+    // {
+    //     name : "Dashboard",
+    //     icon : BarChart2,
+    //     color : "#6366f1",
+    //     path: "/",
+    // },
     // {
     //     name : "Profile",
     //     icon : File,
@@ -19,7 +19,7 @@ const SIDEBAR_ITEMS = [
     // },
     {
         name : "Organisasi",
-        icon : Settings,
+        icon : Users,
         color : "#EC4899",
         path: "/organisasi",
     },

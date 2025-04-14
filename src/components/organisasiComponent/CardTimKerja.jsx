@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import GroupIcon from "@mui/icons-material/Group";
 
 const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
@@ -23,9 +24,13 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
     setAnchorEl(null);
   };
 
+  console.log("anggotaTim");
+  console.log(anggotaTim);
+  console.log(anggotaTim);
+  console.log("anggotaTim");
+
   const open = Boolean(anchorEl);
   const id = open ? `popover-${namaTim}` : undefined;
-
 
   return (
     <Card
@@ -85,14 +90,25 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
               {anggotaTim && anggotaTim.length > 0 ? (
                 anggotaTim.map((anggota, idx) => (
                   <ListItem key={idx} disablePadding>
-                    <ListItemText
-                      primary={anggota.pegawai?.nama || "Tanpa Nama"}
-                    />
+                    <Link
+                      to={`/profile/${anggota.pegawai?.nip}`}
+                      style={{ textDecoration: "none" }} // ini biar linknya ga underline default
+                    >
+                      <ListItemText
+                        primary={anggota.pegawai?.nama || "Tanpa Nama"}
+                        primaryTypographyProps={{
+                          sx: {
+                            textDecoration: "underline",
+                            color: "primary.main",
+                          },
+                        }}
+                      />
+                    </Link>
                   </ListItem>
                 ))
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  ....
+                  Tidak ada anggota.
                 </Typography>
               )}
             </List>
