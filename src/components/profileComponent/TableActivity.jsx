@@ -72,16 +72,16 @@ const TableActivity = ({ pegawai }) => {
     {
       field: "tanggal",
       headerName: "Tanggal Kegiatan",
-      width: 150,
+      width: 200,
       renderCell: (params) => formatTanggal(params.value),
     },
     {
       field: "kegiatan",
       headerName: "Kegiatan",
-      width: 300,
+      width: 450,
       renderCell: (params) => <div style={{ whiteSpace: "pre-wrap" }}>{params.value}</div>,
     },
-    { field: "capaian", headerName: "Capaian", width: 300 },
+    { field: "capaian", headerName: "Capaian", width: 450 },
     {
       field: "dataDukung",
       headerName: "Bukti Dukung",
