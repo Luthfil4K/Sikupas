@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Card, CardContent, Typography, Button,
   CardActions, Popover, List, ListItem, ListItemText
@@ -15,13 +15,31 @@ const BoxFour = ({jumlah}) => {
     setAnchorEl(null);
   };
 
+  const [size, setSize] = useState({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  
+    useEffect(() => {
+      const handleResize = () => {
+        setSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
+  
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+      console.log(size);
+    }, []);
+    console.log(size);
   const open = Boolean(anchorEl);
 
   const pegawaiBelumIsi = ["Ani", "Budi", "Citra"];
 
   return (
     <>
-      <Card sx={{ minWidth: 75 }}>
+      <Card sx={{ minWidth: 75, minHeight: size < 800 ? 200 : 170  }}>
         <CardContent>
           <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
             Jumlah Pegawai yang Belum Isi Aktivitas

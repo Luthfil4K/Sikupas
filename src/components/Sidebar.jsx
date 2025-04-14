@@ -11,12 +11,12 @@ const SIDEBAR_ITEMS = [
         color : "#6366f1",
         path: "/",
     },
-    {
-        name : "Profile",
-        icon : File,
-        color : "#6EE7B7",
-        path: "/profile",
-    },
+    // {
+    //     name : "Profile",
+    //     icon : File,
+    //     color : "#6EE7B7",
+    //     path: "/profile",
+    // },
     {
         name : "Organisasi",
         icon : Settings,

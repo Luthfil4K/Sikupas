@@ -32,6 +32,8 @@ const OrganisasiPages = () => {
     const fetchTimKerja = async () => {
       try {
         const data = await getAllTimKerja();
+        console.log(data); // Menggunakan service yang sudah dibuat
+
         setTimKerja(data);
       } catch (err) {
         setError("Gagal mengambil data tim kerja");
@@ -47,7 +49,6 @@ const OrganisasiPages = () => {
     const fetchPegawai = async () => {
       try {
         const data = await getAllPegawai();
-        console.log(data); // Menggunakan service yang sudah dibuat
         setPegawai(data); // Simpan data tim kerja di state
       } catch (err) {
         console.log(err);
@@ -167,14 +168,14 @@ const OrganisasiPages = () => {
                   textColor="inherit"
                 >
                   <Tab
-                    label="Tim Kerja"
+                    label="Daftar Pegawai"
                     sx={{
                       color: tabIndex === 0 ? "#1DA57A" : "gray",
                       fontWeight: tabIndex === 0 ? "bold" : "normal",
                     }}
                   />
                   <Tab
-                    label="Individu"
+                    label="Daftar Tim Kerja"
                     sx={{
                       color: tabIndex === 1 ? "#1DA57A" : "gray",
                       fontWeight: tabIndex === 1 ? "bold" : "normal",
@@ -186,7 +187,7 @@ const OrganisasiPages = () => {
 
                 {/* 🔍 Filter Search & Tahun */}
                 <Grid container spacing={2} sx={{ mb: 2 }}>
-                  {tabIndex == 0 ? (
+                  {tabIndex == 1 ? (
                     <>
                       <Grid item xs={12} md={6}>
                         <TextField
@@ -230,14 +231,14 @@ const OrganisasiPages = () => {
                 </Grid>
 
                 {/* Tabs Content */}
-                <TabPanel value={tabIndex} index={0}>
+                <TabPanel value={tabIndex} index={1}>
                   <Grid container spacing={4}>
                     {paginatedTeams.map((team, index) => (
                       <Grid item xs={12} md={3} key={index}>
                         <CardTimKerja
                           namaTim={team.tim_nama}
                           jumlahAnggota={team.timKerja?.length}
-                          anggotaTim={["Budi", "Ani", "Joko"]}
+                          anggotaTim={team.timKerja}
                         />
                       </Grid>
                     ))}
@@ -280,7 +281,7 @@ const OrganisasiPages = () => {
                     </Grid>
                   </Grid>
                 </TabPanel>
-                <TabPanel value={tabIndex} index={1}>
+                <TabPanel value={tabIndex} index={0}>
                   <Grid container spacing={4} sx={{ mb: 2 }}>
                     {paginatedStaffs.map((staff, index) => (
                       <Grid item xs={12} md={3} key={index}>

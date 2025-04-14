@@ -10,11 +10,14 @@ import {
   Typography,
   Divider,
   TextField,
+  Tab,
+  Tabs,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import Identity from "../components/profileComponent/Identity";
 import TableIdentity from "../components/profileComponent/TableIdentity";
+import TableActivity from "../components/profileComponent/TableActivity";
 import LineChartIdentity from "../components/profileComponent/LineChartIdentity";
 import SKPDragDrop from "../components/profileComponent/SKPDragDrop";
 import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
@@ -45,17 +48,31 @@ const ProfilePages = () => {
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
+  // tabpanel
+  const [tabIndex, setTabIndex] = useState(0);
 
+  const handleChange = (event, newValue) => {
+    setTabIndex(newValue);
+  };
 
-  // const filteredTeams = teams.filter((team) =>
-  //   team.namaTim.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
+  const TabPanel = ({ children, value, index }) => {
+    return (
+      <div role="tabpanel" hidden={value !== index}>
+        {value === index && (
+          <Box sx={{ p: 2 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  };
+
   const filteredTeams =
-  pegawai && pegawai.timkerja
-    ? pegawai.timkerja.filter((staff) =>
-        staff.tim?.tim_nama?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+    pegawai && pegawai.timkerja
+      ? pegawai.timkerja.filter((staff) =>
+          staff.tim?.tim_nama?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : [];
   return (
     <>
       <main className="w-full px-4">
@@ -72,7 +89,7 @@ const ProfilePages = () => {
             spacing={4}
             sx={{ paddingLeft: 2, paddingTop: 4, paddingRight: 2 }}
           >
-            <Grid  item md={3} xs={12} >
+            <Grid item md={3} xs={12}>
               <Identity
                 nama={pegawai?.nama}
                 jabatan={pegawai?.jabatan}
@@ -80,7 +97,7 @@ const ProfilePages = () => {
                 pegawai={pegawai}
               ></Identity>
             </Grid>
-            <Grid item md={9} xs={6} >
+            <Grid item md={9} xs={6}>
               {/* <Grid container spacing={4}>
                 <Grid item md={12} xs={6}>
                   <LineChartIdentity></LineChartIdentity>
@@ -90,12 +107,8 @@ const ProfilePages = () => {
                 </Grid>
               
               </Grid> */}
-              <Grid
-                bgcolor={""}
-                container
-                spacing={4}
-              >
-                <Grid item md={12} >
+              <Grid bgcolor={""} container spacing={4}>
+                <Grid item md={12}>
                   <Card sx={{ height: 537, overflowY: "scroll" }}>
                     <Typography
                       variant="h5"
@@ -143,11 +156,48 @@ const ProfilePages = () => {
             sx={{ paddingLeft: 2, paddingTop: 4, paddingRight: 2 }}
           >
             <Grid item md={12}>
-              <Card sx={{ minWidth: 75, height: 500, marginBottom: 5,overflowY:"scroll" }}>
+              <Card
+                sx={{
+                  minWidth: 75,
+                  height: 600,
+                  marginBottom: 5,
+                  overflowY: "scroll",
+                }}
+              >
+                <Tabs
+                  value={tabIndex}
+                  onChange={handleChange}
+                  TabIndicatorProps={{
+                    style: { backgroundColor: "#1DA57A" },
+                  }}
+                  textColor="inherit"
+                >
+                  <Tab
+                    label="SKP Bulanan"
+                    sx={{
+                      color: tabIndex === 0 ? "#1DA57A" : "gray",
+                      fontWeight: tabIndex === 0 ? "bold" : "normal",
+                    }}
+                  />
+                  <Tab
+                    label="CKP Harian"
+                    sx={{
+                      color: tabIndex === 1 ? "#1DA57A" : "gray",
+                      fontWeight: tabIndex === 1 ? "bold" : "normal",
+                    }}
+                  />
+                </Tabs>
+                <Divider></Divider>
                 <CardContent>
-                  <Typography variant="h5" component="div">
-                    <TableIdentity pegawai={pegawai} setJumlahAktivitas={setJumlahAktivitas} ></TableIdentity>
-                  </Typography>
+                  <TabPanel value={tabIndex} index={1}>
+                    <TableActivity></TableActivity>
+                  </TabPanel>
+                  <TabPanel value={tabIndex} index={0}>
+                    <TableIdentity
+                      pegawai={pegawai}
+                      setJumlahAktivitas={setJumlahAktivitas}
+                    ></TableIdentity>
+                  </TabPanel>
                 </CardContent>
               </Card>
             </Grid>

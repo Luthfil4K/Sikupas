@@ -30,7 +30,7 @@ const BoxOne = ({total}) => {
 
 
   return (
-    <Card sx={{ minWidth: 75, minHeight:size<800 ? 200:100 }}>
+    <Card sx={{ minWidth: 75, minHeight:size<800 ? 200 : 170 }}>
       <CardContent>
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
           Total Aktivitas Hari Ini
@@ -40,9 +40,7 @@ const BoxOne = ({total}) => {
         </Typography>
       </CardContent>
       <CardActions>
-      <Button color="success" size="small" variant="outlined">
-          Lihat Detail
-        </Button>
+      
       </CardActions>
     </Card>
   );

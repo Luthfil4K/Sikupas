@@ -26,7 +26,7 @@ const BoxTwo = ({ nama, jumlah }) => {
   console.log(size);
 
   return (
-    <Card sx={{ minWidth: 75, minHeight: size < 800 ? 200 : 100 }}>
+    <Card sx={{ minWidth: 75, minHeight: size < 800 ? 200 : 170 }}>
       <CardContent>
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
           Pegawai Paling Aktif
@@ -42,9 +42,7 @@ const BoxTwo = ({ nama, jumlah }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button color="success" size="small" variant="outlined">
-          Lihat Detail
-        </Button>
+        
       </CardActions>
     </Card>
   );

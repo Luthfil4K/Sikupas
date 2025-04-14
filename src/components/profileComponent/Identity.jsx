@@ -12,7 +12,6 @@ import {
 import { CalendarDays, Calendar, BarChart3 } from "lucide-react"; // Import ikon dari lucide
 import { File } from "lucide-react";
 
-
 const isToday = (date) => {
   const today = new Date();
   const targetDate = new Date(date);
@@ -77,8 +76,8 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
           `(${index + 1}) ${skpItem.realisasi} ➜ ${aktivitasCount} aktivitas`
         );
 
-        if(isToday(date)){
-          hariIni+=aktivitasCount;
+        if (isToday(date)) {
+          hariIni += aktivitasCount;
         }
         if (isThisWeek(date)) {
           mingguIni += aktivitasCount;
@@ -93,7 +92,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
       console.log("mingguini:" + mingguIni);
       console.log("bulan ini:" + bulanIni);
 
-      setJumlahAktivitasHariIni(hariIni)
+      setJumlahAktivitasHariIni(hariIni);
       setJumlahAktivitasMingguIni(mingguIni);
       setJumlahAktivitasBulanIni(bulanIni);
       setJumlahAktivitasTahunIni(tahunIni);
@@ -122,21 +121,25 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
       sx={{
         height: "auto",
         minWidth: 330,
-       
+        paddingTop:1,
         minHeight: size.width < 800 ? 300 : 365,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
       }}
     >
-      <CardMedia
-        sx={{ height: 245 }}
-        image="/src/assets/image/Feels.png"
-        title="Profile Photo"
-      />
+      <Box sx={{ height: 240, width: "100%", overflow: "hidden", justifyContent:'center',alignItems:'center',display:'flex' }}>
+        <CardMedia
+          component="img"
+          sx={{ height: "100%", width: "60%",objectFit:'fill' }}
+          image="/src/assets/image/Asset 2.png"
+          title="Profile Photo"
+        />
+      </Box>
+
       <CardContent sx={{ height: 290 }}>
         {/* Info Pegawai */}
-        <Typography variant="h6" component="div" gutterBottom>
+        <Typography sx={{fontSize:18, fontWeight:600}} component="div" gutterBottom>
           {nama}
         </Typography>
         <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
@@ -148,7 +151,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
 
         {/* Ringkasan Jumlah Pekerjaan */}
         <Grid container spacing={2} sx={{ mt: 2 }}>
-        <Grid item xs={6} md={3}>
+          <Grid item xs={6} md={3}>
             <Box
               sx={{
                 height: 120, // Atur tinggi sesuai kebutuhanmu
@@ -164,15 +167,14 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
               {/* Bagian Angka (Atas - Putih) */}
               <Box
                 sx={{
-                
                   p: 1,
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   fontWeight: 600,
                   fontSize: 24,
-                  bgcolor: "#ffffff", 
-                  color:'#1DA57A'
+                  bgcolor: "#ffffff",
+                  color: "#1DA57A",
                 }}
               >
                 {jumlahAktivitasHariIni}
@@ -183,7 +185,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   bgcolor: "#EFEFEF",
                   flex: 1, // Ini yang bikin bagian bawah isi seluruh sisa tinggi
                   display: "flex",
-                 
+
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
@@ -220,8 +222,8 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   alignItems: "center",
                   fontWeight: 600,
                   fontSize: 24,
-                  bgcolor: "#ffffff", 
-                  color:'#1DA57A'
+                  bgcolor: "#ffffff",
+                  color: "#1DA57A",
                 }}
               >
                 {jumlahAktivitasMingguIni}
@@ -271,7 +273,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   fontWeight: 600,
                   fontSize: 24,
                   bgcolor: "#ffffff",
-                  color:'#1DA57A' // Warna putih eksplisit
+                  color: "#1DA57A", // Warna putih eksplisit
                 }}
               >
                 {jumlahAktivitasBulanIni}
@@ -321,7 +323,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   fontWeight: 600,
                   fontSize: 24,
                   bgcolor: "#ffffff",
-                  color:'#1DA57A' // Warna putih eksplisit
+                  color: "#1DA57A", // Warna putih eksplisit
                 }}
               >
                 {jumlahAktivitasTahunIni}

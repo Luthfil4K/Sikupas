@@ -221,7 +221,7 @@ const TableIdentity = ({ pegawai }) => {
           display: "flex",
           flexWrap: "wrap",
           gap: 2,
-          justifyContent: "flex-start",
+          justifyContent: "flex-end",
           mb: 2,
         }}
       >

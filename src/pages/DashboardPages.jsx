@@ -15,7 +15,7 @@ import BoxTwo from "../components/dashboardComponent/BoxTwo";
 import BoxThree from "../components/dashboardComponent/BoxThree";
 import BoxFour from "../components/dashboardComponent/BoxFour";
 import TableRank from "../components/dashboardComponent/TableRank";
-import TableBottom from "../components/dashboardComponent/TableBottom";
+import TableActivity from "../components/profileComponent/TableActivity";
 import FilterButtons from "../components/dashboardComponent/FilterButtons";
 import { getAllSKP } from "../services/dashboardServices";
 
@@ -242,7 +242,7 @@ const DashboardPages = () => {
             spacing={4}
             sx={{ paddingLeft: 2, paddingTop: 4, paddingRight: 2 }}
           >
-            <Grid item md={8} xs={6}>
+            {/* <Grid item md={8} xs={6}>
               <Card sx={{ minWidth: 275 }}>
                 <LineChartDashboard></LineChartDashboard>
               </Card>
@@ -260,7 +260,7 @@ const DashboardPages = () => {
                   <TableRank></TableRank>
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid> */}
           </Grid>
           <Grid
             container
@@ -277,7 +277,7 @@ const DashboardPages = () => {
                   >
                     Pelaksanaan Kinerja Pegawai
                   </Typography>
-                  <TableBottom></TableBottom>
+                  <TableActivity></TableActivity>
                 </CardContent>
               </Card>
             </Grid>

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 
-const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim = [] }) => {
+const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -26,8 +26,23 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim = [] }) => {
   const open = Boolean(anchorEl);
   const id = open ? `popover-${namaTim}` : undefined;
 
+  console.log("anggotaTim");
+  console.log("anggotaTim");
+  console.log(anggotaTim);
+  console.log(anggotaTim);
+  console.log(anggotaTim);
+  console.log("anggotaTim");
+  console.log("anggotaTim");
+  console.log("anggotaTim");
   return (
-    <Card sx={{ p: 2, boxShadow: "0 1px 15px rgba(0,0,0,0.15)", maxHeight:200,height:200 }}>
+    <Card
+      sx={{
+        p: 2,
+        boxShadow: "0 1px 15px rgba(0,0,0,0.15)",
+        maxHeight: 200,
+        height: 200,
+      }}
+    >
       <CardContent>
         {/* Icon dan Nama Tim */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
@@ -54,7 +69,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim = [] }) => {
           }}
           onClick={handleClick}
         >
-          Lihat
+          Lihat Anggota
         </Button>
 
         {/* Popover */}
@@ -72,11 +87,14 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim = [] }) => {
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
               Anggota Tim:
             </Typography>
+
             <List dense>
-              {anggotaTim.length > 0 ? (
-                anggotaTim.map((nama, idx) => (
+              {anggotaTim && anggotaTim.length > 0 ? (
+                anggotaTim.map((anggota, idx) => (
                   <ListItem key={idx} disablePadding>
-                    <ListItemText primary={nama} />
+                    <ListItemText
+                      primary={anggota.pegawai?.nama || "Tanpa Nama"}
+                    />
                   </ListItem>
                 ))
               ) : (
