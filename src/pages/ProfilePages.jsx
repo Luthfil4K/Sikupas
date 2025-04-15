@@ -138,6 +138,8 @@ const ProfilePages = () => {
                               <CardTimKerja
                                 namaTim={team.tim.tim_nama}
                                 jumlahAnggota={team?.tim?.timKerja?.length}
+                                anggotaTim={team?.tim?.timKerja}
+                                
                               />
                             </Grid>
                           );
@@ -177,14 +179,14 @@ const ProfilePages = () => {
                   textColor="inherit"
                 >
                   <Tab
-                    label="SKP Bulanan"
+                    label="CKP Harian"
                     sx={{
                       color: tabIndex === 0 ? "#1DA57A" : "gray",
                       fontWeight: tabIndex === 0 ? "bold" : "normal",
                     }}
                   />
                   <Tab
-                    label="CKP Harian"
+                    label="SKP Bulanan"
                     sx={{
                       color: tabIndex === 1 ? "#1DA57A" : "gray",
                       fontWeight: tabIndex === 1 ? "bold" : "normal",
@@ -193,10 +195,10 @@ const ProfilePages = () => {
                 </Tabs>
                 <Divider></Divider>
                 <CardContent>
-                  <TabPanel value={tabIndex} index={1}>
+                  <TabPanel value={tabIndex} index={0}>
                     <TableActivity pegawai={pegawai}></TableActivity>
                   </TabPanel>
-                  <TabPanel value={tabIndex} index={0}>
+                  <TabPanel value={tabIndex} index={1}>
                     <TableIdentity
                       pegawai={pegawai}
                       setJumlahAktivitas={setJumlahAktivitas}

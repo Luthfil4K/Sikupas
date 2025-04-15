@@ -18,12 +18,15 @@ const columns = [
     renderCell: (params) =>
       `${params.api.getAllRowIds().indexOf(params.id) + 1}`,
   },
-  { field: "tanggal", headerName: "Periode SKP", width: 120,
+  {
+    field: "tanggal",
+    headerName: "Periode SKP",
+    width: 120,
     renderCell: (params) => {
       const [bulan, tahun] = params.value.split("/");
       return `${bulan} ${tahun}`;
     },
-   },
+  },
   {
     field: "sasaran_kinerja",
     headerName: "Sasaran Kinerja",
@@ -104,7 +107,6 @@ const multiLineCellStyle = {
   height: "100%",
 };
 
-// Array bulan dalam Bahasa Indonesia
 const bulanIndonesia = [
   "Januari",
   "Februari",
@@ -122,33 +124,19 @@ const bulanIndonesia = [
 
 const TableIdentity = ({ pegawai }) => {
   const today = new Date();
-  // Set default values directly in state
   const [selectedYear, setSelectedYear] = useState("2025");
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
-  const [selectedWeek, setSelectedWeek] = useState(Math.ceil((today.getDate() / 7)+1));
 
-  // Menentukan minggu berdasarkan tanggal
-  const getWeekOfMonth = (tanggal) => {
-    const [monthName, year] = tanggal.split("/");
-    const monthIndex = bulanIndonesia.indexOf(monthName);
-    const date = new Date(year, monthIndex, 1); // Tanggal pertama bulan tersebut
-    const firstDay = date.getDay();
-    const day = new Date(year, monthIndex, 13).getDate(); // Tanggal tengah bulan
-    return Math.ceil((day + firstDay) / 7); // Hitung minggu keberapa
-  };
-
-  // Ambil tahun yang ada dalam data untuk populasi filter tahun
   const years = useMemo(() => {
     const uniqueYears = new Set();
     if (pegawai && pegawai.skp) {
       pegawai.skp.forEach((item) => {
-        uniqueYears.add(item.tahun); // Menambahkan tahun dari data
+        uniqueYears.add(item.tahun);
       });
     }
-    return Array.from(uniqueYears).sort((a, b) => b - a); // Urutkan tahun secara descending
+    return Array.from(uniqueYears).sort((a, b) => b - a);
   }, [pegawai]);
 
-  // Memformat data pegawai
   const rows = useMemo(() => {
     if (!pegawai || !pegawai.skp) return [];
 
@@ -175,7 +163,7 @@ const TableIdentity = ({ pegawai }) => {
           realisasi: cleanedRealisasi,
           tanggal: `${item.bulan}/${item.tahun}`,
           buktiDukung: buktiLink,
-          tahun: item.tahun, // Menambahkan tahun di data
+          tahun: item.tahun,
         });
       });
     });
@@ -183,24 +171,19 @@ const TableIdentity = ({ pegawai }) => {
     return formatted;
   }, [pegawai]);
 
-  // Filter bulan, tahun, dan minggu
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {
-      const [monthName] = row.tanggal.split("/"); // Ambil nama bulan dari tanggal
-      const monthIndex = bulanIndonesia.indexOf(monthName); // Dapatkan index bulan dalam bahasa Indonesia
+      const [monthName] = row.tanggal.split("/");
+      const monthIndex = bulanIndonesia.indexOf(monthName);
 
-      const isYearMatch = selectedYear === "" || row.tahun === selectedYear; // Filter berdasarkan tahun
+      const isYearMatch = selectedYear === "" || row.tahun === selectedYear;
       const isMonthMatch =
-        selectedMonth === "" || monthIndex === selectedMonth - 1; // Filter berdasarkan bulan
-      const isWeekMatch =
-        selectedWeek === "" ||
-        getWeekOfMonth(row.tanggal) === parseInt(selectedWeek); // Filter berdasarkan minggu
+        selectedMonth === "" || monthIndex === selectedMonth - 1;
 
-      return isYearMatch && isMonthMatch && isWeekMatch;
+      return isYearMatch && isMonthMatch;
     });
-  }, [rows, selectedYear, selectedMonth, selectedWeek]);
+  }, [rows, selectedYear, selectedMonth]);
 
-  // Update selectedYear if 2025 is not available in years
   useEffect(() => {
     if (years.length > 0 && !years.includes("2025")) {
       setSelectedYear(years[0]);
@@ -259,23 +242,6 @@ const TableIdentity = ({ pegawai }) => {
             {bulanIndonesia.map((bulan, index) => (
               <MenuItem key={index} value={index + 1}>
                 {bulan}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Filter Minggu */}
-        <FormControl size="small" sx={{ minWidth: 120 }}>
-          <InputLabel id="filter-week">Minggu</InputLabel>
-          <Select
-            labelId="filter-week"
-            value={selectedWeek}
-            label="Minggu"
-            onChange={(e) => setSelectedWeek(e.target.value)}
-          >
-            {Array.from({ length: 4 }, (_, i) => (
-              <MenuItem key={i} value={i + 1}>
-                Minggu {i + 1}
               </MenuItem>
             ))}
           </Select>

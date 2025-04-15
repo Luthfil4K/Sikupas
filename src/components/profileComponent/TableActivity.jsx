@@ -20,7 +20,7 @@ const TableActivity = ({ pegawai }) => {
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [selectedWeek, setSelectedWeek] = useState(currentWeek);
+  const [selectedWeek, setSelectedWeek] = useState("all");
 
   const monthNames = [
     "Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -61,7 +61,9 @@ const TableActivity = ({ pegawai }) => {
         const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
         return Math.ceil((date.getDate() + firstDay) / 7);
       };
-      const isSameWeek = getWeekOfMonth(date) === selectedWeek;
+       
+      const isSameWeek = selectedWeek === "all" || getWeekOfMonth(date) === parseInt(selectedWeek);
+      
 
       return isSameYear && isSameMonth && isSameWeek;
     });
@@ -149,6 +151,7 @@ const TableActivity = ({ pegawai }) => {
                 label="Minggu"
                 onChange={(e) => setSelectedWeek(e.target.value)}
               >
+                <MenuItem key={6} value={"all"}>Semua Minggu</MenuItem>
                 {[1, 2, 3, 4, 5].map((week) => (
                   <MenuItem key={week} value={week}>Minggu ke-{week}</MenuItem>
                 ))}

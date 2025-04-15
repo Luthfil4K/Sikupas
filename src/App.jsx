@@ -49,7 +49,7 @@ function App() {
 
             {/* Routes untuk halaman lainnya */}
             <Routes>
-              <Route path="/" element={<DashboardPages />} />
+              <Route path="/" element={<OrganisasiPages />} />
               <Route path="/dashboard" element={<DashboardPages />} />
               <Route path="/profile/:id" element={<ProfilePages />} />
               <Route path="/organisasi" element={<OrganisasiPages />} />
