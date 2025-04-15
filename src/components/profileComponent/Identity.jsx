@@ -53,6 +53,11 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
   const [jumlahAktivitasBulanIni, setJumlahAktivitasBulanIni] = useState(0);
   const [jumlahAktivitasTahunIni, setJumlahAktivitasTahunIni] = useState(0);
 
+  const [jumlahCkpHariIni, setJumlahCkpHariIni] = useState(0);
+  const [jumlahCkpMingguIni, setJumlahCkpMingguIni] = useState(0);
+  const [jumlahCkpBulanIni, setJumlahCkpBulanIni] = useState(0);
+  const [jumlahCkpTahunIni, setJumlahCkpTahunIni] = useState(0);
+
   useEffect(() => {
     if (pegawai && pegawai.skp) {
       let hariIni = 0;
@@ -98,6 +103,55 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
       setJumlahAktivitasTahunIni(tahunIni);
     }
   }, [pegawai]);
+
+
+  useEffect(() => {
+    if (pegawai && pegawai.ckp) {
+      let hariIni = 0;
+      let mingguIni = 0;
+      let bulanIni = 0;
+      let tahunIni = 0;
+
+      const aktivitasCount =1
+      pegawai.ckp.forEach((ckpItem, index) => {
+      
+        const date = new Date(ckpItem.tglMulai); 
+
+        if (isToday(date)) {
+          hariIni += aktivitasCount;
+        }
+        if (isThisWeek(date)) {
+          mingguIni += aktivitasCount;
+        }
+        if (isThisMonth(date)) {
+          bulanIni += aktivitasCount;
+        }
+        if (isThisYear(date)) {
+          tahunIni += aktivitasCount;
+        }
+      });
+    
+      setJumlahCkpHariIni(hariIni);
+      setJumlahCkpMingguIni(mingguIni);
+      setJumlahCkpBulanIni(bulanIni);
+      setJumlahCkpTahunIni(tahunIni);
+      console.log("jumlahCkpHariIni");
+      console.log("jumlahCkpMingguIni");
+      console.log("jumlahCkpBulanIni");
+      console.log("jumlahCkpTahunIni");
+      console.log(jumlahCkpHariIni);
+      console.log(jumlahCkpMingguIni);
+      console.log(jumlahCkpBulanIni);
+      console.log(jumlahCkpTahunIni);
+      console.log("jumlahCkpHariIni");
+      console.log("jumlahCkpMingguIni");
+      console.log("jumlahCkpBulanIni");
+      console.log("jumlahCkpTahunIni");
+
+      
+    }
+  }, [pegawai]);
+
 
   const [size, setSize] = useState({
     width: window.innerWidth,
@@ -177,7 +231,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   color: "#1DA57A",
                 }}
               >
-                {jumlahAktivitasHariIni}
+                {jumlahCkpHariIni}
               </Box>
 
               <Box
@@ -226,7 +280,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   color: "#1DA57A",
                 }}
               >
-                {jumlahAktivitasMingguIni}
+                {jumlahCkpMingguIni}
               </Box>
 
               {/* Bagian Aktivitas (Bawah - Abu-Abu) */}
@@ -276,7 +330,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   color: "#1DA57A", // Warna putih eksplisit
                 }}
               >
-                {jumlahAktivitasBulanIni}
+                {jumlahCkpBulanIni}
               </Box>
 
               {/* Bagian Aktivitas (Bawah - Abu-Abu) */}
@@ -326,7 +380,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
                   color: "#1DA57A", // Warna putih eksplisit
                 }}
               >
-                {jumlahAktivitasTahunIni}
+                {jumlahCkpTahunIni}
               </Box>
 
               {/* Bagian Aktivitas (Bawah - Abu-Abu) */}
