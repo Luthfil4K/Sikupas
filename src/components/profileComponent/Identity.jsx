@@ -186,7 +186,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
         <CardMedia
           component="img"
           sx={{ height: "100%", width: "60%",objectFit:'fill' }}
-          image="/src/assets/image/Asset 2.png"
+          image="/Asset-2.png"
           title="Profile Photo"
         />
       </Box>
