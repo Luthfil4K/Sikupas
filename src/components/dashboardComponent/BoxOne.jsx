@@ -24,9 +24,7 @@ const BoxOne = ({total}) => {
     
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-        console.log(size)
     }, []);
-    console.log(size)
 
 
   return (

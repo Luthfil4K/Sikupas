@@ -21,9 +21,7 @@ const BoxTwo = ({ nama, jumlah }) => {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-    console.log(size);
   }, []);
-  console.log(size);
 
   return (
     <Card sx={{ minWidth: 75, minHeight: size < 800 ? 200 : 170 }}>

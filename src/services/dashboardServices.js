@@ -6,3 +6,9 @@ export const getAllSKP = async () => {
     return res.data;
   };
   
+
+  
+export const getAllCkp = async () => {
+  const res = await api.get('/ckp');
+  return res.data;
+};

@@ -5,6 +5,7 @@ import DashboardPages from "./pages/DashboardPages";
 import ProfilePages from "./pages/ProfilePages";
 import OrganisasiPages from "./pages/OrganisasiPages";
 import LoginPage from "./pages/LoginPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 import Sidebar from "./components/Sidebar";
 import reactLogo from "./assets/react.svg";
@@ -21,7 +22,6 @@ function App() {
       {location.pathname === "/login" ? (
         // Halaman Login tanpa Sidebar dan Header
         <div className="">
-         
           <Routes>
             <Route path="/login" element={<LoginPage />} />
           </Routes>
@@ -49,10 +49,38 @@ function App() {
 
             {/* Routes untuk halaman lainnya */}
             <Routes>
-              <Route path="/" element={<OrganisasiPages />} />
-              <Route path="/dashboard" element={<DashboardPages />} />
-              <Route path="/profile/:id" element={<ProfilePages />} />
-              <Route path="/organisasi" element={<OrganisasiPages />} />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <OrganisasiPages />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <DashboardPages />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/profile/:id"
+                element={
+                  <PrivateRoute>
+                    <ProfilePages />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/organisasi"
+                element={
+                  <PrivateRoute>
+                    <OrganisasiPages />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </div>
         </div>

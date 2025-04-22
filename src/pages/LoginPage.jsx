@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Paper, Grid } from "@mui/material";
-import { Link } from "react-router-dom";
+import { login } from '../services/login';
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validasi sederhana untuk login
-    if (username === "" || password === "") {
-      setError("Username and password are required.");
-    } else {
-      setError("");
-      console.log("Logging in with", { username, password });
-      // Lakukan logika login di sini
+    try {
+      const { token, user } = await login(username, password);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      window.location.href = "/dashboard";
+    } catch (err) {
+      setError("Login gagal. Cek username/password.");
     }
   };
 
@@ -58,20 +58,14 @@ const LoginPage = () => {
             margin="normal"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
             sx={{
               "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#1DA57A",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#1DA57A",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#1DA57A",
-                },
+                "& fieldset": { borderColor: "#1DA57A" },
+                "&:hover fieldset": { borderColor: "#1DA57A" },
+                "&.Mui-focused fieldset": { borderColor: "#1DA57A" },
               },
             }}
-            required
           />
           <TextField
             label="Password"
@@ -84,15 +78,9 @@ const LoginPage = () => {
             required
             sx={{
               "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#1DA57A",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#1DA57A",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#1DA57A",
-                },
+                "& fieldset": { borderColor: "#1DA57A" },
+                "&:hover fieldset": { borderColor: "#1DA57A" },
+                "&.Mui-focused fieldset": { borderColor: "#1DA57A" },
               },
             }}
           />
@@ -101,9 +89,7 @@ const LoginPage = () => {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ marginTop: 2,backgroundColor:'#1DA57A' }}
-            component={Link}
-            to="/organisasi"
+            sx={{ marginTop: 2, backgroundColor: '#1DA57A' }}
           >
             Login
           </Button>

@@ -30,9 +30,7 @@ const BoxFour = ({jumlah}) => {
   
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
-      console.log(size);
     }, []);
-    console.log(size);
   const open = Boolean(anchorEl);
 
   const pegawaiBelumIsi = ["Ani", "Budi", "Citra"];
