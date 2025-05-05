@@ -175,7 +175,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
         <CardMedia
           component="img"
           sx={{ height: "110%", width: "50%",objectFit:'contain' }}
-          image={`/PNG/hasilRename/${nip}.png`}
+          image={`/PNG/hasilRename/${nip?nip:"Asset-2"}.png`}
           title="Profile Photo"
         />
       </Box>
@@ -215,7 +215,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
                   justifyContent: "center",
                   alignItems: "center",
                   fontWeight: 600,
-                  fontSize: 24,
+                  fontSize: 20,
                   bgcolor: "#ffffff",
                   color: "#1DA57A",
                 }}
@@ -264,7 +264,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
                   justifyContent: "center",
                   alignItems: "center",
                   fontWeight: 600,
-                  fontSize: 24,
+                  fontSize: 20,
                   bgcolor: "#ffffff",
                   color: "#1DA57A",
                 }}
@@ -314,7 +314,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
                   justifyContent: "center",
                   alignItems: "center",
                   fontWeight: 600,
-                  fontSize: 24,
+                  fontSize: 20,
                   bgcolor: "#ffffff",
                   color: "#1DA57A", // Warna putih eksplisit
                 }}
@@ -364,7 +364,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
                   justifyContent: "center",
                   alignItems: "center",
                   fontWeight: 600,
-                  fontSize: 24,
+                  fontSize: 20,
                   bgcolor: "#ffffff",
                   color: "#1DA57A", // Warna putih eksplisit
                 }}

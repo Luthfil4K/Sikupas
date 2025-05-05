@@ -1,11 +1,44 @@
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Grid, Box } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { Link,useNavigate } from "react-router-dom";
+
+import api from "../services/api";
 
 const Header = ({ title }) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [userData, setUserData] = useState(0);
+
+   useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) {
+            console.error("Token tidak ditemukan!");
+            return;
+          }
+  
+          const response = await api.get("/pegawai/me", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          });
+  
+          setUserData(response.data);
+        } catch (error) {
+          console.error("Gagal mengambil data pengguna:", error);
+          // window.location.href = '/login';
+        }
+      };
+  
+      fetchUserData();
+    }, []);
+
+   
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -16,12 +49,20 @@ const Header = ({ title }) => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    setAnchorEl(null);
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <header className="bg-gray-800 bg-opacity-35 backdrop-blur-md shadow-lg border-b border-gray-700">
       <div className="bg-gray-700 mx-auto py-4 px-4 sm:px-8 lg:px-8">
         <Grid container spacing={4} sx={{ display: "flex" }}>
           <Grid item xs={6}>
-            <h1 className="text mt-2 font-semibold text-gray-200 uppercase">{title}</h1>
+            <h1 className="text mt-2 font-semibold text-gray-200 uppercase">
+              {title}
+            </h1>
           </Grid>
           <Grid
             item
@@ -30,7 +71,7 @@ const Header = ({ title }) => {
           >
             <Avatar
               alt="Profile"
-              src="/Asset-2.png"
+              src={`/PNG/hasilRename/${userData.nip?userData.nip:"Asset-2"}.png`}
               sx={{
                 width: 36,
                 height: 36,
@@ -64,9 +105,16 @@ const Header = ({ title }) => {
                 },
               }}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <Link
+                to={`/profile/${userData.nip?userData.nip:0}`}
+                // to={`/profile/`}
+                className="w-full block text-black no-underline"
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+              </Link>
+
+              {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Grid>
         </Grid>

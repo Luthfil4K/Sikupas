@@ -252,7 +252,7 @@ const TableIdentity = ({ pegawai }) => {
         <DataGrid
           rows={filteredRows}
           columns={columns}
-          rowHeight={70}
+          rowHeight={45}
           pageSize={5}
           rowsPerPageOptions={[5]}
           disableSelectionOnClick

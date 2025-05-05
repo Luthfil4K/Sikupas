@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import { Link } from "react-router-dom";
 
-const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai }) => {
+const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai,wilayah }) => {
   return (
     <Card
       sx={{
@@ -25,10 +25,11 @@ const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai }) => {
           </Box>
           {/* Jumlah Anggota */}
           <Typography sx={{ color: "text.secondary", fontSize: 14,mt:1 }}>
-            {jabatanPegawai}
+            {/* {jabatanPegawai} {wilayah?.replace(/\b(Kab\.?|Kota|Prov\.?)\s/g, "").trim()} */}
+            {jabatanPegawai?.replace(/\bKabupaten\/Kota\s*/gi, "").trim()} {wilayah}
           </Typography>
           <Typography sx={{ color: "text.secondary", fontSize: 14 }}>
-            Aktivitas Bulan ini: {jumlahCkp} Aktivitas
+            Aktivitas Bulan ini: {jumlahCkp?jumlahCkp:"0"} Aktivitas
           </Typography>
         </Box>
 

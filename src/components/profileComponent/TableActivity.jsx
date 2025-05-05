@@ -161,11 +161,11 @@ const TableActivity = ({ pegawai }) => {
         </Grid>
       </Box>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ height: 400, width: "100%" }}>
         <DataGrid
           rows={filteredRows}
           columns={columns}
-          rowHeight={70}
+          rowHeight={45}
           pageSize={5}
           rowsPerPageOptions={[5]}
           disableSelectionOnClick

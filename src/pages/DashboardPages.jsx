@@ -325,7 +325,7 @@ const DashboardPages = () => {
   return (
     <>
       {isLoading ? (
-        <div>Loading...</div>
+        <div>Calculate...</div>
       ) : (
         <main className="w-full px-4">
           <motion.div

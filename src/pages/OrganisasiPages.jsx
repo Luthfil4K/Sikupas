@@ -29,14 +29,7 @@ const OrganisasiPages = () => {
   const [pegawai, setPegawai] = useState([]);
 
 
-
-  console.log("pegawai")
-  console.log("pegawai")
-  console.log(pegawai)
-  console.log(pegawai)
-  console.log(pegawai)
-  console.log("pegawai")
-  console.log("pegawai")
+ 
 
   useEffect(() => {
     const fetchTimKerja = async () => {
@@ -98,6 +91,9 @@ const OrganisasiPages = () => {
     }
     return true;
   });
+console.log(pegawai)
+console.log(pegawai)
+
 
   const TabPanel = ({ children, value, index }) => {
     return (
@@ -111,6 +107,15 @@ const OrganisasiPages = () => {
     );
   };
 
+  const sortedStaffs = [...filteredStaffs].sort((a, b) => {
+    const aIsAhliMadya = a.jabatan?.toLowerCase().includes("ahli madya");
+    const bIsAhliMadya = b.jabatan?.toLowerCase().includes("ahli madya");
+  
+    if (aIsAhliMadya && !bIsAhliMadya) return -1; // a duluan
+    if (!aIsAhliMadya && bIsAhliMadya) return 1;  // b duluan
+    return 0; // tidak diubah
+  });
+
   // pagination
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [itemsPerPageStaff, setItemsPerPageStaff] = useState(15);
@@ -123,7 +128,7 @@ const OrganisasiPages = () => {
 
   const indexOfLastItemStaff = currentPageStaff * itemsPerPageStaff;
   const indexOfFirstItemStaff = indexOfLastItemStaff - itemsPerPageStaff;
-  const paginatedStaffs = filteredStaffs.slice(
+  const paginatedStaffs = sortedStaffs.slice(
     indexOfFirstItemStaff,
     indexOfLastItemStaff
   );
@@ -301,6 +306,7 @@ const OrganisasiPages = () => {
                           jumlahCkp={staff.ckp?.length}
                           nipPegawai={staff.nip}
                           jabatanPegawai={staff.jabatan}
+                          wilayah={staff.wilayah}
                         />
                       </Grid>
                     ))}

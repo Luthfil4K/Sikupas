@@ -14,7 +14,7 @@ const LoginPage = () => {
       const { token, user } = await login(username, password);
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = "/dashboard";
+      window.location.href = "/organisasi";
     } catch (err) {
       setError("Login gagal. Cek username/password.");
     }
@@ -95,13 +95,13 @@ const LoginPage = () => {
           </Button>
         </form>
 
-        <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+        {/* <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
           <Grid item>
             <Typography variant="body2" color="text.secondary">
               Forgot password?
             </Typography>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Paper>
     </Box>
   );

@@ -5,12 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 // Definisi item sidebar
 const SIDEBAR_ITEMS = [
-  {
-    name: "Dashboard",
-    icon: House,
-    color: "#6EE7B7",
-    path: "/dashboard",
-  },
+  // {
+  //   name: "Dashboard",
+  //   icon: House,
+  //   color: "#6EE7B7",
+  //   path: "/dashboard",
+  // },
   {
     name: "Organisasi",
     icon: Users,
