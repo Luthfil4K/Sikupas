@@ -29,7 +29,10 @@ const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai,wilayah 
             {jabatanPegawai?.replace(/\bKabupaten\/Kota\s*/gi, "").trim()} {wilayah}
           </Typography>
           <Typography sx={{ color: "text.secondary", fontSize: 14 }}>
-            Aktivitas Bulan ini: {jumlahCkp?jumlahCkp:"0"} Aktivitas
+            Aktivitas Bulan Sebelumnya: 
+          </Typography>
+          <Typography sx={{ color: "text.secondary", fontSize: 14,fontWeight:'600' }}>
+             {jumlahCkp?jumlahCkp:"0"} Aktivitas
           </Typography>
         </Box>
 
