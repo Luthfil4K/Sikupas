@@ -47,7 +47,7 @@ const isThisYear = (date) => {
   return date.getFullYear() === today.getFullYear();
 };
 
-const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
+const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
   const [jumlahAktivitasHariIni, setJumlahAktivitasHariIni] = useState(0);
   const [jumlahAktivitasMingguIni, setJumlahAktivitasMingguIni] = useState(0);
   const [jumlahAktivitasBulanIni, setJumlahAktivitasBulanIni] = useState(0);
@@ -77,9 +77,9 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
 
         const aktivitasCount = aktivitasList.length;
 
-        console.log(
-          `(${index + 1}) ${skpItem.realisasi} ➜ ${aktivitasCount} aktivitas`
-        );
+        // console.log(
+        //   `(${index + 1}) ${skpItem.realisasi} ➜ ${aktivitasCount} aktivitas`
+        // );
 
         if (isToday(date)) {
           hariIni += aktivitasCount;
@@ -94,8 +94,8 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
           tahunIni += aktivitasCount;
         }
       });
-      console.log("mingguini:" + mingguIni);
-      console.log("bulan ini:" + bulanIni);
+      // console.log("mingguini:" + mingguIni);
+      // console.log("bulan ini:" + bulanIni);
 
       setJumlahAktivitasHariIni(hariIni);
       setJumlahAktivitasMingguIni(mingguIni);
@@ -135,18 +135,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
       setJumlahCkpMingguIni(mingguIni);
       setJumlahCkpBulanIni(bulanIni);
       setJumlahCkpTahunIni(tahunIni);
-      console.log("jumlahCkpHariIni");
-      console.log("jumlahCkpMingguIni");
-      console.log("jumlahCkpBulanIni");
-      console.log("jumlahCkpTahunIni");
-      console.log(jumlahCkpHariIni);
-      console.log(jumlahCkpMingguIni);
-      console.log(jumlahCkpBulanIni);
-      console.log(jumlahCkpTahunIni);
-      console.log("jumlahCkpHariIni");
-      console.log("jumlahCkpMingguIni");
-      console.log("jumlahCkpBulanIni");
-      console.log("jumlahCkpTahunIni");
+     
 
       
     }
@@ -174,10 +163,10 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
     <Card
       sx={{
         height: "auto",
-        minWidth: 330,
         paddingTop:1,
         minHeight: size.width < 800 ? 300 : 365,
         display: "flex",
+
         flexDirection: "column",
         justifyContent: "space-between",
       }}
@@ -185,8 +174,8 @@ const Identity = ({ nama, jabatan, wilayah, pegawai }) => {
       <Box sx={{ height: 240, width: "100%", overflow: "hidden", justifyContent:'center',alignItems:'center',display:'flex' }}>
         <CardMedia
           component="img"
-          sx={{ height: "100%", width: "60%",objectFit:'fill' }}
-          image="/Asset-2.png"
+          sx={{ height: "110%", width: "50%",objectFit:'contain' }}
+          image={`/PNG/hasilRename/${nip}.png`}
           title="Profile Photo"
         />
       </Box>

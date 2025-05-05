@@ -28,6 +28,16 @@ const OrganisasiPages = () => {
   const [timKerja, setTimKerja] = useState([]);
   const [pegawai, setPegawai] = useState([]);
 
+
+
+  console.log("pegawai")
+  console.log("pegawai")
+  console.log(pegawai)
+  console.log(pegawai)
+  console.log(pegawai)
+  console.log("pegawai")
+  console.log("pegawai")
+
   useEffect(() => {
     const fetchTimKerja = async () => {
       try {
@@ -234,7 +244,7 @@ const OrganisasiPages = () => {
                 <TabPanel value={tabIndex} index={1}>
                   <Grid container spacing={4}>
                     {paginatedTeams.map((team, index) => (
-                      <Grid item xs={12} md={3} key={index}>
+                      <Grid item xs={12} lg={3} md={4} sm={6} key={index}>
                         <CardTimKerja
                           namaTim={team.tim_nama}
                           jumlahAnggota={team.timKerja?.length}
@@ -284,10 +294,11 @@ const OrganisasiPages = () => {
                 <TabPanel value={tabIndex} index={0}>
                   <Grid container spacing={4} sx={{ mb: 2 }}>
                     {paginatedStaffs.map((staff, index) => (
-                      <Grid item xs={12} md={3} key={index}>
+                      <Grid item xs={12} lg={3} md={4} sm={6} key={index}>
                         <CardPegawai
                           namaPegawai={staff.nama}
-                          jumlahTim={staff.timkerja?.length}
+                          // jumlahTim={staff.timkerja?.length}
+                          jumlahCkp={staff.ckp?.length}
                           nipPegawai={staff.nip}
                           jabatanPegawai={staff.jabatan}
                         />

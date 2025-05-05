@@ -12,6 +12,7 @@ import {
   TextField,
   Tab,
   Tabs,
+  Autocomplete,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 
@@ -23,11 +24,13 @@ import SKPDragDrop from "../components/profileComponent/SKPDragDrop";
 import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
 
 import { getPegawaiById } from "../services/pegawaiServices";
+import { getAllPegawai } from "../services/pegawaiServices";
 
 const ProfilePages = () => {
   const { id } = useParams(); // dapetin id dari URL
   const [pegawai, setPegawai] = useState(null);
   const [jumlahAktivitas, setJumlahAktivitas] = useState(0);
+  const [semuaPegawai, setSemuaPegawai] = useState([]);
 
   useEffect(() => {
     const fetchPegawai = async () => {
@@ -40,13 +43,23 @@ const ProfilePages = () => {
         console.log("final");
       }
     };
-
     fetchPegawai();
   }, [id]);
 
-  console.log("pegawai")
-  console.log(pegawai)
-  console.log("pegawai")
+  useEffect(() => {
+    const fetchPegawai = async () => {
+      try {
+        const data = await getAllPegawai();
+        setSemuaPegawai(data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        console.log("final");
+      }
+    };
+
+    fetchPegawai();
+  }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -77,6 +90,25 @@ const ProfilePages = () => {
           staff.tim?.tim_nama?.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : [];
+
+  const onPilihPegawai = (pegawai) => {
+    const fetchPegawai = async () => {
+      try {
+        const data = await getPegawaiById(pegawai.nip);
+        setPegawai(data);
+      } catch (err) {
+        console.error("Gagal mengambil data pegawai", err);
+      } finally {
+        console.log("final");
+      }
+    };
+    fetchPegawai();
+  };
+
+  console.log("semuaPegawai");
+  console.log(pegawai);
+  console.log(pegawai);
+  console.log("semuaPegawai");
   return (
     <>
       <main className="w-full px-4">
@@ -93,27 +125,49 @@ const ProfilePages = () => {
             spacing={4}
             sx={{ paddingLeft: 2, paddingTop: 4, paddingRight: 2 }}
           >
-            <Grid item md={3} xs={12}>
+            <Grid item md={12} sx={{height:100}}>
+              <Autocomplete
+                options={semuaPegawai ? semuaPegawai : []}
+                getOptionLabel={(option) => option?.nama?.trim() || ""}
+                sx={{ width: "100%",backgroundColor:'white' }}
+                value={
+                  semuaPegawai
+                    ? semuaPegawai
+                    : [].find((p) => p.nama.trim() === nama.trim()) || null
+                }
+                onChange={(event, value) => {
+                  if (value) {
+                    onPilihPegawai(value);
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Cari Pegawai"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item md={3} sm={12}>
               <Identity
                 nama={pegawai?.nama}
+                nip={pegawai?.nip}
                 jabatan={pegawai?.jabatan}
                 wilayah={pegawai?.wilayah}
                 pegawai={pegawai}
               ></Identity>
             </Grid>
-            <Grid item md={9} xs={6}>
+            <Grid item md={9} xs={12} >
               {/* <Grid container spacing={4}>
                 <Grid item md={12} xs={6}>
                   <LineChartIdentity></LineChartIdentity>
                 </Grid>
-                <Grid item md={12} xs={6}>
-                  <SKPDragDrop></SKPDragDrop>
-                </Grid>
-              
               </Grid> */}
               <Grid bgcolor={""} container spacing={4}>
-                <Grid item md={12}>
-                  <Card sx={{ height: 537, overflowY: "scroll" }}>
+                <Grid item md={12} xs={12}>
+                  <Card sx={{ height: 537, overflow: "scroll" }}>
                     <Typography
                       variant="h5"
                       sx={{ marginTop: 3, marginLeft: 2, mb: 2 }}
@@ -127,19 +181,18 @@ const ProfilePages = () => {
                       fullWidth
                       value={searchTerm}
                       onChange={handleSearchChange}
-                      sx={{ margin: 2, width: 900 }}
+                      sx={{ margin: 2, width: "90%" }}
                     />
-                    <Grid item md={12} xs={6}>
+                    <Grid item md={12} xs={12} >
                       <Grid container spacing={4} sx={{ padding: 2 }}>
                         <Divider></Divider>
                         {filteredTeams.map((team, index) => {
                           return (
-                            <Grid item sm={12} xs={12} md={4} key={index}>
+                            <Grid item sm={6} xs={6} md={4} key={index}>
                               <CardTimKerja
                                 namaTim={team.tim.tim_nama}
                                 jumlahAnggota={team?.tim?.timKerja?.length}
                                 anggotaTim={team?.tim?.timKerja}
-                                
                               />
                             </Grid>
                           );

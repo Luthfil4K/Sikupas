@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import { Link } from "react-router-dom";
 
-const CardPegawai = ({ namaPegawai, jumlahTim,nipPegawai,jabatanPegawai }) => {
+const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai }) => {
   return (
     <Card
       sx={{
@@ -19,7 +19,7 @@ const CardPegawai = ({ namaPegawai, jumlahTim,nipPegawai,jabatanPegawai }) => {
         <Box sx={{ height: 100, minHeight: 100 }}>
           <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
             <GroupIcon sx={{ color: "#1DA57A", mr: 1 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
               {namaPegawai}
             </Typography>
           </Box>
@@ -28,7 +28,7 @@ const CardPegawai = ({ namaPegawai, jumlahTim,nipPegawai,jabatanPegawai }) => {
             {jabatanPegawai}
           </Typography>
           <Typography sx={{ color: "text.secondary", fontSize: 14 }}>
-            Jumlah Tim yang Diampu: {jumlahTim} Tim Kerja
+            Aktivitas Bulan ini: {jumlahCkp} Aktivitas
           </Typography>
         </Box>
 

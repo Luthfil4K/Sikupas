@@ -24,10 +24,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
     setAnchorEl(null);
   };
 
-  console.log("anggotaTim");
-  console.log(anggotaTim);
-  console.log(anggotaTim);
-  console.log("anggotaTim");
+ 
 
   const open = Boolean(anchorEl);
   const id = open ? `popover-${namaTim}` : undefined;
@@ -52,7 +49,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
         {/* Icon dan Nama Tim */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
           <GroupIcon sx={{ color: "#1DA57A", mr: 1 }} />
-          <Typography variant="body1" sx={{ fontWeight: 600 }}>
+          <Typography variant="body1" sx={{ fontSize: 15,fontWeight: 600 }}>
             {namaTim}
           </Typography>
         </Box>

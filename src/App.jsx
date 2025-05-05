@@ -4,6 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import DashboardPages from "./pages/DashboardPages";
 import ProfilePages from "./pages/ProfilePages";
 import OrganisasiPages from "./pages/OrganisasiPages";
+import ApiTest from "./pages/ApiTest";
 import LoginPage from "./pages/LoginPage";
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -78,6 +79,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <OrganisasiPages />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/api"
+                element={
+                  <PrivateRoute>
+                    <ApiTest />
                   </PrivateRoute>
                 }
               />

@@ -1,16 +1,28 @@
 import React, { useState } from "react";
-import { Menu, Users, LogOut } from "lucide-react";
+import { Menu, Users, LogOut,House } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
 // Definisi item sidebar
 const SIDEBAR_ITEMS = [
   {
+    name: "Dashboard",
+    icon: House,
+    color: "#6EE7B7",
+    path: "/dashboard",
+  },
+  {
     name: "Organisasi",
     icon: Users,
     color: "#EC4899",
     path: "/organisasi",
   },
+  // {
+  //   name: "API",
+  //   icon: Menu,
+  //   color: "#6366f1",
+  //   action: "/api", // 
+  // },
   {
     name: "Logout",
     icon: LogOut,

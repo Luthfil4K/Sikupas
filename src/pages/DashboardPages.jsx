@@ -127,9 +127,9 @@ const DashboardPages = () => {
       dataDukung: item.dataDukung,
     }));
   });
-  console.log("dataClearCkp");
-  console.log(dataClearCkp);
-  console.log("dataClearCkp");
+  // console.log("dataClearCkp");
+  // console.log(dataClearCkp);
+  // console.log("dataClearCkp");
 
   const aktivitasTerurai = useMemo(() => {
     if (!skp || skp.length === 0) return [];
@@ -321,13 +321,7 @@ const DashboardPages = () => {
   console.log(dashboardStatsCkp);
   console.log("dashboardStatsCkp");
   const isLoading = !userData;
-  console.log(userData)
-  console.log(userData)
-  console.log(userData)
-  console.log(userData)
-  console.log(userData)
-  console.log(userData)
-  console.log(userData)
+
   return (
     <>
       {isLoading ? (
