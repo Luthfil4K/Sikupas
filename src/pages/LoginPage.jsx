@@ -1,13 +1,22 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography, Paper, Grid } from "@mui/material";
-import { login } from '../services/login';
+import {
+  TextField,
+  IconButton,
+  Button,
+  Box,
+  Typography,
+  Paper,
+  Grid,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { login } from "../services/login";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -18,6 +27,12 @@ const LoginPage = () => {
     } catch (err) {
       setError("Login gagal. Cek username/password.");
     }
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -71,7 +86,7 @@ const LoginPage = () => {
             label="Password"
             variant="outlined"
             fullWidth
-            type="password"
+            type={showPassword ? "text" : "password"}
             margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -83,13 +98,24 @@ const LoginPage = () => {
                 "&.Mui-focused fieldset": { borderColor: "#1DA57A" },
               },
             }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  position="end"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              ),
+            }}
           />
 
           <Button
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ marginTop: 2, backgroundColor: '#1DA57A' }}
+            sx={{ marginTop: 2, backgroundColor: "#1DA57A" }}
           >
             Login
           </Button>
