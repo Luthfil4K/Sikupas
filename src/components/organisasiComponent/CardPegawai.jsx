@@ -3,20 +3,26 @@ import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import { Link } from "react-router-dom";
 
-const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai,wilayah }) => {
+const CardPegawai = ({
+  namaPegawai,
+  jumlahCkp,
+  nipPegawai,
+  jabatanPegawai,
+  wilayah,
+}) => {
   return (
     <Card
       sx={{
-        minHeight: 200,
-        height: 200,
         paddingLeft: 2,
+        height:200,
+        // backgroundColor:'red',
         paddingTop: 1,
         boxShadow: "0 1px 15px rgba(0,0,0,0.15)",
       }}
     >
       <CardContent>
         {/* Icon dan Nama Tim */}
-        <Box sx={{ height: 100, minHeight: 100 }}>
+        <Box sx={{ height: 100}}>
           <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
             <GroupIcon sx={{ color: "#1DA57A", mr: 1 }} />
             <Typography variant="body1" sx={{ fontWeight: 600 }}>
@@ -24,16 +30,19 @@ const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai,wilayah 
             </Typography>
           </Box>
           {/* Jumlah Anggota */}
-          <Typography sx={{ color: "text.secondary", fontSize: 14,mt:1 }}>
-            {/* {jabatanPegawai} {wilayah?.replace(/\b(Kab\.?|Kota|Prov\.?)\s/g, "").trim()} */}
-            {jabatanPegawai?.replace(/\bKabupaten\/Kota\s*/gi, "").trim()} {wilayah}
+          <Typography sx={{ color: "text.secondary", fontSize: 13, mt: 1 }}>
+            <Box component="span" sx={{ fontWeight: "bold", color:'#1DA57A' }}>
+              {wilayah}
+            </Box>
+            {" - "}
+            {jabatanPegawai
+              ?.replace(/\b(Kabupaten\/Kota|BPS)\s*/gi, "")
+              .trim()}
           </Typography>
-          <Typography sx={{ color: "text.secondary", fontSize: 14 }}>
-            Aktivitas Bulan Sebelumnya: 
+          <Typography sx={{ color: "text.secondary", fontSize: 13, fontWeight: "500",mt:1 }}>
+            Aktivitas Bulan Sebelumnya: {jumlahCkp ? jumlahCkp : "0"} Aktivitas
           </Typography>
-          <Typography sx={{ color: "text.secondary", fontSize: 14,fontWeight:'600' }}>
-             {jumlahCkp?jumlahCkp:"0"} Aktivitas
-          </Typography>
+          
         </Box>
 
         <Box
@@ -45,7 +54,10 @@ const CardPegawai = ({ namaPegawai, jumlahCkp,nipPegawai,jabatanPegawai,wilayah 
             alignItems: "end",
           }}
         >
-          <Link to={`/profile/${nipPegawai}`} style={{ textDecoration: "none" }}>
+          <Link
+            to={`/profile/${nipPegawai}`}
+            style={{ textDecoration: "none" }}
+          >
             <Button
               variant="outlined"
               size="small"

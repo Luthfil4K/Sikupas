@@ -299,7 +299,7 @@ console.log(pegawai)
                 <TabPanel value={tabIndex} index={0}>
                   <Grid container spacing={4} sx={{ mb: 2 }}>
                     {paginatedStaffs.map((staff, index) => (
-                      <Grid item xs={12} lg={3} md={4} sm={6} key={index}>
+                      <Grid item xs={12} lg={4} md={4} sm={6} key={index}>
                         <CardPegawai
                           namaPegawai={staff.nama}
                           // jumlahTim={staff.timkerja?.length}
