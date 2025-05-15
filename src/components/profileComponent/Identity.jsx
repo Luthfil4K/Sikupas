@@ -106,16 +106,16 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
 
 
   useEffect(() => {
-    if (pegawai && pegawai.ckp) {
+    if (pegawai && pegawai.kegiatan) {
       let hariIni = 0;
       let mingguIni = 0;
       let bulanIni = 0;
       let tahunIni = 0;
 
       const aktivitasCount =1
-      pegawai.ckp.forEach((ckpItem, index) => {
+      pegawai.kegiatan.forEach((ckpItem, index) => {
       
-        const date = new Date(ckpItem.tglMulai); 
+        const date = new Date(ckpItem.keg_tanggal_awal); 
 
         if (isToday(date)) {
           hariIni += aktivitasCount;

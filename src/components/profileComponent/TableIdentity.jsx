@@ -1,7 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
@@ -21,70 +20,13 @@ const columns = [
   {
     field: "tanggal",
     headerName: "Periode SKP",
-    width: 120,
-    renderCell: (params) => {
-      const [bulan, tahun] = params.value.split("/");
-      return `${bulan} ${tahun}`;
-    },
+    width: 200,
   },
   {
     field: "sasaran_kinerja",
     headerName: "Sasaran Kinerja",
-    width: 400,
+    width: 1000,
     renderCell: (params) => <div style={cellStyle}>{params.value}</div>,
-  },
-  {
-    field: "indikator",
-    headerName: "Indikator",
-    width: 500,
-    renderCell: (params) => {
-      const cleanedText = params.value
-        ?.replace(
-          "Ukuran keberhasilan/ indikator kinerja individu dan Target:",
-          ""
-        )
-        .trim();
-
-      return (
-        <div style={multiLineCellStyle}>
-          {cleanedText
-            .split("•")
-            .filter((text) => text.trim() !== "")
-            .map((part, i) => (
-              <div key={i}>
-                <strong>•</strong> {part.trim()}
-              </div>
-            ))}
-        </div>
-      );
-    },
-  },
-  {
-    field: "realisasi",
-    headerName: "Realisasi",
-    width: 400,
-    flex: 1,
-    renderCell: (params) => <div style={cellStyle}>{params.value}</div>,
-  },
-  {
-    field: "buktiDukung",
-    headerName: "Bukti Dukung",
-    width: 150,
-    renderCell: (params) =>
-      params.value ? (
-        <Button
-          variant="contained"
-          color="success"
-          size="small"
-          onClick={() => window.open(params.value, "_blank")}
-        >
-          Lihat
-        </Button>
-      ) : (
-        <Typography variant="body2" color="textSecondary">
-          -
-        </Typography>
-      ),
   },
 ];
 
@@ -94,16 +36,6 @@ const cellStyle = {
   lineHeight: 1.3,
   display: "flex",
   alignItems: "center",
-  height: "100%",
-};
-
-const multiLineCellStyle = {
-  whiteSpace: "normal",
-  wordBreak: "break-word",
-  lineHeight: 1.3,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
   height: "100%",
 };
 
@@ -123,74 +55,53 @@ const bulanIndonesia = [
 ];
 
 const TableIdentity = ({ pegawai }) => {
+  const [selectedYear, setSelectedYear] = useState("");
   const today = new Date();
-  const [selectedYear, setSelectedYear] = useState("2025");
-  const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
 
-  const years = useMemo(() => {
-    const uniqueYears = new Set();
-    if (pegawai && pegawai.skp) {
-      pegawai.skp.forEach((item) => {
-        uniqueYears.add(item.tahun);
-      });
-    }
-    return Array.from(uniqueYears).sort((a, b) => b - a);
-  }, [pegawai]);
-
-  const rows = useMemo(() => {
-    if (!pegawai || !pegawai.skp) return [];
-
-    const formatted = [];
-
-    pegawai.skp.forEach((item) => {
-      const realisasiList = item.realisasi
-        ?.split("•")
-        .filter((val) => val.trim() !== "");
-
-      realisasiList?.forEach((realisasi, idx) => {
-        const buktiMatch = realisasi.match(
-          /\(Bukti dukung:\s*(https?:\/\/[^\s)]+)\)/
-        );
-        const buktiLink = buktiMatch ? buktiMatch[1] : "";
-        const cleanedRealisasi = realisasi
-          .replace(/\(Bukti dukung:\s*https?:\/\/[^\s)]+\)/, "")
-          .trim();
-
-        formatted.push({
-          id: `${item.id}-${idx}`,
-          sasaran_kinerja: item.sasaran_kinerja,
-          indikator: item.indikator,
-          realisasi: cleanedRealisasi,
-          tanggal: `${item.bulan}/${item.tahun}`,
-          buktiDukung: buktiLink,
-          tahun: item.tahun,
-        });
-      });
-    });
-
-    return formatted;
-  }, [pegawai]);
-
-  const filteredRows = useMemo(() => {
-    return rows.filter((row) => {
-      const [monthName] = row.tanggal.split("/");
-      const monthIndex = bulanIndonesia.indexOf(monthName);
-
-      const isYearMatch = selectedYear === "" || row.tahun === selectedYear;
-      const isMonthMatch =
-        selectedMonth === "" || monthIndex === selectedMonth - 1;
-
-      return isYearMatch && isMonthMatch;
-    });
-  }, [rows, selectedYear, selectedMonth]);
+  const [selectedMonth, setSelectedMonth] = useState(
+    bulanIndonesia[today.getMonth()]
+  );
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [allRows, setAllRows] = useState([]);
+  const [years, setYears] = useState([]);
 
   useEffect(() => {
-    if (years.length > 0 && !years.includes("2025")) {
-      setSelectedYear(years[0]);
+    if (pegawai?.tbl_skp?.length > 0) {
+      const data = pegawai.tbl_skp.map((item, index) => {
+        return {
+          id: item.skp_id?.toString() || `${index}`,
+          sasaran_kinerja: item.skp_rencana_kinerja,
+          tanggal: `${item.skp_periode}/${item.skp_tahun}`,
+          bulan: item.skp_periode, 
+          tahun: item.skp_tahun?.toString(),
+        };
+      });
+  
+      setAllRows(data);
+  
+      const uniqueYears = Array.from(new Set(data.map((r) => r.tahun))).sort(
+        (a, b) => b - a
+      );
+      setYears(uniqueYears);
+  
+      if (uniqueYears.length > 0 && !selectedYear) {
+        setSelectedYear(uniqueYears[0]);
+      }
+      
     }
-  }, [years]);
+  }, [pegawai]);
+  
 
-  if (!pegawai || !pegawai.skp) {
+  useEffect(() => {
+    if (selectedYear && selectedMonth) {
+      const filtered = allRows.filter(
+        (item) => item.tahun === selectedYear && item.bulan === selectedMonth
+      );
+      setFilteredRows(filtered);
+    }
+  }, [allRows, selectedYear, selectedMonth]);
+
+  if (!pegawai || !pegawai.tbl_skp) {
     return <Typography variant="body2">Memuat data SKP...</Typography>;
   }
 
@@ -213,7 +124,6 @@ const TableIdentity = ({ pegawai }) => {
           mb: 2,
         }}
       >
-        {/* Filter Tahun */}
         <FormControl size="small" sx={{ minWidth: 150 }}>
           <InputLabel id="filter-tahun">Tahun</InputLabel>
           <Select
@@ -230,7 +140,6 @@ const TableIdentity = ({ pegawai }) => {
           </Select>
         </FormControl>
 
-        {/* Filter Bulan */}
         <FormControl size="small" sx={{ minWidth: 150 }}>
           <InputLabel id="filter-bulan">Periode SKP</InputLabel>
           <Select
@@ -240,7 +149,7 @@ const TableIdentity = ({ pegawai }) => {
             onChange={(e) => setSelectedMonth(e.target.value)}
           >
             {bulanIndonesia.map((bulan, index) => (
-              <MenuItem key={index} value={index + 1}>
+              <MenuItem key={index} value={bulan}>
                 {bulan}
               </MenuItem>
             ))}

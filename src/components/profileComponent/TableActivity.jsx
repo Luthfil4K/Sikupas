@@ -37,17 +37,17 @@ const TableActivity = ({ pegawai }) => {
   };
 
   // Ambil daftar CKP dari pegawai
-  const ckpList = pegawai?.ckp || [];
+  const ckpList = pegawai?.kegiatan || [];
 
   // Ubah jadi rows
   const rows = ckpList.map((item, idx) => ({
     id: idx + 1,
-    tanggal: item.tglMulai,
-    bulan: item.bulan,
-    tahun: item.tahun,
-    kegiatan: item.kegiatan,
-    capaian: item.capaian,
-    dataDukung: item.dataDukung,
+    tanggal: item.keg_tanggal_awal,
+    bulan: item.keg_bulan,
+    tahun: item.keg_tahun,
+    kegiatan: item.keg_deskripsi,
+    capaian: item.keg_capaian,
+    dataDukung: item.data_dukung,
   }));
 
   // Filter berdasarkan tahun, bulan, minggu

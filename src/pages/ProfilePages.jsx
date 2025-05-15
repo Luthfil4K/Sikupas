@@ -105,10 +105,10 @@ const ProfilePages = () => {
     fetchPegawai();
   };
 
-  console.log("semuaPegawai");
+  console.log("pegawai");
   console.log(pegawai);
   console.log(pegawai);
-  console.log("semuaPegawai");
+  console.log("pegawai");
   return (
     <>
       <main className="w-full px-4">

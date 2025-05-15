@@ -303,7 +303,7 @@ console.log(pegawai)
                         <CardPegawai
                           namaPegawai={staff.nama}
                           // jumlahTim={staff.timkerja?.length}
-                          jumlahCkp={staff.ckp?.length}
+                          jumlahCkp={staff.kegiatan?.length}
                           nipPegawai={staff.nip}
                           jabatanPegawai={staff.jabatan}
                           wilayah={staff.wilayah}
