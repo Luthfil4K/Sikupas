@@ -47,7 +47,7 @@ const TableActivity = ({ pegawai }) => {
     tahun: item.keg_tahun,
     kegiatan: item.keg_deskripsi,
     capaian: item.keg_capaian,
-    dataDukung: item.data_dukung,
+    dataDukung: item.keg_data_dukung,
   }));
 
   // Filter berdasarkan tahun, bulan, minggu
