@@ -85,11 +85,12 @@ const ProfilePages = () => {
   };
 
   const filteredTeams =
-    pegawai && pegawai.timkerja
-      ? pegawai.timkerja.filter((staff) =>
-          staff.tim?.tim_nama?.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : [];
+  pegawai && pegawai.anggota_pegawai
+    ? pegawai.anggota_pegawai.filter((staff) =>
+        staff.tim_which?.tim_nama?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+
 
   const onPilihPegawai = (pegawai) => {
     const fetchPegawai = async () => {
@@ -105,10 +106,14 @@ const ProfilePages = () => {
     fetchPegawai();
   };
 
-  console.log("pegawai");
-  console.log(pegawai);
-  console.log(pegawai);
-  console.log("pegawai");
+  console.log("pegawai")
+  console.log("pegawai")
+  console.log(pegawai)
+  console.log(pegawai)
+  console.log("pegawai")
+  console.log("pegawai")
+  console.log("pegawai")
+  
   return (
     <>
       <main className="w-full px-4">
@@ -125,7 +130,7 @@ const ProfilePages = () => {
             spacing={4}
             sx={{ paddingLeft: 2, paddingTop: 4, paddingRight: 2 }}
           >
-            <Grid item md={12} sx={{height:100}}>
+            <Grid item xs={12} md={12} sx={{height:100}}>
               <Autocomplete
                 options={semuaPegawai ? semuaPegawai : []}
                 getOptionLabel={(option) => option?.nama?.trim() || ""}
@@ -150,7 +155,7 @@ const ProfilePages = () => {
               />
             </Grid>
 
-            <Grid item md={3} sm={12}>
+            <Grid item md={3} sm={12} xs={12}>
               <Identity
                 nama={pegawai?.nama}
                 nip={pegawai?.nip}
@@ -167,7 +172,7 @@ const ProfilePages = () => {
               </Grid> */}
               <Grid bgcolor={""} container spacing={4}>
                 <Grid item md={12} xs={12}>
-                  <Card sx={{ height: 537, overflow: "scroll" }}>
+                  <Card sx={{ height: 537, overflow: "auto" }}>
                     <Typography
                       variant="h5"
                       sx={{ marginTop: 3, marginLeft: 2, mb: 2 }}
@@ -188,11 +193,11 @@ const ProfilePages = () => {
                         <Divider></Divider>
                         {filteredTeams.map((team, index) => {
                           return (
-                            <Grid item sm={6} xs={6} md={4} key={index}>
+                            <Grid item sm={12} xs={12} md={4} key={index}>
                               <CardTimKerja
-                                namaTim={team.tim.tim_nama}
-                                jumlahAnggota={team?.tim?.timKerja?.length}
-                                anggotaTim={team?.tim?.timKerja}
+                                namaTim={team.tim_which.tim_nama}
+                                jumlahAnggota={team?.tim_which?.tim_member?.length}
+                                anggotaTim={team?.tim_which?.tim_member}
                               />
                             </Grid>
                           );
@@ -214,13 +219,13 @@ const ProfilePages = () => {
             spacing={4}
             sx={{ paddingLeft: 2, paddingTop: 4, paddingRight: 2 }}
           >
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <Card
                 sx={{
                   minWidth: 75,
                   height: 600,
                   marginBottom: 5,
-                  overflowY: "scroll",
+                  overflowY: "auto",
                 }}
               >
                 <Tabs

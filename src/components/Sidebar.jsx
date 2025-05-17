@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, Users, LogOut,House } from "lucide-react";
+import { Menu, Users, LogOut, House } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ const SIDEBAR_ITEMS = [
   //   name: "API",
   //   icon: Menu,
   //   color: "#6366f1",
-  //   action: "/api", // 
+  //   action: "/api", //
   // },
   {
     name: "Logout",
@@ -45,10 +45,11 @@ const Sidebar = () => {
 
   return (
     <motion.div
-      className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isOpen ? "w-64" : "w-20"}`}
-      animate={{ width: isOpen ? 256 : 100 }}
-    >
+    className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isOpen ? "w-64" : "w-20"} h-screen`}
+    animate={{ width: isOpen ? 256 : 100 }}
+  >
       <div className="h-full bg-gray-700 bg-opacity-50 backdrop-blur-md flex p-4 flex-col border-r border-gray-600">
+        {/* Tombol burger */}
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -58,13 +59,13 @@ const Sidebar = () => {
           <Menu size={24} />
         </motion.button>
 
+        {/* Menu */}
         <nav className="mt-8 flex-grow">
           {SIDEBAR_ITEMS.map((item) => {
             const Icon = item.icon;
-
             const handleClick = (e) => {
               if (item.action === "logout") {
-                e.preventDefault(); // Biar nggak redirect duluan
+                e.preventDefault();
                 handleLogout();
               }
             };

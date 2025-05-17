@@ -47,7 +47,7 @@ const isThisYear = (date) => {
   return date.getFullYear() === today.getFullYear();
 };
 
-const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
+const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
   const [jumlahAktivitasHariIni, setJumlahAktivitasHariIni] = useState(0);
   const [jumlahAktivitasMingguIni, setJumlahAktivitasMingguIni] = useState(0);
   const [jumlahAktivitasBulanIni, setJumlahAktivitasBulanIni] = useState(0);
@@ -104,7 +104,6 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
     }
   }, [pegawai]);
 
-
   useEffect(() => {
     if (pegawai && pegawai.kegiatan) {
       let hariIni = 0;
@@ -112,10 +111,9 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
       let bulanIni = 0;
       let tahunIni = 0;
 
-      const aktivitasCount =1
+      const aktivitasCount = 1;
       pegawai.kegiatan.forEach((ckpItem, index) => {
-      
-        const date = new Date(ckpItem.keg_tanggal_awal); 
+        const date = new Date(ckpItem.keg_tanggal_awal);
 
         if (isToday(date)) {
           hariIni += aktivitasCount;
@@ -130,17 +128,13 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
           tahunIni += aktivitasCount;
         }
       });
-    
+
       setJumlahCkpHariIni(hariIni);
       setJumlahCkpMingguIni(mingguIni);
       setJumlahCkpBulanIni(bulanIni);
       setJumlahCkpTahunIni(tahunIni);
-     
-
-      
     }
   }, [pegawai]);
-
 
   const [size, setSize] = useState({
     width: window.innerWidth,
@@ -163,26 +157,43 @@ const Identity = ({ nama, jabatan, wilayah, pegawai,nip }) => {
     <Card
       sx={{
         height: "auto",
-        paddingTop:1,
+        paddingTop: 1,
         minHeight: size.width < 800 ? 300 : 365,
         display: "flex",
-
+        overflowY: "auto",
         flexDirection: "column",
         justifyContent: "space-between",
       }}
     >
-      <Box sx={{ height: 240, width: "100%", overflow: "hidden", justifyContent:'center',alignItems:'center',display:'flex' }}>
+      <Box
+        sx={{
+          height: 240,
+          width: "100%",
+          overflow: "hidden",
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+        }}
+      >
         <CardMedia
           component="img"
-          sx={{ height: "110%", width: "50%",objectFit:'contain' }}
-          image={`/PNG/hasilRename/${nip?nip:"Asset-2"}.png`}
+          sx={{ height: "110%", width: "50%", objectFit: "contain" }}
+          image={`/PNG/hasilRename/${nip ? nip : "Asset-2"}.png`}
+          onError={(e) => {
+            e.target.onerror = null; // mencegah infinite loop
+            e.target.src = "/PNG/hasilRename/Asset-2.png";
+          }}
           title="Profile Photo"
         />
       </Box>
 
       <CardContent sx={{ height: 290 }}>
         {/* Info Pegawai */}
-        <Typography sx={{fontSize:18, fontWeight:600}} component="div" gutterBottom>
+        <Typography
+          sx={{ fontSize: 18, fontWeight: 600 }}
+          component="div"
+          gutterBottom
+        >
           {nama}
         </Typography>
         <Typography sx={{ fontSize: 14, color: "text.secondary" }}>

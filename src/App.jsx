@@ -1,6 +1,7 @@
 import { useState } from "react";
-
 import { Route, Routes, useLocation } from "react-router-dom";
+
+import DashboardPage from "./pages/DashboardPage";
 import DashboardPages from "./pages/DashboardPages";
 import ProfilePages from "./pages/ProfilePages";
 import OrganisasiPages from "./pages/OrganisasiPages";
@@ -9,90 +10,99 @@ import LoginPage from "./pages/LoginPage";
 import PrivateRoute from "./components/PrivateRoute";
 
 import Sidebar from "./components/Sidebar";
-import reactLogo from "./assets/react.svg";
+import MobileSidebarDrawer from "./components/MobileSidebarDrawer";
 import Header from "./components/Header";
-import viteLogo from "/vite.svg";
+
+import { UserProvider } from "./context/UserContext";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
   const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleBurgerClick = () => {
+    setMobileOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setMobileOpen(false);
+  };
+
+  const title = location.pathname === "/" 
+    ? "dashboard"
+    : location.pathname.split("/")[1];
 
   return (
     <div>
       {location.pathname === "/login" ? (
-        // Halaman Login tanpa Sidebar dan Header
-        <div className="">
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
       ) : (
-        // Layout dengan Sidebar dan Header untuk halaman selain Login
-        <div className="flex h-screen bg-gray-800 text-gray-100 overflow-hidden">
-          <div className="fixed inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80"></div>
-            <div className="absolute inset-0 backdrop-blur-sm"></div>
+        <UserProvider>
+          <div className="flex h-screen bg-gray-800 text-gray-100 overflow-hidden">
+            <div className="fixed inset-0 z-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80"></div>
+              <div className="absolute inset-0 backdrop-blur-sm"></div>
+            </div>
+
+            {/* Sidebar Desktop */}
+            <div className="hidden md:block">
+              <Sidebar />
+            </div>
+
+            {/* Sidebar Mobile Drawer */}
+            <MobileSidebarDrawer open={mobileOpen} onClose={handleDrawerClose} />
+
+            {/* Konten utama */}
+            <div className="flex-1 overflow-auto relative z-10 bg-gray-800">
+              <Header title={title} onBurgerClick={handleBurgerClick} />
+
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <PrivateRoute>
+                      <OrganisasiPages />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <PrivateRoute>
+                      <DashboardPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profile/:id"
+                  element={
+                    <PrivateRoute>
+                      <ProfilePages />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/organisasi"
+                  element={
+                    <PrivateRoute>
+                      <OrganisasiPages />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/api"
+                  element={
+                    <PrivateRoute>
+                      <ApiTest />
+                    </PrivateRoute>
+                  }
+                />
+              </Routes>
+            </div>
           </div>
-
-          {/* Sidebar */}
-          <Sidebar />
-
-          {/* Konten utama dengan Header */}
-          <div className="flex-1 overflow-auto relative z-10 bg-gray-800">
-            <Header
-              title={
-                location.pathname === "/"
-                  ? "dasboard"
-                  : location.pathname.split("/")[1]
-              }
-            />
-
-            {/* Routes untuk halaman lainnya */}
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <PrivateRoute>
-                    <OrganisasiPages />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/dashboard"
-                element={
-                  <PrivateRoute>
-                    <DashboardPages />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profile/:id"
-                element={
-                  <PrivateRoute>
-                    <ProfilePages />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/organisasi"
-                element={
-                  <PrivateRoute>
-                    <OrganisasiPages />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/api"
-                element={
-                  <PrivateRoute>
-                    <ApiTest />
-                  </PrivateRoute>
-                }
-              />
-            </Routes>
-          </div>
-        </div>
+        </UserProvider>
       )}
     </div>
   );

@@ -23,11 +23,15 @@ const LoginPage = () => {
       const { token, user } = await login(username, password);
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("nip", JSON.stringify(user.nip));
+      localStorage.setItem("role", user.role);
+      localStorage.setItem("timKode",  JSON.stringify(user.tim_kode));
       window.location.href = "/organisasi";
     } catch (err) {
       setError("Login gagal. Cek username/password.");
     }
   };
+  
 
   const [showPassword, setShowPassword] = useState(false);
 

@@ -24,32 +24,32 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
     setAnchorEl(null);
   };
 
- 
-
   const open = Boolean(anchorEl);
   const id = open ? `popover-${namaTim}` : undefined;
 
-
-  const [cabang, setCabang] = React.useState('');
+  const [cabang, setCabang] = React.useState("");
 
   const handleChange = (event) => {
     setCabang(event.target.value);
-  }
+  };
 
   return (
     <Card
       sx={{
         p: 2,
         boxShadow: "0 1px 15px rgba(0,0,0,0.15)",
-        maxHeight: 200,
-        height: 200,
+        height: "auto", // tinggi fleksibel
+        minHeight: 200, // biar tetap stabil di desktop
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
       }}
     >
       <CardContent>
         {/* Icon dan Nama Tim */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
           <GroupIcon sx={{ color: "#1DA57A", mr: 1 }} />
-          <Typography variant="body1" sx={{ fontSize: 15,fontWeight: 600 }}>
+          <Typography variant="body1" sx={{ fontSize: 15, fontWeight: 600 }}>
             {namaTim}
           </Typography>
         </Box>

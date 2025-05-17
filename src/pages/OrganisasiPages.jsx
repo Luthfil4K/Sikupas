@@ -23,12 +23,30 @@ import CardPegawai from "../components/organisasiComponent/CardPegawai";
 import { getAllTimKerja } from "../services/timKerjaServices";
 import { getAllPegawai } from "../services/pegawaiServices";
 
+
+// req user login infor
+import { useUser } from "../context/UserContext";
+
 const OrganisasiPages = () => {
   const [filterRole, setFilterRole] = useState("all"); 
   const [timKerja, setTimKerja] = useState([]);
   const [pegawai, setPegawai] = useState([]);
 
+  const { userData, loadingUser } = useUser();
 
+
+  console.log(userData)
+  console.log(userData)
+
+
+  const role = localStorage.getItem("role");
+  const timKode = localStorage.getItem("timKode");
+
+  console.log("role")
+
+  console.log(role)
+  console.log("timKode")
+  console.log(timKode)
  
 
   useEffect(() => {
@@ -91,8 +109,6 @@ const OrganisasiPages = () => {
     }
     return true;
   });
-console.log(pegawai)
-console.log(pegawai)
 
 
   const TabPanel = ({ children, value, index }) => {
@@ -252,8 +268,8 @@ console.log(pegawai)
                       <Grid item xs={12} lg={3} md={4} sm={6} key={index}>
                         <CardTimKerja
                           namaTim={team.tim_nama}
-                          jumlahAnggota={team.timKerja?.length}
-                          anggotaTim={team.timKerja}
+                          jumlahAnggota={team.tim_member?.length}
+                          anggotaTim={team.tim_member}
                         />
                       </Grid>
                     ))}
