@@ -12,7 +12,11 @@ import {
 import { CalendarDays, Calendar, BarChart3 } from "lucide-react"; // Import ikon dari lucide
 import { File } from "lucide-react";
 
+import { useTheme } from '@mui/material/styles';
+
+
 const isToday = (date) => {
+ 
   const today = new Date();
   const targetDate = new Date(date);
 
@@ -48,6 +52,8 @@ const isThisYear = (date) => {
 };
 
 const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
+
+
   const [jumlahAktivitasHariIni, setJumlahAktivitasHariIni] = useState(0);
   const [jumlahAktivitasMingguIni, setJumlahAktivitasMingguIni] = useState(0);
   const [jumlahAktivitasBulanIni, setJumlahAktivitasBulanIni] = useState(0);
@@ -153,6 +159,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const theme = useTheme();
   return (
     <Card
       sx={{
@@ -228,7 +235,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   fontWeight: 600,
                   fontSize: 20,
                   bgcolor: "#ffffff",
-                  color: "#1DA57A",
+                  color: theme.palette.primary.main,
                 }}
               >
                 {jumlahCkpHariIni}
@@ -277,7 +284,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   fontWeight: 600,
                   fontSize: 20,
                   bgcolor: "#ffffff",
-                  color: "#1DA57A",
+                  color: theme.palette.primary.main,
                 }}
               >
                 {jumlahCkpMingguIni}
@@ -327,7 +334,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   fontWeight: 600,
                   fontSize: 20,
                   bgcolor: "#ffffff",
-                  color: "#1DA57A", // Warna putih eksplisit
+                  color: theme.palette.primary.main, // Warna putih eksplisit
                 }}
               >
                 {jumlahCkpBulanIni}
@@ -377,7 +384,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   fontWeight: 600,
                   fontSize: 20,
                   bgcolor: "#ffffff",
-                  color: "#1DA57A", // Warna putih eksplisit
+                  color: theme.palette.primary.main, // Warna putih eksplisit
                 }}
               >
                 {jumlahCkpTahunIni}

@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import { Link } from "react-router-dom";
+import { useTheme } from '@mui/material/styles';
 
 const CardPegawai = ({
   namaPegawai,
@@ -10,6 +11,7 @@ const CardPegawai = ({
   jabatanPegawai,
   wilayah,
 }) => {
+  const theme = useTheme();
   return (
     <Card
       sx={{
@@ -25,14 +27,14 @@ const CardPegawai = ({
       {/* Konten utama */}
       <CardContent sx={{ flexGrow: 1 }}>
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-          <GroupIcon sx={{ color: "#1DA57A", mr: 1 }} />
+          <GroupIcon sx={{ color: theme.palette.primary.main, mr: 1 }} />
           <Typography variant="body1" sx={{ fontWeight: 600 }}>
             {namaPegawai}
           </Typography>
         </Box>
 
         <Typography sx={{ color: "text.secondary", fontSize: 13, mt: 1 }}>
-          <Box component="span" sx={{ fontWeight: "bold", color: "#1DA57A" }}>
+          <Box component="span" sx={{ fontWeight: "bold",}}>
             {wilayah}
           </Box>{" "}
           - {jabatanPegawai?.replace(/\b(Kabupaten\/Kota|BPS)\s*/gi, "").trim()}
@@ -64,8 +66,8 @@ const CardPegawai = ({
             variant="outlined"
             size="small"
             sx={{
-              color: "#1DA57A",
-              borderColor: "#1DA57A",
+              color: theme.palette.primary.main,
+              borderColor: theme.palette.primary.main,
               textTransform: "none",
               fontWeight: 500,
             }}

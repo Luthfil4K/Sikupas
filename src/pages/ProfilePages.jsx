@@ -26,7 +26,13 @@ import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
 import { getPegawaiById } from "../services/pegawaiServices";
 import { getAllPegawai } from "../services/pegawaiServices";
 
+import { useTheme } from '@mui/material/styles';
+
 const ProfilePages = () => {
+
+  const theme = useTheme()
+
+
   const { id } = useParams(); // dapetin id dari URL
   const [pegawai, setPegawai] = useState(null);
   const [jumlahAktivitas, setJumlahAktivitas] = useState(0);
@@ -106,13 +112,6 @@ const ProfilePages = () => {
     fetchPegawai();
   };
 
-  console.log("pegawai")
-  console.log("pegawai")
-  console.log(pegawai)
-  console.log(pegawai)
-  console.log("pegawai")
-  console.log("pegawai")
-  console.log("pegawai")
   
   return (
     <>
@@ -232,21 +231,21 @@ const ProfilePages = () => {
                   value={tabIndex}
                   onChange={handleChange}
                   TabIndicatorProps={{
-                    style: { backgroundColor: "#1DA57A" },
+                    style: { backgroundColor: theme.palette.primary.dark },
                   }}
                   textColor="inherit"
                 >
                   <Tab
                     label="CKP Harian"
                     sx={{
-                      color: tabIndex === 0 ? "#1DA57A" : "gray",
+                      color: tabIndex === 0 ? theme.palette.primary.dark  : "gray",
                       fontWeight: tabIndex === 0 ? "bold" : "normal",
                     }}
                   />
                   <Tab
                     label="SKP Bulanan"
                     sx={{
-                      color: tabIndex === 1 ? "#1DA57A" : "gray",
+                      color: tabIndex === 1 ? theme.palette.primary.dark : "gray",
                       fontWeight: tabIndex === 1 ? "bold" : "normal",
                     }}
                   />

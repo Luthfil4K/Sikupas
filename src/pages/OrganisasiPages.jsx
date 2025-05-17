@@ -23,31 +23,32 @@ import CardPegawai from "../components/organisasiComponent/CardPegawai";
 import { getAllTimKerja } from "../services/timKerjaServices";
 import { getAllPegawai } from "../services/pegawaiServices";
 
-
 // req user login infor
 import { useUser } from "../context/UserContext";
 
+import { useTheme } from '@mui/material/styles';
+
+
+
 const OrganisasiPages = () => {
-  const [filterRole, setFilterRole] = useState("all"); 
+  const theme = useTheme();
+  const [filterRole, setFilterRole] = useState("all");
   const [timKerja, setTimKerja] = useState([]);
   const [pegawai, setPegawai] = useState([]);
 
   const { userData, loadingUser } = useUser();
 
-
-  console.log(userData)
-  console.log(userData)
-
+  console.log(userData);
+  console.log(userData);
 
   const role = localStorage.getItem("role");
   const timKode = localStorage.getItem("timKode");
 
-  console.log("role")
+  console.log("role");
 
-  console.log(role)
-  console.log("timKode")
-  console.log(timKode)
- 
+  console.log(role);
+  console.log("timKode");
+  console.log(timKode);
 
   useEffect(() => {
     const fetchTimKerja = async () => {
@@ -93,23 +94,21 @@ const OrganisasiPages = () => {
   const handleSearchStaff = (e) => setSearchTerm2(e.target.value);
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
-
   // Filter berdasarkan search
   const filteredTeams = timKerja.filter((team) =>
     team.tim_nama.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredStaffs = pegawai
-  .filter((team) =>
-    team.nama.toLowerCase().includes(searchTerm2.toLowerCase())
-  )
-  .filter((team) => {
-    if (filterRole === "ahli madya") {
-      return team.jabatan?.toLowerCase().includes("ahli madya");
-    }
-    return true;
-  });
-
+    .filter((team) =>
+      team.nama.toLowerCase().includes(searchTerm2.toLowerCase())
+    )
+    .filter((team) => {
+      if (filterRole === "ahli madya") {
+        return team.jabatan?.toLowerCase().includes("ahli madya");
+      }
+      return true;
+    });
 
   const TabPanel = ({ children, value, index }) => {
     return (
@@ -126,9 +125,9 @@ const OrganisasiPages = () => {
   const sortedStaffs = [...filteredStaffs].sort((a, b) => {
     const aIsAhliMadya = a.jabatan?.toLowerCase().includes("ahli madya");
     const bIsAhliMadya = b.jabatan?.toLowerCase().includes("ahli madya");
-  
+
     if (aIsAhliMadya && !bIsAhliMadya) return -1; // a duluan
-    if (!aIsAhliMadya && bIsAhliMadya) return 1;  // b duluan
+    if (!aIsAhliMadya && bIsAhliMadya) return 1; // b duluan
     return 0; // tidak diubah
   });
 
@@ -194,23 +193,24 @@ const OrganisasiPages = () => {
                   value={tabIndex}
                   onChange={handleChange}
                   TabIndicatorProps={{
-                    style: { backgroundColor: "#1DA57A" },
+                    style: { backgroundColor: theme.palette.primary.main },
                   }}
                   textColor="inherit"
                 >
                   <Tab
                     label="Daftar Pegawai"
-                    sx={{
-                      color: tabIndex === 0 ? "#1DA57A" : "gray",
+                    sx={(theme) => ({
+                      color: tabIndex === 0 ? theme.palette.primary.main : "gray",
                       fontWeight: tabIndex === 0 ? "bold" : "normal",
-                    }}
+                    })}
                   />
                   <Tab
                     label="Daftar Tim Kerja"
-                    sx={{
-                      color: tabIndex === 1 ? "#1DA57A" : "gray",
+                    sx={(theme) => ({
+                      color:
+                        tabIndex === 1 ? theme.palette.primary.main : "gray",
                       fontWeight: tabIndex === 1 ? "bold" : "normal",
-                    }}
+                    })}
                   />
                 </Tabs>
 

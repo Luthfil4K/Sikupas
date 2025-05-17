@@ -13,7 +13,12 @@ import {
 import { Link } from "react-router-dom";
 import GroupIcon from "@mui/icons-material/Group";
 
+import { useTheme } from '@mui/material/styles';
+
+
 const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
+
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -48,7 +53,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
       <CardContent>
         {/* Icon dan Nama Tim */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-          <GroupIcon sx={{ color: "#1DA57A", mr: 1 }} />
+          <GroupIcon sx={{ color: theme.palette.primary.main, mr: 1 }} />
           <Typography variant="body1" sx={{ fontSize: 15, fontWeight: 600 }}>
             {namaTim}
           </Typography>
@@ -64,8 +69,8 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
           variant="outlined"
           size="small"
           sx={{
-            color: "#1DA57A",
-            borderColor: "#1DA57A",
+            color: theme.palette.primary.main,
+            borderColor: theme.palette.primary.main,
             textTransform: "none",
             fontWeight: 500,
           }}
@@ -103,7 +108,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
                         primaryTypographyProps={{
                           sx: {
                             textDecoration: "underline",
-                            color: "primary.main",
+                            color: "primary.dark",
                           },
                         }}
                       />

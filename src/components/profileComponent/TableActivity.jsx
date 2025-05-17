@@ -9,9 +9,11 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-
+import { useTheme } from '@mui/material/styles';
 
 const TableActivity = ({ pegawai }) => {
+
+  const theme = useTheme();
   const today = new Date();
 
   const currentYear = today.getFullYear();
@@ -91,12 +93,12 @@ const TableActivity = ({ pegawai }) => {
       renderCell: (params) => (
         <Button
           variant="contained"
-          color="primary"
+          
           size="small"
           href={params.value}
           target="_blank"
           rel="noopener noreferrer"
-          sx={{ backgroundColor: "#1DA57A" }}
+          sx={{ backgroundColor: theme.palette.primary.dark,color:'white' }}
         >
           Lihat
         </Button>
