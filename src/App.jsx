@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
-import DashboardPage from "./pages/DashboardPage";
-import DashboardPages from "./pages/DashboardPages";
 import ProfilePages from "./pages/ProfilePages";
 import OrganisasiPages from "./pages/OrganisasiPages";
 import ApiTest from "./pages/ApiTest";
@@ -19,6 +17,7 @@ import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
+import ForbiddenPage from "./pages/ForbiddenPage";
 
 function App() {
   const location = useLocation();
@@ -75,14 +74,7 @@ function App() {
                       </PrivateRoute>
                     }
                   />
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <PrivateRoute>
-                        <DashboardPage />
-                      </PrivateRoute>
-                    }
-                  />
+                 
                   <Route
                     path="/profile/:id"
                     element={
@@ -104,6 +96,14 @@ function App() {
                     element={
                       <PrivateRoute>
                         <ApiTest />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/forbidden"
+                    element={
+                      <PrivateRoute>
+                        <ForbiddenPage />
                       </PrivateRoute>
                     }
                   />
