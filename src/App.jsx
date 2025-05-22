@@ -129,7 +129,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/rekapIndividu"
+                    path="/rekapIndividu/:id"
                     element={
                       <PrivateRoute>
                         <RekapIndividu />
