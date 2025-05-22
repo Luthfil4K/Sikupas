@@ -22,13 +22,7 @@ export const changePasswordPegawai = async ({ nip, oldPassword, newPassword }) =
 };
 
 export const getPegawaiKabko = async (wilayah) => {
-  console.log("wilayah")
-  console.log("wilayah")
-  console.log("wilayah")
-  console.log(wilayah)
-  console.log(wilayah)
-  console.log(wilayah)
-  console.log(wilayah)
+ 
    const response = await api.get(`/pegawai/kabko`, {
       params: { wilayah:wilayah },
     });

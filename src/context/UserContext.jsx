@@ -1,4 +1,3 @@
-// contexts/UserContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api"; // sesuaikan path
 
@@ -26,6 +25,15 @@ export const UserProvider = ({ children }) => {
       } catch (err) {
         console.error("Gagal mengambil data user:", err);
         setErrorUser(err);
+
+        
+        if (err.response?.status === 401 || err.response?.status === 403  ) {
+          localStorage.removeItem("token");
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 150);
+          
+        }
       } finally {
         setLoadingUser(false);
       }

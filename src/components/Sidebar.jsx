@@ -22,7 +22,7 @@ const Sidebar = () => {
       userData?.role.id === Role.ANGGOTA_TIM_KABKO
       ? [
           {
-            name: 'Profil Saya',
+            name: 'Aktivitas Saya',
             icon: User,
             color: '#EC4899',
             path: `/profile/${cleanedNip}`,
@@ -39,7 +39,7 @@ const Sidebar = () => {
       
         [
           {
-            name: 'Profil Saya',
+            name: 'Aktivitas Saya',
             icon: User,
             color: '#EC4899',
             path: `/profile/${cleanedNip}`,
