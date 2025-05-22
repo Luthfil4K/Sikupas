@@ -1,0 +1,6 @@
+.fc-popover .fc-event-title {
+    white-space: normal !important;  /* biar teks bisa pecah baris */
+    word-break: break-word;           /* supaya kata panjang bisa dipotong */
+    max-width: 200px;                 /* atur max width agar tidak melebar terus */
+    line-height: 1.2;                 /* jarak antar baris */
+  }

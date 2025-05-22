@@ -12,7 +12,10 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "../services/login";
 
+import { useTheme } from '@mui/material/styles';
+
 const LoginPage = () => {
+  const theme = useTheme()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,9 +27,14 @@ const LoginPage = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("nip", JSON.stringify(user.nip));
+      localStorage.setItem("nipLama", JSON.stringify(user.nip_bps));
       localStorage.setItem("role", user.role);
       localStorage.setItem("timKode",  JSON.stringify(user.tim_kode));
+     
       window.location.href = "/organisasi";
+
+      window.location.href = `${user.role != "anggota" ? "/organisasi" : "/profile/" + user.nip}`;
+
     } catch (err) {
       setError("Login gagal. Cek username/password.");
     }
@@ -80,9 +88,9 @@ const LoginPage = () => {
             required
             sx={{
               "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "#1DA57A" },
-                "&:hover fieldset": { borderColor: "#1DA57A" },
-                "&.Mui-focused fieldset": { borderColor: "#1DA57A" },
+                "& fieldset": { borderColor: theme.palette.primary.light },
+                "&:hover fieldset": { borderColor: theme.palette.primary.light },
+                "&.Mui-focused fieldset": { borderColor: theme.palette.primary.dark },
               },
             }}
           />
@@ -97,9 +105,9 @@ const LoginPage = () => {
             required
             sx={{
               "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "#1DA57A" },
-                "&:hover fieldset": { borderColor: "#1DA57A" },
-                "&.Mui-focused fieldset": { borderColor: "#1DA57A" },
+                "& fieldset": { borderColor: theme.palette.primary.light },
+                "&:hover fieldset": { borderColor: theme.palette.primary.light },
+                "&.Mui-focused fieldset": { borderColor: theme.palette.primary.dark },
               },
             }}
             InputProps={{
@@ -119,7 +127,7 @@ const LoginPage = () => {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ marginTop: 2, backgroundColor: "#1DA57A" }}
+            sx={{ marginTop: 2, backgroundColor: theme.palette.primary.dark,color:"white" }}
           >
             Login
           </Button>
