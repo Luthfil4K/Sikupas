@@ -47,7 +47,7 @@ const Sidebar = () => {
           {
             name: 'Organisasi',
             icon: Network,
-            color: '#6366f1',
+            color: '#FFAF76',
             path: '/organisasi',
           },
           {

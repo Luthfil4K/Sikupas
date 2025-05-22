@@ -17,7 +17,10 @@ import Swal from "sweetalert2";
 
 import { getPegawaiById } from "../services/pegawaiServices";
 
+import LoadingPage from "./LoadingPage";
+
 const RekapIndividu = () => {
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const [pegawai, setPegawai] = useState(null);
   const [events, setEvents] = useState([]);
@@ -31,6 +34,10 @@ const RekapIndividu = () => {
         setPegawai(data);
       } catch (err) {
         console.error("Gagal mengambil data pegawai", err);
+      }finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000); // matikan loading setelah fetch
       }
     };
     fetchPegawai();
@@ -126,6 +133,12 @@ const RekapIndividu = () => {
       },
     });
   };
+
+  
+    if (loading) {
+      return <LoadingPage />
+    }
+  
 
   return (
     <main className="w-full px-4">

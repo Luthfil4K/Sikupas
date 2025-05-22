@@ -197,16 +197,16 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
       <CardContent sx={{ height: 290 }}>
         {/* Info Pegawai */}
         <Typography
-          sx={{ fontSize: 18, fontWeight: 600 }}
+          sx={{ fontSize: 14, fontWeight: 600 }}
           component="div"
           gutterBottom
         >
           {nama}
         </Typography>
-        <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
+        <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
           Jabatan: {jabatan}
         </Typography>
-        <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
+        <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
           Satuan Kerja: {wilayah}
         </Typography>
 
@@ -252,10 +252,10 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Aktivitas
                 </Typography>
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Hari Ini
                 </Typography>
               </Box>
@@ -301,10 +301,10 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Aktivitas
                 </Typography>
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Minggu Ini
                 </Typography>
               </Box>
@@ -351,10 +351,10 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Aktivitas
                 </Typography>
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Bulan Ini
                 </Typography>
               </Box>
@@ -401,10 +401,10 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Aktivitas
                 </Typography>
-                <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Tahun Ini
                 </Typography>
               </Box>

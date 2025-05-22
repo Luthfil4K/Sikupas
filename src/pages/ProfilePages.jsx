@@ -23,6 +23,8 @@ import LineChartIdentity from "../components/profileComponent/LineChartIdentity"
 import SKPDragDrop from "../components/profileComponent/SKPDragDrop";
 import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
 
+import LoadingPage from "./LoadingPage";
+
 import { getPegawaiById } from "../services/pegawaiServices";
 import { getAllPegawai } from "../services/pegawaiServices";
 
@@ -38,6 +40,7 @@ import { useUser } from "../context/UserContext";
 import Role from "../types/roles"; // sesuaikan pathnya
 
 const ProfilePages = () => {
+  const [loading, setLoading] = useState(true);
   const { userData, loadingUser } = useUser();
   const { id } = useParams();
   const role = localStorage.getItem("role");
@@ -106,7 +109,9 @@ const ProfilePages = () => {
       } catch (err) {
         console.error("Gagal mengambil data pegawai", err);
       } finally {
-        console.log("final");
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000); // matikan loading setelah fetch
       }
     };
     fetchPegawai();
@@ -180,10 +185,10 @@ const ProfilePages = () => {
     fetchPegawai();
   };
 
-  console.log(pegawai);
-  console.log(pegawai);
-  if (isAllowed === null) {
-    return <div>Loading...</div>;
+
+
+  if (loading) {
+    return <LoadingPage />
   }
 
   if (!isAllowed) {
