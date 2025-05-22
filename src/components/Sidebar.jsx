@@ -27,7 +27,14 @@ const Sidebar = () => {
             color: '#EC4899',
             path: `/profile/${cleanedNip}`,
           },
+          {
+            name: 'Rekap Individu',
+            icon: CalendarDays ,
+            color: '#6EE7B7',
+            path: `/rekapIndividu/${cleanedNip}`,
+          },
         ]
+        
       : 
       
         [
