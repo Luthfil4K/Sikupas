@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 
 import DashboardPage from "./pages/DashboardPage";
 import DashboardPages from "./pages/DashboardPages";
@@ -43,8 +43,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div>
-        {location.pathname === "/login" ? (
+        {location.pathname === "/login" || location.pathname === "/" ? (
           <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
         ) : (
@@ -71,14 +72,6 @@ function App() {
                 <Header title={title} onBurgerClick={handleBurgerClick} />
 
                 <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      <PrivateRoute>
-                        <OrganisasiPages />
-                      </PrivateRoute>
-                    }
-                  />
                   <Route
                     path="/dashboard"
                     element={
@@ -136,7 +129,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/rekapIndividu/:id"
+                    path="/rekapIndividu"
                     element={
                       <PrivateRoute>
                         <RekapIndividu />
