@@ -313,7 +313,7 @@ const ProfilePages = () => {
                   minWidth: 75,
                   height: 600,
                   marginBottom: 5,
-                  overflowY: "auto",
+                  overflowY: 'hidden'
                 }}
               >
                 <Tabs

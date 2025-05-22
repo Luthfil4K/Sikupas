@@ -11,6 +11,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
@@ -34,7 +35,7 @@ const RekapIndividu = () => {
         setPegawai(data);
       } catch (err) {
         console.error("Gagal mengambil data pegawai", err);
-      }finally {
+      } finally {
         setTimeout(() => {
           setLoading(false);
         }, 1000); // matikan loading setelah fetch
@@ -75,8 +76,10 @@ const RekapIndividu = () => {
     const today = startOfDay(new Date());
     const date = startOfDay(info.date);
     const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-    const hasEvents = events.some((e) => date >= e.startDate && date < e.endDate);
-  
+    const hasEvents = events.some(
+      (e) => date >= e.startDate && date < e.endDate
+    );
+
     if (!isWeekend && !hasEvents && isBefore(date, today)) {
       const el = document.createElement("div");
       el.innerText = "×";
@@ -91,7 +94,6 @@ const RekapIndividu = () => {
       info.el.appendChild(el);
     }
   };
-  
 
   const eventContent = (arg) => {
     return (
@@ -134,11 +136,12 @@ const RekapIndividu = () => {
     });
   };
 
-  
-    if (loading) {
-      return <LoadingPage />
-    }
-  
+  console.log(pegawai);
+  console.log(pegawai);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   return (
     <main className="w-full px-4">
@@ -156,58 +159,74 @@ const RekapIndividu = () => {
             overflowY: "auto",
           }}
         >
-          <div className="p-4">
-            <div className="flex gap-4 mb-4 justify-end">
-              <FormControl size="small" sx={{ width: 200 }}>
-                <InputLabel id="bulan-label">Bulan</InputLabel>
-                <Select
-                  labelId="bulan-label"
-                  defaultValue={new Date().getMonth()}
-                  label="Bulan"
-                  onChange={(e) => {
-                    const newMonth = parseInt(e.target.value);
-                    const calendarApi = calendarRef.current.getApi();
-                    const currentDate = calendarApi.getDate();
-                    const newDate = new Date(currentDate);
-                    newDate.setMonth(newMonth);
-                    calendarApi.gotoDate(newDate);
-                  }}
-                >
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <MenuItem key={i} value={i}>
-                      {new Date(0, i).toLocaleString("id-ID", {
-                        month: "long",
-                      })}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+          <div className=" mt-4 p-4">
+            <div className="flex mb-4 justify-between items-center gap-4">
+              {/* Bagian kiri: tulisan */}
+              <div>
+                <Typography sx={{ fontSize: 22, fontWeight: 600 }}>
+                  REKAP INDIVIDU{" "}
+                </Typography>
+                <Typography>
+                  {pegawai?.nama} -{" "}
+                  <span className="text-gray-500">
+                    {pegawai?.satker?.nama_satker}
+                  </span>
+                </Typography>
+              </div>
 
-              <FormControl size="small" sx={{ width: 200 }}>
-                <InputLabel id="tahun-label">Tahun</InputLabel>
-                <Select
-                  labelId="tahun-label"
-                  defaultValue={new Date().getFullYear()}
-                  label="Tahun"
-                  onChange={(e) => {
-                    const newYear = parseInt(e.target.value);
-                    const calendarApi = calendarRef.current.getApi();
-                    const currentDate = calendarApi.getDate();
-                    const newDate = new Date(currentDate);
-                    newDate.setFullYear(newYear);
-                    calendarApi.gotoDate(newDate);
-                  }}
-                >
-                  {Array.from({ length: 5 }, (_, i) => {
-                    const year = new Date().getFullYear() - 2 + i;
-                    return (
-                      <MenuItem key={year} value={year}>
-                        {year}
+              {/* Bagian kanan: form controls */}
+              <div className="flex gap-4">
+                <FormControl size="small" sx={{ width: 200 }}>
+                  <InputLabel id="bulan-label">Bulan</InputLabel>
+                  <Select
+                    labelId="bulan-label"
+                    defaultValue={new Date().getMonth()}
+                    label="Bulan"
+                    onChange={(e) => {
+                      const newMonth = parseInt(e.target.value);
+                      const calendarApi = calendarRef.current.getApi();
+                      const currentDate = calendarApi.getDate();
+                      const newDate = new Date(currentDate);
+                      newDate.setMonth(newMonth);
+                      calendarApi.gotoDate(newDate);
+                    }}
+                  >
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <MenuItem key={i} value={i}>
+                        {new Date(0, i).toLocaleString("id-ID", {
+                          month: "long",
+                        })}
                       </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <FormControl size="small" sx={{ width: 200 }}>
+                  <InputLabel id="tahun-label">Tahun</InputLabel>
+                  <Select
+                    labelId="tahun-label"
+                    defaultValue={new Date().getFullYear()}
+                    label="Tahun"
+                    onChange={(e) => {
+                      const newYear = parseInt(e.target.value);
+                      const calendarApi = calendarRef.current.getApi();
+                      const currentDate = calendarApi.getDate();
+                      const newDate = new Date(currentDate);
+                      newDate.setFullYear(newYear);
+                      calendarApi.gotoDate(newDate);
+                    }}
+                  >
+                    {Array.from({ length: 5 }, (_, i) => {
+                      const year = new Date().getFullYear() - 2 + i;
+                      return (
+                        <MenuItem key={year} value={year}>
+                          {year}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
             </div>
 
             <FullCalendar
