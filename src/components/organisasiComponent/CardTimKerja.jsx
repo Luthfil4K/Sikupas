@@ -13,11 +13,9 @@ import {
 import { Link } from "react-router-dom";
 import GroupIcon from "@mui/icons-material/Group";
 
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 
-
-const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
-
+const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim, allowClick }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -99,10 +97,22 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
               {anggotaTim && anggotaTim.length > 0 ? (
                 anggotaTim.map((anggota, idx) => (
                   <ListItem key={idx} disablePadding>
-                    <Link
-                      to={`/profile/${anggota.pegawai?.nip}`}
-                      style={{ textDecoration: "none" }} // ini biar linknya ga underline default
-                    >
+                    {allowClick === true ? (
+                      <Link
+                        to={`/profile/${anggota.pegawai?.nip}`}
+                        style={{ textDecoration: "none" }} // ini biar linknya ga underline default
+                      >
+                        <ListItemText
+                          primary={anggota.pegawai?.nama || "Tanpa Nama"}
+                          primaryTypographyProps={{
+                            sx: {
+                              textDecoration: "underline",
+                              color: "primary.dark",
+                            },
+                          }}
+                        />
+                      </Link>
+                    ) : (
                       <ListItemText
                         primary={anggota.pegawai?.nama || "Tanpa Nama"}
                         primaryTypographyProps={{
@@ -112,7 +122,7 @@ const CardTimKerja = ({ namaTim, jumlahAnggota, anggotaTim }) => {
                           },
                         }}
                       />
-                    </Link>
+                    )}
                   </ListItem>
                 ))
               ) : (

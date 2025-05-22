@@ -26,14 +26,74 @@ import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
 import { getPegawaiById } from "../services/pegawaiServices";
 import { getAllPegawai } from "../services/pegawaiServices";
 
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
+
+// router
+import { Navigate } from "react-router-dom";
+
+// req user login infor
+import { useUser } from "../context/UserContext";
+
+// utils/types
+import Role from "../types/roles"; // sesuaikan pathnya
 
 const ProfilePages = () => {
+  const { userData, loadingUser } = useUser();
+  const { id } = useParams();
+  const role = localStorage.getItem("role");
+  const nip = localStorage.getItem("nip");
+  const rawNip = localStorage.getItem("nip");
+  const cleanedNip = nip?.replace(/^"+|"+$/g, "");
 
-  const theme = useTheme()
+  const [isAllowed, setIsAllowed] = useState(null);
+  const [isAllowedSearch, setIsAllowedSearch] = useState(null);
 
+  useEffect(() => {
+    if (userData) {
+      if (
+        role === "ketua_tim" ||
+        role === "admin" ||
+        role == "pimpinan" ||
+        [
+          Role.PIMPINAN_PROVINSI,
+          Role.KEPALA_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_PROVINSI,
+        ].includes(userData.role.id)
+      ) {
+        setIsAllowed(true);
+      } else if (cleanedNip === id) {
+        setIsAllowed(true);
+      } else {
+        setIsAllowed(false);
+      }
+    }
+  }, [role, cleanedNip, id, userData]);
 
-  const { id } = useParams(); // dapetin id dari URL
+  useEffect(() => {
+    if (userData) {
+      if (
+        role === "ketua_tim" ||
+        role === "admin" ||
+        role === "pimpinan" ||
+        [
+          Role.PIMPINAN_PROVINSI,
+          Role.KEPALA_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_PROVINSI,
+        ].includes(userData.role.id)
+      ) {
+        setIsAllowedSearch(true);
+      } else if (cleanedNip === id) {
+        setIsAllowedSearch(false);
+      } else {
+        setIsAllowedSearch(false);
+      }
+    }
+  }, [role, cleanedNip, id, userData]);
+
+  const theme = useTheme();
+
   const [pegawai, setPegawai] = useState(null);
   const [jumlahAktivitas, setJumlahAktivitas] = useState(0);
   const [semuaPegawai, setSemuaPegawai] = useState([]);
@@ -90,13 +150,21 @@ const ProfilePages = () => {
     );
   };
 
-  const filteredTeams =
-  pegawai && pegawai.anggota_pegawai
-    ? pegawai.anggota_pegawai.filter((staff) =>
-        staff.tim_which?.tim_nama?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  const anggota = pegawai?.anggota_pegawai ?? [];
 
+  const lead = (pegawai?.pegawai_is_lead ?? []).map((item) => ({
+    ...item,
+    tim_which: {
+      tim_nama: item.tim_nama,
+      tim_member: item.tim_member,
+    },
+  }));
+
+  const combinedPegawai = [...anggota, ...lead];
+
+  const filteredTeams = combinedPegawai.filter((staff) =>
+    staff.tim_which?.tim_nama?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const onPilihPegawai = (pegawai) => {
     const fetchPegawai = async () => {
@@ -112,7 +180,16 @@ const ProfilePages = () => {
     fetchPegawai();
   };
 
-  
+  console.log(pegawai);
+  console.log(pegawai);
+  if (isAllowed === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAllowed) {
+    return <Navigate to="/forbidden" replace />;
+  }
+
   return (
     <>
       <main className="w-full px-4">
@@ -129,30 +206,34 @@ const ProfilePages = () => {
             spacing={4}
             sx={{ paddingLeft: 2, paddingTop: 4, paddingRight: 2 }}
           >
-            <Grid item xs={12} md={12} sx={{height:100}}>
-              <Autocomplete
-                options={semuaPegawai ? semuaPegawai : []}
-                getOptionLabel={(option) => option?.nama?.trim() || ""}
-                sx={{ width: "100%",backgroundColor:'white' }}
-                value={
-                  semuaPegawai
-                    ? semuaPegawai
-                    : [].find((p) => p.nama.trim() === nama.trim()) || null
-                }
-                onChange={(event, value) => {
-                  if (value) {
-                    onPilihPegawai(value);
-                  }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Cari Pegawai"
-                    variant="outlined"
+            {isAllowedSearch && (
+              <>
+                <Grid item xs={12} md={12} sx={{ height: 100 }}>
+                  <Autocomplete
+                    options={semuaPegawai ? semuaPegawai : []}
+                    getOptionLabel={(option) => option?.nama?.trim() || ""}
+                    sx={{ width: "100%", backgroundColor: "white" }}
+                    value={
+                      semuaPegawai
+                        ? semuaPegawai
+                        : [].find((p) => p.nama.trim() === nama.trim()) || null
+                    }
+                    onChange={(event, value) => {
+                      if (value) {
+                        onPilihPegawai(value);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Cari Pegawai"
+                        variant="outlined"
+                      />
+                    )}
                   />
-                )}
-              />
-            </Grid>
+                </Grid>
+              </>
+            )}
 
             <Grid item md={3} sm={12} xs={12}>
               <Identity
@@ -163,7 +244,7 @@ const ProfilePages = () => {
                 pegawai={pegawai}
               ></Identity>
             </Grid>
-            <Grid item md={9} xs={12} >
+            <Grid item md={9} xs={12}>
               {/* <Grid container spacing={4}>
                 <Grid item md={12} xs={6}>
                   <LineChartIdentity></LineChartIdentity>
@@ -185,17 +266,20 @@ const ProfilePages = () => {
                       fullWidth
                       value={searchTerm}
                       onChange={handleSearchChange}
-                      sx={{ margin: 2, width: "90%" }}
+                      sx={{ margin: 2, width: "97%" }}
                     />
-                    <Grid item md={12} xs={12} >
+                    <Grid item md={12} xs={12}>
                       <Grid container spacing={4} sx={{ padding: 2 }}>
                         <Divider></Divider>
                         {filteredTeams.map((team, index) => {
                           return (
                             <Grid item sm={12} xs={12} md={4} key={index}>
                               <CardTimKerja
+                                allowClick={isAllowedSearch}
                                 namaTim={team.tim_which.tim_nama}
-                                jumlahAnggota={team?.tim_which?.tim_member?.length}
+                                jumlahAnggota={
+                                  team?.tim_which?.tim_member?.length
+                                }
                                 anggotaTim={team?.tim_which?.tim_member}
                               />
                             </Grid>
@@ -238,14 +322,16 @@ const ProfilePages = () => {
                   <Tab
                     label="CKP Harian"
                     sx={{
-                      color: tabIndex === 0 ? theme.palette.primary.dark  : "gray",
+                      color:
+                        tabIndex === 0 ? theme.palette.primary.dark : "gray",
                       fontWeight: tabIndex === 0 ? "bold" : "normal",
                     }}
                   />
                   <Tab
                     label="SKP Bulanan"
                     sx={{
-                      color: tabIndex === 1 ? theme.palette.primary.dark : "gray",
+                      color:
+                        tabIndex === 1 ? theme.palette.primary.dark : "gray",
                       fontWeight: tabIndex === 1 ? "bold" : "normal",
                     }}
                   />

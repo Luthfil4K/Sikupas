@@ -28,6 +28,12 @@ const columns = [
     width: 1000,
     renderCell: (params) => <div style={cellStyle}>{params.value}</div>,
   },
+  {
+    field: "capaian_kinerja",
+    headerName: "Capaian Kinerja",
+    width: 1000,
+    renderCell: (params) => <div style={cellStyle}>{params.value}</div>,
+  },
 ];
 
 const cellStyle = {
@@ -54,10 +60,14 @@ const bulanIndonesia = [
   "Desember",
 ];
 
+
+
 const TableIdentity = ({ pegawai }) => {
   const [selectedYear, setSelectedYear] = useState("");
   const today = new Date();
 
+
+  console.log(pegawai)
   const [selectedMonth, setSelectedMonth] = useState(
     bulanIndonesia[today.getMonth()]
   );

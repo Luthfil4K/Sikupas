@@ -16,72 +16,112 @@ import {
   Pagination,
 } from "@mui/material";
 import { motion } from "framer-motion";
+
+// pages
 import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
 import CardPegawai from "../components/organisasiComponent/CardPegawai";
+import LoadingPage from "./LoadingPage";
 
-// req data
+// req data pimpinan
 import { getAllTimKerja } from "../services/timKerjaServices";
 import { getAllPegawai } from "../services/pegawaiServices";
+
+// req data ketua
+import { getTimKerjaKetua } from "../services/timKerjaServices";
+
+// req data kabko
+import { getPegawaiKabko } from "../services/pegawaiServices";
+import { getTimKerjaKabko } from "../services/timKerjaServices";
 
 // req user login infor
 import { useUser } from "../context/UserContext";
 
-import { useTheme } from '@mui/material/styles';
+// theme
+import { useTheme } from "@mui/material/styles";
 
+// router
+import { Navigate } from "react-router-dom";
 
+// utils/types
+import Role from "../types/roles"; // sesuaikan pathnya
 
 const OrganisasiPages = () => {
+  const { userData, loadingUser } = useUser();
+  const [loading, setLoading] = useState(true);
+  const [isAllowed, setIsAllowed] = useState(null);
   const theme = useTheme();
+
+  useEffect(() => {
+    if (userData) {
+      const role = localStorage.getItem("role");
+      if (
+        [
+          Role.PIMPINAN_PROVINSI,
+          Role.KEPALA_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_PROVINSI,
+        ].includes(userData.role.id)
+      ) {
+        setIsAllowed(true);
+      } else {
+        setIsAllowed(false);
+      }
+    }
+  }, [userData]);
+
   const [filterRole, setFilterRole] = useState("all");
   const [timKerja, setTimKerja] = useState([]);
   const [pegawai, setPegawai] = useState([]);
 
-  const { userData, loadingUser } = useUser();
-
-  console.log(userData);
-  console.log(userData);
-
   const role = localStorage.getItem("role");
   const timKode = localStorage.getItem("timKode");
+  const nip = localStorage.getItem("nip");
+  const nipLama = localStorage.getItem("nipLama");
 
-  console.log("role");
-
-  console.log(role);
-  console.log("timKode");
-  console.log(timKode);
-
+  //  api get dsini
   useEffect(() => {
-    const fetchTimKerja = async () => {
-      try {
-        const data = await getAllTimKerja();
-        console.log(data); // Menggunakan service yang sudah dibuat
+    const fetchData = async () => {
+      if (userData) {
+        try {
+          if (userData.role.id === Role.PIMPINAN_PROVINSI) {
+            const tim = await getAllTimKerja();
+            const peg = await getAllPegawai();
+            setTimKerja(tim);
+            setPegawai(peg);
+          } else if (userData.role.id === Role.KEPALA_KABKO) {
+            console.log("role: kepala kabko");
+            const peg = await getPegawaiKabko(userData?.wilayah);
+            const tim = await getTimKerjaKabko(userData?.wilayah);
+            setTimKerja(tim);
+            setPegawai(peg);
+          } else if (userData.role.id === "ketua_tim") {
+            const tim = await getTimKerjaKetua(nipLama);
+            setTimKerja(tim);
 
-        setTimKerja(data);
-      } catch (err) {
-        console.log("Gagal mengambil data tim kerja");
-      } finally {
-        console.log("final");
+            const semuaPegawai = tim.flatMap((t) =>
+              t.tim_member.map((m) => m.pegawai)
+            );
+
+            const uniquePegawai = semuaPegawai.filter(
+              (p, i, self) => i === self.findIndex((x) => x.nip === p.nip)
+            );
+
+            setPegawai(uniquePegawai);
+          }
+        } catch (error) {
+          console.error("Gagal mengambil data:", error);
+        } finally {
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000); // matikan loading setelah fetch
+        }
       }
     };
 
-    fetchTimKerja();
-  }, []);
+    fetchData();
+  }, [role, nipLama, userData]);
 
-  useEffect(() => {
-    const fetchPegawai = async () => {
-      try {
-        const data = await getAllPegawai();
-        setPegawai(data); // Simpan data tim kerja di state
-      } catch (err) {
-        console.log(err);
-      } finally {
-        console.log("final");
-      }
-    };
-
-    fetchPegawai(); // Panggil fungsi untuk mengambil data
-  }, []);
-
+  // fortabb
   const [tabIndex, setTabIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
@@ -94,7 +134,7 @@ const OrganisasiPages = () => {
   const handleSearchStaff = (e) => setSearchTerm2(e.target.value);
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
-  // Filter berdasarkan search
+  // Filter  search
   const filteredTeams = timKerja.filter((team) =>
     team.tim_nama.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -126,12 +166,12 @@ const OrganisasiPages = () => {
     const aIsAhliMadya = a.jabatan?.toLowerCase().includes("ahli madya");
     const bIsAhliMadya = b.jabatan?.toLowerCase().includes("ahli madya");
 
-    if (aIsAhliMadya && !bIsAhliMadya) return -1; // a duluan
-    if (!aIsAhliMadya && bIsAhliMadya) return 1; // b duluan
-    return 0; // tidak diubah
+    if (aIsAhliMadya && !bIsAhliMadya) return -1;
+    if (!aIsAhliMadya && bIsAhliMadya) return 1;
+    return 0;
   });
 
-  // pagination
+  // pagination disssini
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [itemsPerPageStaff, setItemsPerPageStaff] = useState(15);
   const [currentPage, setCurrentPage] = useState(1);
@@ -162,7 +202,13 @@ const OrganisasiPages = () => {
     setCurrentPageStaff((prev) => (prev !== 1 ? 1 : prev));
   }, [searchTerm2, filterRole]);
 
-  return (
+  if (isAllowed === false) {
+    return <Navigate to="/forbidden" replace />;
+  }
+
+  return loading ? (
+    <LoadingPage />
+  ) : (
     <main className="w-full px-4">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -188,7 +234,6 @@ const OrganisasiPages = () => {
           <Grid container pt={5} spacing={4} sx={{ px: 2 }}>
             <Grid item md={12}>
               <Box sx={{ width: "100%", backgroundColor: "white" }}>
-                {/* Tabs Header */}
                 <Tabs
                   value={tabIndex}
                   onChange={handleChange}
@@ -200,7 +245,8 @@ const OrganisasiPages = () => {
                   <Tab
                     label="Daftar Pegawai"
                     sx={(theme) => ({
-                      color: tabIndex === 0 ? theme.palette.primary.main : "gray",
+                      color:
+                        tabIndex === 0 ? theme.palette.primary.main : "gray",
                       fontWeight: tabIndex === 0 ? "bold" : "normal",
                     })}
                   />
@@ -216,7 +262,6 @@ const OrganisasiPages = () => {
 
                 <Divider sx={{ mb: 2 }} />
 
-                {/* 🔍 Filter Search & Tahun */}
                 <Grid container spacing={2} sx={{ mb: 2 }}>
                   {tabIndex == 1 ? (
                     <>
@@ -261,12 +306,12 @@ const OrganisasiPages = () => {
                   )}
                 </Grid>
 
-                {/* Tabs Content */}
                 <TabPanel value={tabIndex} index={1}>
                   <Grid container spacing={4}>
                     {paginatedTeams.map((team, index) => (
                       <Grid item xs={12} lg={3} md={4} sm={6} key={index}>
                         <CardTimKerja
+                        wilayah={"s"}
                           namaTim={team.tim_nama}
                           jumlahAnggota={team.tim_member?.length}
                           anggotaTim={team.tim_member}
@@ -363,6 +408,7 @@ const OrganisasiPages = () => {
                         page={currentPageStaff}
                         onChange={handlePageChangeStaff}
                         color="primary"
+                        sx={{ color: theme.palette.primary.dark }}
                       />
                     </Grid>
                   </Grid>
