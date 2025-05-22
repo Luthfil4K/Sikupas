@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
+import DashboardPage from "./pages/DashboardPage";
+import DashboardPages from "./pages/DashboardPages";
 import ProfilePages from "./pages/ProfilePages";
 import OrganisasiPages from "./pages/OrganisasiPages";
+import ApiTest from "./pages/ApiTest";
 import LoginPage from "./pages/LoginPage";
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -16,6 +19,10 @@ import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
+import ForbiddenPage from "./pages/ForbiddenPage";
+import LoadingPage from "./pages/LoadingPage";
+import RekapPegawai from "./pages/RekapPegawai";
+import RekapIndividu from "./pages/RekapIndividu";
 
 function App() {
   const location = useLocation();
@@ -72,7 +79,14 @@ function App() {
                       </PrivateRoute>
                     }
                   />
-                 
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <PrivateRoute>
+                        <DashboardPage />
+                      </PrivateRoute>
+                    }
+                  />
                   <Route
                     path="/profile/:id"
                     element={
@@ -89,8 +103,46 @@ function App() {
                       </PrivateRoute>
                     }
                   />
-                 
-                  
+                  <Route
+                    path="/api"
+                    element={
+                      <PrivateRoute>
+                        <ApiTest />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/forbidden"
+                    element={
+                      <PrivateRoute>
+                        <ForbiddenPage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/loading"
+                    element={
+                      <PrivateRoute>
+                        <LoadingPage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/rekapPegawai"
+                    element={
+                      <PrivateRoute>
+                        <RekapPegawai />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/rekapIndividu/:id"
+                    element={
+                      <PrivateRoute>
+                        <RekapIndividu />
+                      </PrivateRoute>
+                    }
+                  />
                 </Routes>
               </div>
             </div>

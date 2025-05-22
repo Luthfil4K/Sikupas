@@ -1,37 +1,62 @@
 import React, { useState } from "react";
-import { Menu, Users, LogOut, House } from "lucide-react";
+import { Menu, Users, LogOut, House,Network ,CalendarDays  ,User} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
-// Definisi item sidebar
-const SIDEBAR_ITEMS = [
-  // {
-  //   name: "Dashboard",
-  //   icon: House,
-  //   color: "#6EE7B7",
-  //   path: "/dashboard",
-  // },
-  {
-    name: "Organisasi",
-    icon: Users,
-    color: "#EC4899",
-    path: "/organisasi",
-  },
-  // {
-  //   name: "API",
-  //   icon: Menu,
-  //   color: "#6366f1",
-  //   action: "/api", //
-  // },
-  {
-    name: "Logout",
-    icon: LogOut,
-    color: "#3B82F6",
-    action: "logout", // ini bukan path biasa
-  },
-];
+// req user login infor
+import { useUser } from "../context/UserContext";
+
+// utils/types
+import Role from "../types/roles"; // sesuaikan pathnya
+
+
+
 
 const Sidebar = () => {
+  const { userData, loadingUser } = useUser();
+  const role = localStorage.getItem('role');
+  const nip = localStorage.getItem('nip'); // pastikan ini disimpan saat login
+  const cleanedNip = nip.replace(/^"+|"+$/g, '');
+  const SIDEBAR_ITEMS = [
+    ...(userData?.role.id === Role.ANGGOTA_TIM_PROVINSI ||
+      userData?.role.id === Role.ANGGOTA_TIM_KABKO
+      ? [
+          {
+            name: 'Profil Saya',
+            icon: User,
+            color: '#EC4899',
+            path: `/profile/${cleanedNip}`,
+          },
+        ]
+      : 
+      
+        [
+          {
+            name: 'Profil Saya',
+            icon: User,
+            color: '#EC4899',
+            path: `/profile/${cleanedNip}`,
+          },
+          {
+            name: 'Organisasi',
+            icon: Network,
+            color: '#6366f1',
+            path: '/organisasi',
+          },
+          {
+            name: 'Rekap Pegawai',
+            icon: CalendarDays ,
+            color: '#6EE7B7',
+            path: '/rekapPegawai',
+          },
+        ]),
+    {
+      name: 'Logout',
+      icon: LogOut,
+      color: '#3B82F6',
+      action: 'logout',
+    },
+  ];
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 

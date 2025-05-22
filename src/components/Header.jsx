@@ -9,10 +9,15 @@ import { showChangePasswordModal } from "./modalComponents/showChangePasswordMod
 
 import api from "../services/api";
 
+import { User, Key, LogOut } from "lucide-react";
+
 const Header = ({ title, onBurgerClick }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [userData, setUserData] = useState(0);
+
+  const role = localStorage.getItem("role");
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -81,7 +86,8 @@ const Header = ({ title, onBurgerClick }) => {
               </svg>
             </button>
             <h1 className="text mt-2 font-semibold text-gray-200 uppercase">
-              {title}
+            {title.replace(/([A-Z])/g, ' $1').toUpperCase()}
+
             </h1>
           </Grid>
           <Grid
@@ -129,14 +135,33 @@ const Header = ({ title, onBurgerClick }) => {
             >
               <Link
                 to={`/profile/${userData.nip ? userData.nip : 0}`}
-                // to={`/profile/`}
                 className="w-full block text-black no-underline"
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{ gap: 1, display: "flex", alignItems: "center" }}
+                >
+                  <User size={18} style={{marginRight:16}} />
+                  
+                  Profile
+                </MenuItem>
               </Link>
 
-              <MenuItem onClick={showChangePasswordModal}>Ganti Password</MenuItem> 
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              <MenuItem
+                onClick={showChangePasswordModal}
+                sx={{ gap: 1, display: "flex", alignItems: "center" }}
+              >
+                <Key size={18} style={{marginRight:16}} />
+                Ganti Password
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleLogout}
+                sx={{ gap: 1, display: "flex", alignItems: "center" }}
+              >
+                <LogOut size={18} style={{marginRight:16}} />
+                Logout
+              </MenuItem>
             </Menu>
           </Grid>
         </Grid>
