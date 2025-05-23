@@ -96,7 +96,8 @@ const TableRekap = ({
       return {
         field: `day_${day}`,
         headerName: `${day}`,
-        width: 55,
+        minWidth: 20,
+        width: 40,
         disableColumnMenu: true,
         sortable: false,
         cellClassName: isWeekend ? "weekend-cell" : "",
@@ -109,10 +110,8 @@ const TableRekap = ({
 
           if (params.value) {
             return (
-             
-                <IconButton
-                  size="small"
-                
+              <>
+                <Box
                   onClick={(e) =>
                     handlePopoverOpen(
                       e,
@@ -120,10 +119,23 @@ const TableRekap = ({
                       tanggal.format("YYYY-MM-DD")
                     )
                   }
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease-in-out",
+                    fontSize:12,
+                    borderRadius: 1,
+                    "&:hover": {
+                      transform: "scale(1.6)",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    },
+                  }}
                 >
                   ✅
-                </IconButton>
-             
+                </Box>
+              </>
             );
           }
 
@@ -140,6 +152,7 @@ const TableRekap = ({
                 display: "flex",
                 justifyContent: "center",
                 width: "100%",
+                fontSize:12,
               }}
             >
               <span>❌</span>
@@ -159,7 +172,7 @@ const TableRekap = ({
             to={`/rekapIndividu/${params.row.id}`}
             style={{
               color: "#1E40AF",
-              textDecoration: "underline",
+              // textDecoration: "underline",
               cursor: "pointer",
             }}
           >
@@ -217,7 +230,8 @@ const TableRekap = ({
 
   // console.log("rows")
   // console.log(rows)
-
+  const selectedWilayahLabel =
+    wilayahOptions.find((opt) => opt.value === selectedWilayah)?.label || "";
   return (
     <Box>
       <Grid container sx={{ mt: 2, mb: 2 }}>
@@ -234,7 +248,7 @@ const TableRekap = ({
         >
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              Rekap Pegawai - {satkerWilayah}
+              Rekap Pegawai - {selectedWilayahLabel}
             </Typography>
           </Box>
         </Grid>
@@ -320,6 +334,7 @@ const TableRekap = ({
         rows={rows}
         columns={columns}
         disableSelectionOnClick
+        rowHeight={32}
         pagination
         pageSizeOptions={[15, 50, 100]}
         initialState={{

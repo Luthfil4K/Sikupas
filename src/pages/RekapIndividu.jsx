@@ -119,12 +119,15 @@ const RekapIndividu = () => {
   const handleEventClick = (clickInfo) => {
     const { title, start, end } = clickInfo.event;
 
+    console.log("end");
+    console.log(end);
+    console.log(end);
     Swal.fire({
       title: "Detail Kegiatan",
       html: `
         <strong>${title}</strong><br/>
-        <small>${format(new Date(start), "dd MMM yyyy")} - ${format(
-        new Date(end),
+  <small>${format(new Date(start), "dd MMM yyyy")} - ${format(
+        new Date(new Date(end).getTime() - 1000), // kurangi 1 detik dari end
         "dd MMM yyyy"
       )}</small>
       `,
