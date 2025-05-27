@@ -31,9 +31,9 @@ const LoginPage = () => {
       localStorage.setItem("role", user.role);
       localStorage.setItem("timKode",  JSON.stringify(user.tim_kode));
      
-      window.location.href = "/organisasi";
 
-      window.location.href = `${user.role != "anggota" ? "/organisasi" : "/profile/" + user.nip}`;
+
+      window.location.href = `${user.role != "anggota" ? "/profile/" + user.nip : "/profile/" + user.nip}`;
 
     } catch (err) {
       setError("Login gagal. Cek username/password.");

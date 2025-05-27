@@ -27,6 +27,7 @@ import LoadingPage from "./LoadingPage";
 
 import { getPegawaiById } from "../services/pegawaiServices";
 import { getAllPegawai } from "../services/pegawaiServices";
+import { getPegawaiKabko } from "../services/pegawaiServices";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -119,18 +120,20 @@ const ProfilePages = () => {
 
   useEffect(() => {
     const fetchPegawai = async () => {
-      try {
-        const data = await getAllPegawai();
-        setSemuaPegawai(data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        console.log("final");
+      if (userData) {
+        try {
+          const data = await getPegawaiKabko(userData?.wilayah);
+          setSemuaPegawai(data);
+        } catch (err) {
+          console.log(err);
+        } finally {
+          console.log("final");
+        }
       }
     };
 
     fetchPegawai();
-  }, []);
+  }, [userData]);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -185,10 +188,8 @@ const ProfilePages = () => {
     fetchPegawai();
   };
 
-
-
   if (loading) {
-    return <LoadingPage />
+    return <LoadingPage />;
   }
 
   if (!isAllowed) {
@@ -313,7 +314,7 @@ const ProfilePages = () => {
                   minWidth: 75,
                   height: 600,
                   marginBottom: 5,
-                  overflowY: 'hidden'
+                  overflowY: "hidden",
                 }}
               >
                 <Tabs
