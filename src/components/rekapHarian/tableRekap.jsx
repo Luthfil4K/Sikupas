@@ -22,6 +22,7 @@ import { getKegDeskripsiPegawai } from "../../services/kegiatanServices";
 
 // router
 import { Link } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
 
 const TableRekap = ({
   dataPegawaiKegiatan,
@@ -35,6 +36,7 @@ const TableRekap = ({
   selectedWilayah,
   satkerWilayah,
 }) => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [popoverContent, setPopoverContent] = useState({});
   const [popoverDate, setPopoverDate] = useState(null);
@@ -125,7 +127,7 @@ const TableRekap = ({
                     justifyContent: "center",
                     cursor: "pointer",
                     transition: "all 0.2s ease-in-out",
-                    fontSize:12,
+                    fontSize: 12,
                     borderRadius: 1,
                     "&:hover": {
                       transform: "scale(1.6)",
@@ -152,7 +154,7 @@ const TableRekap = ({
                 display: "flex",
                 justifyContent: "center",
                 width: "100%",
-                fontSize:12,
+                fontSize: 12,
               }}
             >
               <span>❌</span>
@@ -211,7 +213,7 @@ const TableRekap = ({
 
         const aktivitasHariIni = pegawai.kegiatan.filter((keg) => {
           const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
-          const akhir = dayjs(keg.keg_tanggal_akhir).startOf("day");
+          const akhir = dayjs(keg.keg_tanggal_awal).startOf("day");
           return currentDate.isBetween(
             awal.subtract(1, "day"),
             akhir.add(1, "day")
@@ -363,7 +365,7 @@ const TableRekap = ({
         open={open}
         anchorEl={anchorEl}
         onClose={handlePopoverClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left",maxWidth:300 }}
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="subtitle1" fontWeight="bold">
@@ -375,7 +377,34 @@ const TableRekap = ({
           ) : popoverContent.kegiatan?.length > 0 ? (
             popoverContent.kegiatan.map((k, i) => (
               <Typography key={i} variant="body2">
-                • {k.keg_deskripsi}
+                • {k.keg_deskripsi}{" "}
+                <Box
+                  component="span"
+                  sx={{ color: theme.palette.primary.light }}
+                >
+                  {(() => {
+                    const awal = new Date(k.keg_tanggal_awal);
+                    const akhir = new Date(k.keg_tanggal_akhir);
+
+                    const formatTanggal = (tanggal) => tanggal.getDate();
+                    const formatBulanTahun = (tanggal) =>
+                      tanggal.toLocaleDateString("id-ID", {
+                        month: "long",
+                        year: "numeric",
+                      });
+
+                    if (awal.getTime() !== akhir.getTime()) {
+                      return `(${formatTanggal(awal)}–${formatTanggal(
+                        akhir
+                      )}) ${formatBulanTahun(akhir)}`;
+                    } else {
+                      return ``;
+                      // return `(${formatTanggal(awal)}) ${formatBulanTahun(
+                      //   awal
+                      // )}`;
+                    }
+                  })()}
+                </Box>
               </Typography>
             ))
           ) : (

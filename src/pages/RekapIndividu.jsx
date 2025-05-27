@@ -50,7 +50,7 @@ const RekapIndividu = () => {
       kegiatan.forEach(
         ({ keg_deskripsi, keg_tanggal_awal, keg_tanggal_akhir }) => {
           const startDate = startOfDay(new Date(keg_tanggal_awal));
-          const endDate = startOfDay(addDays(new Date(keg_tanggal_akhir), 1));
+          const endDate = startOfDay(addDays(new Date(keg_tanggal_awal), 1));
           events.push({
             title: `${keg_deskripsi}`,
             start: keg_tanggal_awal,
@@ -119,15 +119,12 @@ const RekapIndividu = () => {
   const handleEventClick = (clickInfo) => {
     const { title, start, end } = clickInfo.event;
 
-    console.log("end");
-    console.log(end);
-    console.log(end);
     Swal.fire({
       title: "Detail Kegiatan",
       html: `
         <strong>${title}</strong><br/>
-  <small>${format(new Date(start), "dd MMM yyyy")} - ${format(
-        new Date(new Date(end).getTime() - 1000), // kurangi 1 detik dari end
+        <small>${format(new Date(start), "dd MMM yyyy")} - ${format(
+        new Date(new Date(start).getTime() - 1000), // kurangi 1 detik dari end
         "dd MMM yyyy"
       )}</small>
       `,
