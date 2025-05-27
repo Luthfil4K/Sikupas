@@ -154,7 +154,7 @@ const TableRekap = ({
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-    saveAs(blob, `Rekap_Kegiatan_${tahun}_${bulan + 1}.xlsx`);
+    saveAs(blob, `Rekap_Kegiatan_${tahun}_${bulan + 1}_${selectedWilayah}.xlsx`);
   };
 
   const columns = useMemo(() => {
