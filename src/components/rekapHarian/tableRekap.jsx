@@ -6,6 +6,7 @@ import {
   IconButton,
   Popover,
   MenuItem,
+  Button,
   Select,
   Grid,
   FormControl,
@@ -23,6 +24,11 @@ import { getKegDeskripsiPegawai } from "../../services/kegiatanServices";
 // router
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+
+// export
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import ExcelJS from "exceljs";
 
 const TableRekap = ({
   dataPegawaiKegiatan,
@@ -81,13 +87,75 @@ const TableRekap = ({
     { label: "BPS Kab Gianyar", value: "5104" },
   ];
 
-  // const wilayahOptions = useMemo(() => {
-  //   if (!dataPegawaiKegiatan) return [];
-  //   const wilayahSet = new Set(
-  //     dataPegawaiKegiatan.map((p) => p.satker.nama_satker)
-  //   );
-  //   return ["Semua", ...Array.from(wilayahSet)];
-  // }, [dataPegawaiKegiatan]);
+  const handleExportWithStyle = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Rekap");
+
+    // Header
+    const header = ["Nama Pegawai", "Satuan Kerja"];
+    for (let i = 1; i <= daysInMonth; i++) {
+      header.push(`Tgl ${i}`);
+    }
+    worksheet.addRow(header);
+
+    // Data rows
+    rows.forEach((row) => {
+      const rowData = [row.nama, row.wilayah];
+
+      for (let i = 1; i <= daysInMonth; i++) {
+        const tanggal = dayjs(`${tahun}-${bulan + 1}-${i}`);
+        const dayOfWeek = tanggal.day();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        const value = row[`day_${i}`];
+
+        if (value) {
+          rowData.push("✅");
+        } else if (tanggal.isAfter(dayjs().startOf("day"))) {
+          rowData.push("");
+        } else if (isWeekend) {
+          rowData.push("");
+        } else {
+          rowData.push("❌");
+        }
+      }
+
+      const addedRow = worksheet.addRow(rowData);
+
+      // Warnai hijau sel ceklis
+      addedRow.eachCell((cell, colNumber) => {
+        if (cell.value === "✅") {
+          cell.font = {
+            color: { argb: "FF2E7D32" }, // Hijau tua (#2E7D32, seperti MUI success)
+          };
+        }
+      });
+    });
+
+    // Pewarnaan kolom weekend
+    for (let i = 1; i <= daysInMonth; i++) {
+      const tanggal = dayjs(`${tahun}-${bulan + 1}-${i}`);
+      const dayOfWeek = tanggal.day();
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+      if (isWeekend) {
+        const colIndex = i + 2;
+        worksheet.getColumn(colIndex).eachCell((cell) => {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "FFF3E5F5" },
+          };
+        });
+      }
+    }
+
+    // Export
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    saveAs(blob, `Rekap_Kegiatan_${tahun}_${bulan + 1}.xlsx`);
+  };
 
   const columns = useMemo(() => {
     const dayColumns = Array.from({ length: daysInMonth }, (_, i) => {
@@ -227,11 +295,6 @@ const TableRekap = ({
     });
   }, [dataPegawaiKegiatan, bulan, tahun, daysInMonth, selectedWilayah]);
 
-  // console.log("dataPegawaiKegiatan")
-  // console.log(dataPegawaiKegiatan)
-
-  // console.log("rows")
-  // console.log(rows)
   const selectedWilayahLabel =
     wilayahOptions.find((opt) => opt.value === selectedWilayah)?.label || "";
   return (
@@ -331,7 +394,22 @@ const TableRekap = ({
       </Grid>
 
       <Divider></Divider>
-
+      <Grid container sx={{ marginTop: 2 }}>
+        <Grid
+          item
+          md={12}
+          xs={12}
+          sx={{ display: "flex", aligntItems: "end", justifyContent: "end" }}
+        >
+          <Button
+            onClick={handleExportWithStyle}
+            variant="contained"
+            sx={{ mb: 2, color: "white" }}
+          >
+            Export
+          </Button>
+        </Grid>
+      </Grid>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -365,7 +443,7 @@ const TableRekap = ({
         open={open}
         anchorEl={anchorEl}
         onClose={handlePopoverClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left",maxWidth:300 }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left", maxWidth: 300 }}
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="subtitle1" fontWeight="bold">
