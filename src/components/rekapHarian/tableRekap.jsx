@@ -160,7 +160,19 @@ const TableRekap = ({
     );
   };
 
+  const hariLiburBali = [
+    "12-02-2025",
+    "22-04-2025",
+    "23-04-2025",
+    "24-04-2025",
+    "10-09-2025",
+    "18-11-2025",
+    "19-11-2025",
+    "20-11-2025",
+  ]
+
   const hariLiburNasional = [
+    
     "01-01-2025",
     "27-01-2025",
     "28-01-2025",
@@ -180,6 +192,7 @@ const TableRekap = ({
     "13-05-2025",
     "20-05-2025",
     "29-05-2025",
+    "30-05-2025",
     "01-06-2025",
     "06-06-2025",
     "09-06-2025",
@@ -196,9 +209,10 @@ const TableRekap = ({
       const currentDate = dayjs(`${tahun}-${bulan + 1}-${day}`);
       const dayOfWeek = currentDate.day(); // 0 = Minggu, 6 = Sabtu
       const tanggalStr = currentDate.format("DD-MM-YYYY");
+      const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
 
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-      const isHariLibur = hariLiburNasional.includes(tanggalStr);
+      const isHariLibur = semuaHariLibur.includes(tanggalStr);
       const isLiburTotal = isWeekend || isHariLibur;
 
       return {
@@ -227,7 +241,11 @@ const TableRekap = ({
           const tanggalStr = tanggal.format("DD-MM-YYYY");
 
           const isWeekend = tanggal.day() === 6 || tanggal.day() === 0;
-          const isHariLibur = hariLiburNasional.includes(tanggalStr);
+          const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
+
+          // const isHariLibur = hariLiburNasional.includes(tanggalStr);
+          const isHariLibur = semuaHariLibur.includes(tanggalStr);
+
           const isLiburTotal = isWeekend || isHariLibur;
           const sekarang = dayjs().startOf("day");
 
