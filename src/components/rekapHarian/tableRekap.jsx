@@ -259,15 +259,6 @@ const TableRekap = ({
   const rows = useMemo(() => {
     if (!dataPegawaiKegiatan) return [];
 
-    // const filtered =
-    //   selectedWilayah === "Semua"
-    //     ? dataPegawaiKegiatan
-    //     : dataPegawaiKegiatan.filter(
-    //         (p) => p.satker.nama_satker === selectedWilayah
-    //       );
-
-    // console.log("filtered")
-    // console.log(filtered)
     return dataPegawaiKegiatan.map((pegawai) => {
       const row = {
         id: pegawai.nip,
@@ -428,7 +419,8 @@ const TableRekap = ({
           },
         }}
         sx={{
-          maxHeight: 600,
+          maxHeight: 550,
+          minHeight:550,
           "& .weekend-cell": {
             backgroundColor: "#f3e5f5",
           },
@@ -458,7 +450,7 @@ const TableRekap = ({
                 • {k.keg_deskripsi}{" "}
                 <Box
                   component="span"
-                  sx={{ color: theme.palette.primary.light }}
+                  sx={{ color: theme.palette.primary.main }}
                 >
                   {(() => {
                     const awal = new Date(k.keg_tanggal_awal);
