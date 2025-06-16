@@ -154,15 +154,53 @@ const TableRekap = ({
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-    saveAs(blob, `Rekap_Kegiatan_${tahun}_${bulan + 1}_${selectedWilayah}.xlsx`);
+    saveAs(
+      blob,
+      `Rekap_Kegiatan_${tahun}_${bulan + 1}_${selectedWilayah}.xlsx`
+    );
   };
+
+  const hariLiburNasional = [
+    "01-01-2025",
+    "27-01-2025",
+    "28-01-2025",
+    "29-01-2025",
+    "28-03-2025",
+    "29-03-2025",
+    "31-03-2025",
+    "01-04-2025",
+    "02-04-2025",
+    "03-04-2025",
+    "04-04-2025",
+    "07-04-2025",
+    "18-04-2025",
+    "20-04-2025",
+    "01-05-2025",
+    "12-05-2025",
+    "13-05-2025",
+    "20-05-2025",
+    "29-05-2025",
+    "01-06-2025",
+    "06-06-2025",
+    "09-06-2025",
+    "27-06-2025",
+    "17-08-2025",
+    "05-09-2025",
+    "25-12-2025",
+    "26-12-2025",
+  ];
 
   const columns = useMemo(() => {
     const dayColumns = Array.from({ length: daysInMonth }, (_, i) => {
       const day = i + 1;
       const currentDate = dayjs(`${tahun}-${bulan + 1}-${day}`);
       const dayOfWeek = currentDate.day(); // 0 = Minggu, 6 = Sabtu
+      const tanggalStr = currentDate.format("DD-MM-YYYY");
+
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const isHariLibur = hariLiburNasional.includes(tanggalStr);
+      const isLiburTotal = isWeekend || isHariLibur;
+
       return {
         field: `day_${day}`,
         headerName: `${day}`,
@@ -170,52 +208,62 @@ const TableRekap = ({
         width: 40,
         disableColumnMenu: true,
         sortable: false,
-        cellClassName: isWeekend ? "weekend-cell" : "",
-        headerClassName: isWeekend ? "weekend-header" : "",
+
+        // 👉 beri class untuk header & cell
+        cellClassName: isWeekend
+          ? "weekend-cell"
+          : isHariLibur
+          ? "holiday-cell"
+          : "",
+        headerClassName: isWeekend
+          ? "weekend-header"
+          : isHariLibur
+          ? "holiday-header"
+          : "",
+
         renderCell: (params) => {
           const day = params.colDef.field.split("_")[1];
           const tanggal = dayjs(`${tahun}-${bulan + 1}-${day}`);
+          const tanggalStr = tanggal.format("DD-MM-YYYY");
+
           const isWeekend = tanggal.day() === 6 || tanggal.day() === 0;
+          const isHariLibur = hariLiburNasional.includes(tanggalStr);
+          const isLiburTotal = isWeekend || isHariLibur;
           const sekarang = dayjs().startOf("day");
 
           if (params.value) {
             return (
-              <>
-                <Box
-                  onClick={(e) =>
-                    handlePopoverOpen(
-                      e,
-                      params.row.id,
-                      tanggal.format("YYYY-MM-DD")
-                    )
-                  }
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease-in-out",
-                    fontSize: 12,
-                    borderRadius: 1,
-                    "&:hover": {
-                      transform: "scale(1.6)",
-                      backgroundColor: "rgba(255, 255, 255, 0.1)",
-                    },
-                  }}
-                >
-                  ✅
-                </Box>
-              </>
+              <Box
+                onClick={(e) =>
+                  handlePopoverOpen(
+                    e,
+                    params.row.id,
+                    tanggal.format("YYYY-MM-DD")
+                  )
+                }
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease-in-out",
+                  fontSize: 12,
+                  borderRadius: 1,
+                  "&:hover": {
+                    transform: "scale(1.6)",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  },
+                }}
+              >
+                ✅
+              </Box>
             );
           }
 
-          // Tanggal di masa depan, kosongkan saja
           if (tanggal.isAfter(sekarang)) return null;
 
-          // Jika tidak ada kegiatan dan hari weekend, kosongkan
-          if (isWeekend) return null;
+          if (isLiburTotal) return null;
 
-          // Tidak ada kegiatan dan bukan weekend, tampilkan silang
           return (
             <Box
               sx={{
@@ -420,12 +468,19 @@ const TableRekap = ({
         }}
         sx={{
           maxHeight: 550,
-          minHeight:550,
+          minHeight: 550,
           "& .weekend-cell": {
-            backgroundColor: "#f3e5f5",
+            backgroundColor: "#f3e5f5", // ungu muda
           },
           "& .weekend-header": {
-            backgroundColor: "#ce93d8",
+            backgroundColor: "#ce93d8", // ungu lebih gelap
+            fontWeight: "bold",
+          },
+          "& .holiday-cell": {
+            backgroundColor: "#fff0ff", // lebih terang dari weekend
+          },
+          "& .holiday-header": {
+            backgroundColor: "#edd6f2", // lebih soft dari weekend header
             fontWeight: "bold",
           },
         }}
