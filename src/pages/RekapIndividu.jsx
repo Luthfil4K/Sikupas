@@ -5,6 +5,10 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { format, isBefore, startOfDay, addDays } from "date-fns";
 import { useParams } from "react-router-dom";
 
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
+
 import {
   Card,
   FormControl,
@@ -72,15 +76,70 @@ const RekapIndividu = () => {
     }
   }, [pegawai]);
 
+   const hariLiburBali = [
+    "12-02-2025",
+    "22-04-2025",
+    "23-04-2025",
+    "24-04-2025",
+    "10-09-2025",
+    "18-11-2025",
+    "19-11-2025",
+    "20-11-2025",
+  ]
+
+  const hariLiburNasional = [
+    
+    "01-01-2025",
+    "27-01-2025",
+    "28-01-2025",
+    "29-01-2025",
+    "28-03-2025",
+    "29-03-2025",
+    "31-03-2025",
+    "01-04-2025",
+    "02-04-2025",
+    "03-04-2025",
+    "04-04-2025",
+    "07-04-2025",
+    "18-04-2025",
+    "20-04-2025",
+    "01-05-2025",
+    "12-05-2025",
+    "13-05-2025",
+    "29-05-2025",
+    "30-05-2025",
+    "01-06-2025",
+    "06-06-2025",
+    "09-06-2025",
+    "27-06-2025",
+    "17-08-2025",
+    "05-09-2025",
+    "25-12-2025",
+    "26-12-2025",
+  ];
+
   const dayCellDidMount = (info) => {
     const today = startOfDay(new Date());
     const date = startOfDay(info.date);
+    const tanggal = new Date(info.date)
+    console.log(tanggal)
+    
+    const dd = String(tanggal.getDate()).padStart(2, "0");
+    const mm = String(tanggal.getMonth() + 1).padStart(2, "0"); // bulan 0–11
+    const yyyy = tanggal.getFullYear();
+
+    const formatted = `${dd}-${mm}-${yyyy}`;
+
+    const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
+    const isHariLibur = semuaHariLibur.includes(formatted);
     const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+    // const isHariLibur = semuaHariLibur.includes(tanggalStr);
     const hasEvents = events.some(
       (e) => date >= e.startDate && date < e.endDate
     );
 
-    if (!isWeekend && !hasEvents && isBefore(date, today)) {
+    if (!isHariLibur && !isWeekend && !hasEvents && isBefore(date, today)) {
       const el = document.createElement("div");
       el.innerText = "×";
       el.style.color = "red";
@@ -123,11 +182,16 @@ const RekapIndividu = () => {
       title: "Detail Kegiatan",
       html: `
         <strong>${title}</strong><br/>
-        <small>${format(new Date(start), "dd MMM yyyy")} - ${format(
-        new Date(new Date(start).getTime() - 1000), // kurangi 1 detik dari end
-        "dd MMM yyyy"
-      )}</small>
+        <small>${format(new Date(start), "dd MMM yyyy")} 
+      </small>
       `,
+      // html: `
+      //   <strong>${title}</strong><br/>
+      //   <small>${format(new Date(start), "dd MMM yyyy")} - ${format(
+      //   new Date(new Date(start).getTime() ), 
+      //   "dd MMM yyyy"
+      // )}</small>
+      // `,
       icon: "info",
       confirmButtonText: "Tutup",
       customClass: {
@@ -136,8 +200,7 @@ const RekapIndividu = () => {
     });
   };
 
-  console.log(pegawai);
-  console.log(pegawai);
+  
 
   if (loading) {
     return <LoadingPage />;
