@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 import Identity from "../components/profileComponent/Identity";
 import TableIdentity from "../components/profileComponent/TableIdentity";
 import TableActivity from "../components/profileComponent/TableActivity";
+import TableRekapSkpTahunan from "../components/profileComponent/TableRekapSkpTahunan";
 import LineChartIdentity from "../components/profileComponent/LineChartIdentity";
 import SKPDragDrop from "../components/profileComponent/SKPDragDrop";
 import CardTimKerja from "../components/organisasiComponent/CardTimKerja";
@@ -28,6 +29,7 @@ import LoadingPage from "./LoadingPage";
 import { getPegawaiById } from "../services/pegawaiServices";
 import { getAllPegawai } from "../services/pegawaiServices";
 import { getPegawaiKabko } from "../services/pegawaiServices";
+import { getRekapSKP } from "../services/pegawaiServices";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -99,6 +101,7 @@ const ProfilePages = () => {
   const theme = useTheme();
 
   const [pegawai, setPegawai] = useState(null);
+  const [rekapSkpPegawai,setRekapSkpPegawai]= useState(null)
   const [jumlahAktivitas, setJumlahAktivitas] = useState(0);
   const [semuaPegawai, setSemuaPegawai] = useState([]);
 
@@ -106,17 +109,41 @@ const ProfilePages = () => {
     const fetchPegawai = async () => {
       try {
         const data = await getPegawaiById(id);
+     
         setPegawai(data);
       } catch (err) {
-        console.error("Gagal mengambil data pegawai", err);
+        console.error("Gagal mengambil data pegawai dengan nip: ",id, err);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000); 
+      }
+    };
+    fetchPegawai();
+
+    
+
+  }, [id]);
+
+
+  useEffect(() => {
+   const fetchPegawaiSKP = async () => {
+    const nip_lama_int = pegawai.nip_bps ? parseInt(pegawai.nip_bps): ''
+      try {
+        const data = await getRekapSKP(nip_lama_int);
+        setRekapSkpPegawai(data);
+      } catch (err) {
+        console.error("Gagal mengambil data rekap skp pegawai ",nip_lama_int, ' : ', err);
       } finally {
         setTimeout(() => {
           setLoading(false);
         }, 1000); // matikan loading setelah fetch
       }
     };
-    fetchPegawai();
-  }, [id]);
+    fetchPegawaiSKP();
+  }, [pegawai,id]);
+
+
 
   useEffect(() => {
     const fetchPegawai = async () => {
@@ -341,6 +368,14 @@ const ProfilePages = () => {
                       fontWeight: tabIndex === 1 ? "bold" : "normal",
                     }}
                   />
+                  <Tab
+                    label="Rekap SKP Tahunan"
+                    sx={{
+                      color:
+                        tabIndex === 2 ? theme.palette.primary.dark : "gray",
+                      fontWeight: tabIndex === 1 ? "bold" : "normal",
+                    }}
+                  />
                 </Tabs>
                 <Divider></Divider>
                 <CardContent>
@@ -352,6 +387,9 @@ const ProfilePages = () => {
                       pegawai={pegawai}
                       setJumlahAktivitas={setJumlahAktivitas}
                     ></TableIdentity>
+                  </TabPanel>
+                  <TabPanel value={tabIndex} index={2}>
+                   <TableRekapSkpTahunan dataRekap={rekapSkpPegawai}></TableRekapSkpTahunan>
                   </TabPanel>
                 </CardContent>
               </Card>

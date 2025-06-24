@@ -22,9 +22,17 @@ export const changePasswordPegawai = async ({ nip, oldPassword, newPassword }) =
 };
 
 export const getPegawaiKabko = async (wilayah) => {
- 
    const response = await api.get(`/pegawai/kabko`, {
       params: { wilayah:wilayah },
     });
     return response.data;
 };
+
+
+export const getRekapSKP = async (nip) => {
+  const response = await api.get('/skp/rekap',{
+    params : {nip}
+  })
+
+  return response.data
+}

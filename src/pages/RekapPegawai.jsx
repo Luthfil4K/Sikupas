@@ -99,8 +99,8 @@ const TestingComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!loadingUser && userData) {
-        console.log("UserData: ", userData);
-        console.log("Pimpinan: ", Role.PIMPINAN_PROVINSI);
+        // console.log("UserData: ", userData);
+        // console.log("Pimpinan: ", Role.PIMPINAN_PROVINSI);
         try {
           if (userData.role.id === Role.PIMPINAN_PROVINSI) {
           
@@ -110,8 +110,6 @@ const TestingComponent = () => {
               tahun,
             });
 
-            console.log("response")
-            console.log(response)
             setDataPegawaiKegiatan(response);
             setIsAllowedFilter(true);
           } else if (
