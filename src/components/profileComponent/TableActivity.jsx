@@ -9,24 +9,37 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 
 const TableActivity = ({ pegawai }) => {
-
   const theme = useTheme();
   const today = new Date();
 
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
-  const currentWeek = Math.ceil((today.getDate() + new Date(today.getFullYear(), today.getMonth(), 1).getDay()) / 7);
+  const currentWeek = Math.ceil(
+    (today.getDate() +
+      new Date(today.getFullYear(), today.getMonth(), 1).getDay()) /
+      7
+  );
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedWeek, setSelectedWeek] = useState("all");
 
   const monthNames = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
   ];
 
   const formatTanggal = (isoDate) => {
@@ -60,12 +73,17 @@ const TableActivity = ({ pegawai }) => {
       const isSameMonth = date.getMonth() === selectedMonth;
 
       const getWeekOfMonth = (date) => {
-        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+        const firstDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          1
+        ).getDay();
         return Math.ceil((date.getDate() + firstDay) / 7);
       };
-       
-      const isSameWeek = selectedWeek === "all" || getWeekOfMonth(date) === parseInt(selectedWeek);
-      
+
+      const isSameWeek =
+        selectedWeek === "all" ||
+        getWeekOfMonth(date) === parseInt(selectedWeek);
 
       return isSameYear && isSameMonth && isSameWeek;
     });
@@ -83,40 +101,79 @@ const TableActivity = ({ pegawai }) => {
       field: "kegiatan",
       headerName: "Kegiatan",
       width: 450,
-      renderCell: (params) => <div style={{ whiteSpace: "pre-wrap" }}>{params.value}</div>,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: "pre-wrap" }}>{params.value}</div>
+      ),
     },
     { field: "capaian", headerName: "Capaian", width: 450 },
     {
       field: "dataDukung",
       headerName: "Bukti Dukung",
       width: 150,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          
-          size="small"
-          href={params.value}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{ backgroundColor: theme.palette.primary.dark,color:'white' }}
-        >
-          Lihat
-        </Button>
-      ),
-    }
-    
+      renderCell: (params) => {
+        if (params.value) {
+          return (
+            <Button
+              variant="contained"
+              size="small"
+              href={params.value}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                backgroundColor: theme.palette.primary.dark,
+                color: "white",
+              }}
+            >
+              Lihat
+            </Button>
+          );
+        }else{
+          return (
+            <Box sx={{display:'flex',alignItems:'center',height:45}}>
+              <Typography sx={{fontSize:12}}>Tidak Ada Bukti Dukung</Typography>
+            </Box>
+          )
+        }
+      },
+    },
   ];
 
   return (
-    <Box sx={{ backgroundColor: "white", minHeight: 400, width: "100%", borderRadius: 2, p: 2 }}>
+    <Box
+      sx={{
+        backgroundColor: "white",
+        minHeight: 400,
+        width: "100%",
+        borderRadius: 2,
+        p: 2,
+      }}
+    >
       <Box sx={{ mb: 2 }}>
         <Grid container>
-          <Grid item md={6} sx={{ display: "flex", flexWrap: "wrap", gap: 2, justifyContent: "flex-start" }}>
+          <Grid
+            item
+            md={6}
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              justifyContent: "flex-start",
+            }}
+          >
             <Typography variant="h6">
               Tabel Capaian Kinerja Pegawai Harian
             </Typography>
           </Grid>
-          <Grid item md={6} sx={{ display: "flex", flexWrap: "wrap", gap: 2, justifyContent: "flex-end" }}>
+          <Grid
+            item
+            md={6}
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              justifyContent: "flex-end",
+            }}
+          >
             <FormControl size="small" sx={{ minWidth: 150 }}>
               <InputLabel id="filter-tahun">Tahun</InputLabel>
               <Select
@@ -126,7 +183,9 @@ const TableActivity = ({ pegawai }) => {
                 onChange={(e) => setSelectedYear(e.target.value)}
               >
                 {[2023, 2024, 2025, 2026].map((year) => (
-                  <MenuItem key={year} value={year}>{year}</MenuItem>
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -140,7 +199,9 @@ const TableActivity = ({ pegawai }) => {
                 onChange={(e) => setSelectedMonth(e.target.value)}
               >
                 {monthNames.map((month, index) => (
-                  <MenuItem key={index} value={index}>{month}</MenuItem>
+                  <MenuItem key={index} value={index}>
+                    {month}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -153,9 +214,13 @@ const TableActivity = ({ pegawai }) => {
                 label="Minggu"
                 onChange={(e) => setSelectedWeek(e.target.value)}
               >
-                <MenuItem key={6} value={"all"}>Semua Minggu</MenuItem>
+                <MenuItem key={6} value={"all"}>
+                  Semua Minggu
+                </MenuItem>
                 {[1, 2, 3, 4, 5].map((week) => (
-                  <MenuItem key={week} value={week}>Minggu ke-{week}</MenuItem>
+                  <MenuItem key={week} value={week}>
+                    Minggu ke-{week}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
