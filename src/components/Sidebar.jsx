@@ -39,6 +39,12 @@ const Sidebar = () => {
       
         [
           {
+            name: 'Dashboard',
+            icon: House,
+            color: '#3B82F6',
+            path: `/dashboard`,
+          },
+          {
             name: 'Aktivitas Saya',
             icon: User,
             color: '#EC4899',
