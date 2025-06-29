@@ -1,34 +1,49 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Box, Card } from "@mui/material";
+import { getMetabaseUrl } from "../services/metabaseServices";
 
-import api from "../services/api";
+
+
 
 const DashboardPages = () => {
-  return (
-    <>
-      <main className="w-full p-6">
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            mb: 2,
-          }}
-        ></Box>
+  const [iframeUrl, setIframeUrl] = useState("");
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        ></motion.div>
-        <Card sx={{width:'100%',height:'730px' // height:'auto'
-        
-        
-        }}>
-        </Card>
-      </main>
-    </>
+  useEffect(() => {
+  const fetchUrl = async () => {
+    try {
+      const url = await getMetabaseUrl();
+      setIframeUrl(url);
+    } catch (err) {
+      console.error("Gagal load iframe:", err);
+    }
+  };
+
+  fetchUrl();
+}, []);
+
+  console.log(iframeUrl)
+  console.log(iframeUrl)
+  console.log(iframeUrl)
+  console.log(iframeUrl)
+
+  
+
+  return (
+    <main className="w-full p-6">
+      <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", mb: 2 }} />
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} />
+      <Card sx={{ width: "100%", height: "730px" }}>
+       
+          <iframe
+            src={iframeUrl}
+            frameBorder={0}
+            width="100%"
+            height="100%"
+          />
+       
+      </Card>
+    </main>
   );
 };
 
