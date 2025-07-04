@@ -29,13 +29,26 @@ const isToday = (date) => {
 
 const isThisWeek = (date) => {
   const today = new Date();
-  const currentWeekStart = new Date(
-    today.setDate(today.getDate() - today.getDay())
-  );
-  const currentWeekEnd = new Date(currentWeekStart);
-  currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
 
-  return date >= currentWeekStart && date <= currentWeekEnd;
+  // Hitung awal dan akhir minggu
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
+
+  // Batas minggu yang dibatasi oleh bulan berjalan
+  const monthStart = new Date(currentYear, currentMonth, 1);
+  const monthEnd = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
+
+  const validStart = startOfWeek < monthStart ? monthStart : startOfWeek;
+  const validEnd = endOfWeek > monthEnd ? monthEnd : endOfWeek;
+
+  return date >= validStart && date <= validEnd;
 };
 
 const isThisMonth = (date) => {
@@ -252,9 +265,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
-                  Aktivitas
-                </Typography>
+                
                 <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Hari Ini
                 </Typography>
@@ -301,9 +312,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
-                  Aktivitas
-                </Typography>
+                
                 <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Minggu Ini
                 </Typography>
@@ -351,9 +360,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
-                  Aktivitas
-                </Typography>
+                
                 <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Bulan Ini
                 </Typography>
@@ -401,9 +408,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
-                  Aktivitas
-                </Typography>
+                
                 <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
                   Tahun Ini
                 </Typography>
