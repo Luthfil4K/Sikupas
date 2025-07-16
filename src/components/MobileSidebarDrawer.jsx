@@ -47,6 +47,22 @@ const MobileSidebarDrawer = ({ open, onClose }) => {
     <Drawer anchor="left" open={open} onClose={onClose}>
       <div className="w-64 p-4 bg-gray-800 h-full text-white">
         <h2 className="text-xl font-bold mb-4">Menu</h2>
+        {userData?.role.id === Role.PIMPINAN_PROVINSI ||
+          userData?.role.id === Role.KEPALA_KABKO ||
+          userData?.role.id ===Role.KEPALA_BAGIAN_UMUM_PROVINSI ? (
+            <Link to="/dashboard" onClick={onClose}>
+              <ListItem button>
+                <ListItemIcon>
+                  <House color="#3B82F6" />
+                </ListItemIcon>
+                <ListItemText primary="Dashboard" />
+              </ListItem>
+            </Link>
+           
+          ) : (
+            <>
+            </>
+          )}
         <List>
           <Link to={`/profile/${nip}`} onClick={onClose}>
             <ListItem button>
