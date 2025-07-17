@@ -4,10 +4,22 @@ import { Box, Card } from "@mui/material";
 import { getMetabaseUrl } from "../services/metabaseServices";
 
 
+import { Navigate } from "react-router-dom";
+
+// req user login infor
+import { useUser } from "../context/UserContext";
+
+// utils/types
+import Role from "../types/roles"; // sesuaikan pathnya
 
 
 const DashboardPages = () => {
   const [iframeUrl, setIframeUrl] = useState("");
+  const {userData, loadingUser } = useUser();
+  const role = localStorage.getItem("role");
+  const [isAllowed, setIsAllowed] = useState(true);
+  const nip = localStorage.getItem("nip");
+  const cleanedNip = nip?.replace(/^"+|"+$/g, "");
 
   useEffect(() => {
   const fetchUrl = async () => {
@@ -18,16 +30,34 @@ const DashboardPages = () => {
       console.error("Gagal load iframe:", err);
     }
   };
-
   fetchUrl();
 }, []);
 
-  console.log(iframeUrl)
-  console.log(iframeUrl)
-  console.log(iframeUrl)
-  console.log(iframeUrl)
 
-  
+
+  useEffect(() => {
+      if (userData) {
+        if (
+          role === "ketua_tim" ||
+          role === "admin" ||
+          role == "pimpinan" ||
+          [
+            Role.PIMPINAN_PROVINSI,
+            Role.KEPALA_KABKO,
+            Role.KEPALA_BAGIAN_UMUM_KABKO,
+            Role.KEPALA_BAGIAN_UMUM_PROVINSI,
+          ].includes(userData.role.id)
+        ) {
+          setIsAllowed(true);
+        } else {
+          setIsAllowed(false);
+        }
+      }
+    }, [role, cleanedNip, userData]);
+
+  if (!isAllowed) {
+      return <Navigate to="/forbidden" replace />;
+    }
 
   return (
     <main className="w-full p-6">
