@@ -70,6 +70,7 @@ const OrganisasiPages = () => {
   }, [userData]);
 
   const [filterRole, setFilterRole] = useState("all");
+  const [filterSatker, setFilterSatker] = useState("all");
   const [timKerja, setTimKerja] = useState([]);
   const [pegawai, setPegawai] = useState([]);
 
@@ -113,13 +114,19 @@ const OrganisasiPages = () => {
         } finally {
           setTimeout(() => {
             setLoading(false);
-          }, 1000); // matikan loading setelah fetch
+          }, 1000); 
         }
       }
     };
 
     fetchData();
   }, [role, nipLama, userData]);
+
+
+  console.log("pegawai")
+  console.log(pegawai)
+  console.log(pegawai)
+  console.log("pegawai")
 
   // fortabb
   const [tabIndex, setTabIndex] = useState(0);
@@ -140,12 +147,17 @@ const OrganisasiPages = () => {
   );
 
   const filteredStaffs = pegawai
-    .filter((team) =>
-      team.nama.toLowerCase().includes(searchTerm2.toLowerCase())
+    .filter((staff) =>
+      staff.nama.toLowerCase().includes(searchTerm2.toLowerCase())
     )
-    .filter((team) => {
+    .filter((staff) => {
+
+        if (filterSatker=="all") return true; // tampilkan semua jika belum dipilih
+        return staff.satker.kode_satker === filterSatker;
+      })
+    .filter((staff) => {
       if (filterRole === "ahli madya") {
-        return team.jabatan?.toLowerCase().includes("ahli madya");
+        return staff.jabatan?.toLowerCase().includes("ahli madya");
       }
       return true;
     });
@@ -299,6 +311,32 @@ const OrganisasiPages = () => {
                           >
                             <MenuItem value="all">Semua Pegawai</MenuItem>
                             <MenuItem value="ahli madya">Ahli madya</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <FormControl fullWidth size="small">
+                          <InputLabel id="filter-role-label">
+                            Satuan Kerja
+                          </InputLabel>
+                          <Select
+                            labelId="filter-role-label"
+                            value={filterSatker}
+                            label="Satuan Kerja"
+                            onChange={(e) => setFilterSatker(e.target.value)}
+                          >
+                            <MenuItem value="all">all</MenuItem>
+                            <MenuItem value="5100">5100</MenuItem>
+                            <MenuItem value="5101">5101</MenuItem>
+                            <MenuItem value="5102">5102</MenuItem>
+                            <MenuItem value="5103">5103</MenuItem>
+                            <MenuItem value="5104">5104</MenuItem>
+                            <MenuItem value="5105">5105</MenuItem>
+                            <MenuItem value="5106">5106</MenuItem>
+                            <MenuItem value="5107">5107</MenuItem>
+                            <MenuItem value="5108">5108</MenuItem>
+                            <MenuItem value="5171">5171</MenuItem>
+                            
                           </Select>
                         </FormControl>
                       </Grid>
