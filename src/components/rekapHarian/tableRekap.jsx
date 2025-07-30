@@ -47,6 +47,7 @@ const TableRekap = ({
   const [popoverContent, setPopoverContent] = useState({});
   const [popoverDate, setPopoverDate] = useState(null);
   const [popoverNip, setPopoverNip] = useState(null);
+  const [sortModel, setSortModel] = useState([{ field: "role", sort: "asc" }]);
 
   const handlePopoverOpen = async (event, nip, tanggal) => {
     setAnchorEl(event.currentTarget);
@@ -169,7 +170,7 @@ const TableRekap = ({
     "18-11-2025",
     "19-11-2025",
     "20-11-2025",
-  ]
+  ];
 
   const hariLiburNasional = [
     "01-01-2025",
@@ -315,6 +316,7 @@ const TableRekap = ({
         ),
       },
 
+      { field: "role", headerName: "Role ID", width: 200, hide: true },
       { field: "wilayah", headerName: "Satuan Kerja", width: 200, hide: true },
       ...dayColumns,
     ];
@@ -329,6 +331,7 @@ const TableRekap = ({
         nama: pegawai.nama,
         wilayah: pegawai.satker.nama_satker,
         kegiatan: pegawai.kegiatan,
+        role: pegawai.role_id,
       };
 
       for (let i = 1; i <= daysInMonth; i++) {
@@ -352,6 +355,16 @@ const TableRekap = ({
 
   const selectedWilayahLabel =
     wilayahOptions.find((opt) => opt.value === selectedWilayah)?.label || "";
+
+  useEffect(() => {
+    if (selectedWilayah != "5100") {
+      setSortModel([{ field: "role", sort: "asc" }]);
+      console.log("tidak sama dengan 5100");
+    } else {
+      setSortModel([{ field: "role", sort: "desc" }]);
+      console.log(" sama dengan 5100");
+    }
+  }, [selectedWilayah]);
   return (
     <Box>
       <Grid container sx={{ mt: 2, mb: 2 }}>
@@ -468,6 +481,8 @@ const TableRekap = ({
       <DataGrid
         rows={rows}
         columns={columns}
+        sortModel={sortModel}
+        onSortModelChange={(model) => setSortModel(model)}
         disableSelectionOnClick
         rowHeight={32}
         pagination
@@ -478,7 +493,8 @@ const TableRekap = ({
           },
           columns: {
             columnVisibilityModel: {
-              wilayah: false, // Sembunyikan kolom "wilayah"
+              wilayah: false,
+              role: false,
             },
           },
         }}
@@ -486,17 +502,17 @@ const TableRekap = ({
           maxHeight: 550,
           minHeight: 550,
           "& .weekend-cell": {
-            backgroundColor: "#f3e5f5", // ungu muda
+            backgroundColor: "#f3e5f5",
           },
           "& .weekend-header": {
-            backgroundColor: "#ce93d8", // ungu lebih gelap
+            backgroundColor: "#ce93d8",
             fontWeight: "bold",
           },
           "& .holiday-cell": {
-            backgroundColor: "#fff0ff", // lebih terang dari weekend
+            backgroundColor: "#fff0ff",
           },
           "& .holiday-header": {
-            backgroundColor: "#edd6f2", // lebih soft dari weekend header
+            backgroundColor: "#edd6f2",
             fontWeight: "bold",
           },
         }}
@@ -540,9 +556,6 @@ const TableRekap = ({
                       )}) ${formatBulanTahun(akhir)}`;
                     } else {
                       return ``;
-                      // return `(${formatTanggal(awal)}) ${formatBulanTahun(
-                      //   awal
-                      // )}`;
                     }
                   })()}
                 </Box>
