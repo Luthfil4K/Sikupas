@@ -361,10 +361,11 @@ const TableRekap = ({
       setSortModel([{ field: "role", sort: "asc" }]);
       console.log("tidak sama dengan 5100");
     } else {
-      setSortModel([{ field: "role", sort: "desc" }]);
+      setSortModel([{ field: "role", sort: "asc" }]);
       console.log(" sama dengan 5100");
     }
   }, [selectedWilayah]);
+
   return (
     <Box>
       <Grid container sx={{ mt: 2, mb: 2 }}>

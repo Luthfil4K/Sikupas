@@ -111,6 +111,7 @@ const TestingComponent = () => {
             });
 
             setDataPegawaiKegiatan(response);
+    
             setIsAllowedFilter(true);
           } else if (
             userData.role.id === Role.KETUA_TIM_PROVINSI ||
@@ -133,7 +134,7 @@ const TestingComponent = () => {
 
             console.log(pegawaiKegiatan)
             const filteredPegawai = pegawaiKegiatan.dataPegawai.filter(
-              (pegawai) => pegawai.nip !== userData.nip
+              (pegawai) => pegawai.nip !== "197806121999121001"
             );
             setIsAllowedFilter(false)
             setDataPegawaiKegiatan(filteredPegawai);
@@ -152,6 +153,7 @@ const TestingComponent = () => {
 
     fetchData();
   }, [userData, bulan, tahun, selectedWilayah]);
+
 
   return loading ? (
     <LoadingPage />
