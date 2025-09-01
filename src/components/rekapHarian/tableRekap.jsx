@@ -16,7 +16,13 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter"; // <== tambahin ini
+
 dayjs.extend(isBetween);
+dayjs.extend(isSameOrAfter); // <== extend biar bisa dipakai
+
+dayjs.extend(isBetween);
+dayjs.extend(isSameOrAfter); // <== extend biar bisa dipakai
 
 //get data
 import { getKegDeskripsiPegawai } from "../../services/kegiatanServices";
@@ -57,10 +63,17 @@ const TableRekap = ({
 
     try {
       const response = await getKegDeskripsiPegawai(nip, tanggal);
-      setPopoverContent(response);
+
+      // 👉 cari pegawai dari rows biar dapet status
+      const pegawaiRow = rows.find((r) => r.id === nip);
+
+      setPopoverContent({
+        ...response,
+        pegawai: { status: pegawaiRow?.status }, // inject status
+      });
     } catch (error) {
       console.error("Gagal mengambil kegiatan:", error);
-      setPopoverContent([]);
+      setPopoverContent({});
     }
   };
 
@@ -202,45 +215,110 @@ const TableRekap = ({
     "26-12-2025",
   ];
 
- const columns = useMemo(() => {
-  const dayColumns = Array.from({ length: daysInMonth }, (_, i) => {
-    const day = i + 1;
-    const currentDate = dayjs(`${tahun}-${bulan + 1}-${day}`);
-    const dayOfWeek = currentDate.day(); // 0 = Minggu, 6 = Sabtu
-    const tanggalStr = currentDate.format("DD-MM-YYYY");
-    const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
+  const columns = useMemo(() => {
+    const dayColumns = Array.from({ length: daysInMonth }, (_, i) => {
+      const day = i + 1;
+      const currentDate = dayjs(`${tahun}-${bulan + 1}-${day}`);
+      const dayOfWeek = currentDate.day(); // 0 = Minggu, 6 = Sabtu
+      const tanggalStr = currentDate.format("DD-MM-YYYY");
+      const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
 
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const isHariLibur = semuaHariLibur.includes(tanggalStr);
-    const isLiburTotal = isWeekend || isHariLibur;
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const isHariLibur = semuaHariLibur.includes(tanggalStr);
+      const isLiburTotal = isWeekend || isHariLibur;
 
-    return {
-      field: `day_${day}`,
-      headerName: `${day}`,
-      minWidth: 20,
-      width: 40,
-      disableColumnMenu: true,
-      sortable: false,
+      return {
+        field: `day_${day}`,
+        headerName: `${day}`,
+        minWidth: 20,
+        width: 40,
+        disableColumnMenu: true,
+        sortable: false,
 
-      cellClassName: isWeekend
-        ? "weekend-cell"
-        : isHariLibur
-        ? "holiday-cell"
-        : "",
-      headerClassName: isWeekend
-        ? "weekend-header"
-        : isHariLibur
-        ? "holiday-header"
-        : "",
+        cellClassName: isWeekend
+          ? "weekend-cell"
+          : isHariLibur
+          ? "holiday-cell"
+          : "",
+        headerClassName: isWeekend
+          ? "weekend-header"
+          : isHariLibur
+          ? "holiday-header"
+          : "",
 
-      renderCell: (params) => {
-        const value = params.value;
-        const tanggal = dayjs(`${tahun}-${bulan + 1}-${day}`);
-        const sekarang = dayjs().startOf("day");
-     
-       
-        // 👉 jika ada huruf (TUGAS BELAJAR)
-        if (typeof value === "string") {
+        renderCell: (params) => {
+          const value = params.value;
+          const tanggal = dayjs(`${tahun}-${bulan + 1}-${day}`);
+          const sekarang = dayjs().startOf("day");
+
+          // 👉 jika ada huruf (TUGAS BELAJAR)
+          if (value === "ICON_TB") {
+            return (
+              <Box
+                onClick={(e) =>
+                  handlePopoverOpen(
+                    e,
+                    params.row.id,
+                    tanggal.format("YYYY-MM-DD")
+                  )
+                }
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  fontSize: 16,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.6)",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  },
+                }}
+              >
+                🎓
+              </Box>
+            );
+          }
+
+          // 👉 jika boolean true → ✅
+          if (value === true) {
+            return (
+              <Box
+                onClick={(e) =>
+                  handlePopoverOpen(
+                    e,
+                    params.row.id,
+                    tanggal.format("YYYY-MM-DD")
+                  )
+                }
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease-in-out",
+                  fontSize: 12,
+                  borderRadius: 1,
+                  "&:hover": {
+                    transform: "scale(1.6)",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  },
+                }}
+              >
+                ✅
+              </Box>
+            );
+          }
+
+          // 👉 jika tanggal setelah hari ini → kosong
+          if (tanggal.isAfter(sekarang)) return null;
+
+          // 👉 jika weekend / libur → kosong
+          if (isLiburTotal) return null;
+
+          if (params.row.status == "TB") return null;
+          // 👉 selain itu tampilkan ❌
           return (
             <Box
               sx={{
@@ -248,133 +326,100 @@ const TableRekap = ({
                 justifyContent: "center",
                 width: "100%",
                 fontSize: 12,
-                fontWeight: "bold",
               }}
             >
-              {value}
+              <span>❌</span>
             </Box>
           );
-        }
+        },
+      };
+    });
 
-        // 👉 jika boolean true → ✅
-        if (value === true) {
-          return (
-            <Box
-              onClick={(e) =>
-                handlePopoverOpen(e, params.row.id, tanggal.format("YYYY-MM-DD"))
-              }
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "all 0.2s ease-in-out",
-                fontSize: 12,
-                borderRadius: 1,
-                "&:hover": {
-                  transform: "scale(1.6)",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                },
-              }}
-            >
-              ✅
-            </Box>
-          );
-        }
-
-        // 👉 jika tanggal setelah hari ini → kosong
-        if (tanggal.isAfter(sekarang)) return null;
-
-        // 👉 jika weekend / libur → kosong
-        if (isLiburTotal) return null;
-
-        if (params.row.status =="TB") return null
-        // 👉 selain itu tampilkan ❌
-        return (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              fontSize: 12,
+    return [
+      {
+        field: "nama",
+        headerName: "Nama Pegawai",
+        width: 200,
+        renderCell: (params) => (
+          <Link
+            to={`/rekapIndividu/${params.row.id}`}
+            style={{
+              color: "#1E40AF",
+              cursor: "pointer",
             }}
           >
-            <span>❌</span>
-          </Box>
-        );
+            {params.value}
+          </Link>
+        ),
       },
-    };
-  });
 
-  return [
-    {
-      field: "nama",
-      headerName: "Nama Pegawai",
-      width: 200,
-      renderCell: (params) => (
-        <Link
-          to={`/rekapIndividu/${params.row.id}`}
-          style={{
-            color: "#1E40AF",
-            cursor: "pointer",
-          }}
-        >
-          {params.value}
-        </Link>
-      ),
-    },
+      { field: "role", headerName: "Role ID", width: 200, hide: true },
+      { field: "wilayah", headerName: "Satuan Kerja", width: 200, hide: true },
+      ...dayColumns,
+    ];
+  }, [bulan, tahun, daysInMonth]);
 
-    { field: "role", headerName: "Role ID", width: 200, hide: true },
-    { field: "wilayah", headerName: "Satuan Kerja", width: 200, hide: true },
-    ...dayColumns,
-  ];
-}, [bulan, tahun, daysInMonth]);
+  const rows = useMemo(() => {
+    if (!dataPegawaiKegiatan) return [];
 
-const rows = useMemo(() => {
-  if (!dataPegawaiKegiatan) return [];
+    return dataPegawaiKegiatan.map((pegawai) => {
+      const row = {
+        id: pegawai.nip,
+        nama: pegawai.nama,
+        wilayah: pegawai.satker.nama_satker,
+        kegiatan: pegawai.kegiatan,
+        role: pegawai.role_id,
+        status: pegawai.status,
+      };
 
-  return dataPegawaiKegiatan.map((pegawai) => {
-    const row = {
-      id: pegawai.nip,
-      nama: pegawai.nama,
-      wilayah: pegawai.satker.nama_satker,
-      kegiatan: pegawai.kegiatan,
-      role: pegawai.role_id,
-      status: pegawai.status,
-    };
+      if (pegawai.status === "TB") {
+        const mulaiTB = dayjs("2025-08-01"); // tanggal mulai tugas belajar
 
-    if (pegawai.status === "TB") {
-      // isi kata "TUGAS BELAJAR" mulai kolom day_10
-      const text = "TUGAS BELAJAR";
-      
-      for (let i = 0; i < text.length; i++) {
-        const colIndex = 10 + i; // mulai dari day_10
-        if (colIndex <= daysInMonth) {
-          row[`day_${colIndex}`] = text[i];
+        for (let i = 1; i <= daysInMonth; i++) {
+          const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf(
+            "day"
+          );
+
+          if (currentDate.isSame(mulaiTB) || currentDate.isAfter(mulaiTB)) {
+            // 👉 mulai Agustus pakai ICON_TB
+            row[`day_${i}`] = "ICON_TB";
+          } else {
+            // 👉 sebelum Agustus tetap logika normal
+            const aktivitasHariIni = pegawai.kegiatan.filter((keg) => {
+              const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
+              const akhir = dayjs(keg.keg_tanggal_akhir).startOf("day");
+              return currentDate.isBetween(
+                awal.subtract(1, "day"),
+                akhir.add(1, "day")
+              );
+            });
+
+            row[`day_${i}`] = aktivitasHariIni.length > 0; // true/false
+          }
+        }
+      } else {
+        // pegawai normal
+        for (let i = 1; i <= daysInMonth; i++) {
+          const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf(
+            "day"
+          );
+
+          const aktivitasHariIni = pegawai.kegiatan.filter((keg) => {
+            const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
+            const akhir = dayjs(keg.keg_tanggal_akhir).startOf("day");
+            return currentDate.isBetween(
+              awal.subtract(1, "day"),
+              akhir.add(1, "day")
+            );
+          });
+
+          row[`day_${i}`] = aktivitasHariIni.length > 0;
         }
       }
-    } else {
-      // logika normal ✅ ❌
-      for (let i = 1; i <= daysInMonth; i++) {
-        const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf("day");
 
-        const aktivitasHariIni = pegawai.kegiatan.filter((keg) => {
-          const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
-          const akhir = dayjs(keg.keg_tanggal_awal).startOf("day");
-          return currentDate.isBetween(
-            awal.subtract(1, "day"),
-            akhir.add(1, "day")
-          );
-        });
-
-        row[`day_${i}`] = aktivitasHariIni.length > 0; // true / false
-      }
-    }
-
-    return row;
-  });
-}, [dataPegawaiKegiatan, bulan, tahun, daysInMonth, selectedWilayah]);
-
+      return row;
+    });
+  }, [dataPegawaiKegiatan, bulan, tahun, daysInMonth, selectedWilayah]);
 
   const selectedWilayahLabel =
     wilayahOptions.find((opt) => opt.value === selectedWilayah)?.label || "";
@@ -382,20 +427,11 @@ const rows = useMemo(() => {
   useEffect(() => {
     if (selectedWilayah != "5100") {
       setSortModel([{ field: "role", sort: "asc" }]);
-      console.log("tidak sama dengan 5100");
     } else {
       setSortModel([{ field: "role", sort: "asc" }]);
-      console.log(" sama dengan 5100");
     }
   }, [selectedWilayah]);
 
-  console.log("rows");
-  console.log("rows");
-  console.log(rows);
-  console.log(rows);
-  console.log(rows);
-  console.log("rows");
-  console.log("rows");
 
   return (
     <Box>
@@ -563,7 +599,10 @@ const rows = useMemo(() => {
 
           {popoverContent === "loading" ? (
             <Typography variant="body2">Memuat...</Typography>
-          ) : popoverContent.kegiatan?.length > 0 ? (
+          ) : popoverContent?.pegawai?.status === "TB" &&
+            dayjs(popoverDate).isSameOrAfter(dayjs("2025-08-01")) ? (
+            <Typography variant="body2">Sedang Tugas Belajar 🎓</Typography>
+          ) : popoverContent?.kegiatan?.length > 0 ? (
             popoverContent.kegiatan.map((k, i) => (
               <Typography key={i} variant="body2">
                 • {k.keg_deskripsi}{" "}

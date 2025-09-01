@@ -87,8 +87,7 @@ const TestingComponent = () => {
   }, [userData]);
 
   if (!loadingUser && userData) {
-    // console.log("Role pengguna:", userData.role.nama_role);
-    // console.log("pengguna: ", userData);
+
   }
 
   const role = localStorage.getItem("role");
@@ -99,8 +98,7 @@ const TestingComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!loadingUser && userData) {
-        // console.log("UserData: ", userData);
-        // console.log("Pimpinan: ", Role.PIMPINAN_PROVINSI);
+
         try {
           if (userData.role.id === Role.PIMPINAN_PROVINSI) {
           
@@ -153,6 +151,7 @@ const TestingComponent = () => {
 
     fetchData();
   }, [userData, bulan, tahun, selectedWilayah]);
+
 
 
   return loading ? (
