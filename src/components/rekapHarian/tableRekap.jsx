@@ -16,13 +16,13 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter"; // <== tambahin ini
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 
 dayjs.extend(isBetween);
-dayjs.extend(isSameOrAfter); // <== extend biar bisa dipakai
+dayjs.extend(isSameOrAfter);
 
-dayjs.extend(isBetween);
-dayjs.extend(isSameOrAfter); // <== extend biar bisa dipakai
+// extend dulu sebelum dipakai
+dayjs.extend(isSameOrAfter);
 
 //get data
 import { getKegDeskripsiPegawai } from "../../services/kegiatanServices";
@@ -64,16 +64,13 @@ const TableRekap = ({
     try {
       const response = await getKegDeskripsiPegawai(nip, tanggal);
 
-      // 👉 cari pegawai dari rows biar dapet status
-      const pegawaiRow = rows.find((r) => r.id === nip);
-
-      setPopoverContent({
-        ...response,
-        pegawai: { status: pegawaiRow?.status }, // inject status
-      });
+      console.log("ini respons" + response);
+      console.log(response);
+      console.log(response);
+      setPopoverContent(response);
     } catch (error) {
       console.error("Gagal mengambil kegiatan:", error);
-      setPopoverContent({});
+      setPopoverContent([]);
     }
   };
 
@@ -251,8 +248,8 @@ const TableRekap = ({
           const tanggal = dayjs(`${tahun}-${bulan + 1}-${day}`);
           const sekarang = dayjs().startOf("day");
 
-          // 👉 jika ada huruf (TUGAS BELAJAR)
-          if (value === "ICON_TB") {
+          // 👉 jika Tugas Belajar tampilkan icon 🎓
+          if (value === "TB") {
             return (
               <Box
                 onClick={(e) =>
@@ -264,12 +261,12 @@ const TableRekap = ({
                 }
                 sx={{
                   display: "flex",
-                  justifyContent: "center",
                   alignItems: "center",
-                  width: "100%",
-                  fontSize: 16,
+                  justifyContent: "center",
                   cursor: "pointer",
                   transition: "all 0.2s ease-in-out",
+                  fontSize: 16,
+                  borderRadius: 1,
                   "&:hover": {
                     transform: "scale(1.6)",
                     backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -277,6 +274,23 @@ const TableRekap = ({
                 }}
               >
                 🎓
+              </Box>
+            );
+          }
+
+          // 👉 jika ada huruf lain (cadangan)
+          if (typeof value === "string") {
+            return (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  fontSize: 12,
+                  fontWeight: "bold",
+                }}
+              >
+                {value}
               </Box>
             );
           }
@@ -317,7 +331,6 @@ const TableRekap = ({
           // 👉 jika weekend / libur → kosong
           if (isLiburTotal) return null;
 
-          if (params.row.status == "TB") return null;
           // 👉 selain itu tampilkan ❌
           return (
             <Box
@@ -372,42 +385,36 @@ const TableRekap = ({
         status: pegawai.status,
       };
 
-      if (pegawai.status === "TB") {
-        const mulaiTB = dayjs("2025-08-01"); // tanggal mulai tugas belajar
+     const tanggalMulaiTB = dayjs("2025-08-01").startOf("day");
+const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
 
-        for (let i = 1; i <= daysInMonth; i++) {
-          const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf(
-            "day"
-          );
-          const dayOfWeek = currentDate.day();
-          const tanggalStr = currentDate.format("DD-MM-YYYY");
-          const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
+for (let i = 1; i <= daysInMonth; i++) {
+  const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf("day");
+  const dayOfWeek = currentDate.day(); // 0 = Minggu, 6 = Sabtu
+  const tanggalStr = currentDate.format("DD-MM-YYYY");
 
-          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-          const isHariLibur = semuaHariLibur.includes(tanggalStr);
-          const isLiburTotal = isWeekend || isHariLibur;
+  // 👉 Kalau pegawai TB dan tanggal >= 1 Agustus → isi TB hanya di hari kerja
+  if (pegawai.status === "TB" && currentDate.isSameOrAfter(tanggalMulaiTB)) {
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isHariLibur = semuaHariLibur.includes(tanggalStr);
 
-          if (
-            (currentDate.isSame(mulaiTB) || currentDate.isAfter(mulaiTB)) &&
-            !isLiburTotal
-          ) {
-            // 👉 mulai Agustus, hanya hari kerja (bukan libur/weekend)
-            row[`day_${i}`] = "ICON_TB";
-          } else {
-            // 👉 sebelum Agustus tetap logika normal
-            const aktivitasHariIni = pegawai.kegiatan.filter((keg) => {
-              const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
-              const akhir = dayjs(keg.keg_tanggal_akhir).startOf("day");
-              return currentDate.isBetween(
-                awal.subtract(1, "day"),
-                akhir.add(1, "day")
-              );
-            });
+    if (!isWeekend && !isHariLibur) {
+      row[`day_${i}`] = "TB"; // 🎓 hanya hari kerja
+    } else {
+      row[`day_${i}`] = null; // kosong di weekend/libur
+    }
+    continue;
+  }
 
-            row[`day_${i}`] = aktivitasHariIni.length > 0; // true/false
-          }
-        }
-      }
+  // 👉 Logika normal untuk pegawai biasa
+  const aktivitasHariIni = pegawai.kegiatan.some((keg) => {
+    const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
+    return currentDate.isSame(awal);
+  });
+
+  row[`day_${i}`] = aktivitasHariIni;
+}
+
 
       return row;
     });
@@ -419,8 +426,10 @@ const TableRekap = ({
   useEffect(() => {
     if (selectedWilayah != "5100") {
       setSortModel([{ field: "role", sort: "asc" }]);
+      console.log("tidak sama dengan 5100");
     } else {
       setSortModel([{ field: "role", sort: "asc" }]);
+      console.log(" sama dengan 5100");
     }
   }, [selectedWilayah]);
 
@@ -590,10 +599,10 @@ const TableRekap = ({
 
           {popoverContent === "loading" ? (
             <Typography variant="body2">Memuat...</Typography>
-          ) : popoverContent?.pegawai?.status === "TB" &&
+          ) : popoverContent?.dataPegawai?.status === "TB" &&
             dayjs(popoverDate).isSameOrAfter(dayjs("2025-08-01")) ? (
-            <Typography variant="body2">Sedang Tugas Belajar 🎓</Typography>
-          ) : popoverContent?.kegiatan?.length > 0 ? (
+            <Typography variant="body2">Tugas Belajar</Typography>
+          ) : popoverContent.kegiatan?.length > 0 ? (
             popoverContent.kegiatan.map((k, i) => (
               <Typography key={i} variant="body2">
                 • {k.keg_deskripsi}{" "}
@@ -624,7 +633,7 @@ const TableRekap = ({
               </Typography>
             ))
           ) : (
-            <Typography variant="body2">Tidak ada aktivitas</Typography>
+            <Typography variant="body2">Tidak Ada Aktivitas</Typography>
           )}
         </Box>
       </Popover>
