@@ -379,9 +379,19 @@ const TableRekap = ({
           const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf(
             "day"
           );
+          const dayOfWeek = currentDate.day();
+          const tanggalStr = currentDate.format("DD-MM-YYYY");
+          const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
 
-          if (currentDate.isSame(mulaiTB) || currentDate.isAfter(mulaiTB)) {
-            // 👉 mulai Agustus pakai ICON_TB
+          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+          const isHariLibur = semuaHariLibur.includes(tanggalStr);
+          const isLiburTotal = isWeekend || isHariLibur;
+
+          if (
+            (currentDate.isSame(mulaiTB) || currentDate.isAfter(mulaiTB)) &&
+            !isLiburTotal
+          ) {
+            // 👉 mulai Agustus, hanya hari kerja (bukan libur/weekend)
             row[`day_${i}`] = "ICON_TB";
           } else {
             // 👉 sebelum Agustus tetap logika normal
@@ -396,24 +406,6 @@ const TableRekap = ({
 
             row[`day_${i}`] = aktivitasHariIni.length > 0; // true/false
           }
-        }
-      } else {
-        // pegawai normal
-        for (let i = 1; i <= daysInMonth; i++) {
-          const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf(
-            "day"
-          );
-
-          const aktivitasHariIni = pegawai.kegiatan.filter((keg) => {
-            const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
-            const akhir = dayjs(keg.keg_tanggal_akhir).startOf("day");
-            return currentDate.isBetween(
-              awal.subtract(1, "day"),
-              akhir.add(1, "day")
-            );
-          });
-
-          row[`day_${i}`] = aktivitasHariIni.length > 0;
         }
       }
 
@@ -431,7 +423,6 @@ const TableRekap = ({
       setSortModel([{ field: "role", sort: "asc" }]);
     }
   }, [selectedWilayah]);
-
 
   return (
     <Box>
