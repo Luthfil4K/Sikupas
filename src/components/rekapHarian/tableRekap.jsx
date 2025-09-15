@@ -26,6 +26,7 @@ dayjs.extend(isSameOrAfter);
 
 //get data
 import { getKegDeskripsiPegawai } from "../../services/kegiatanServices";
+import { getAllStatus } from "../../services/kegiatanServices";
 
 // router
 import { Link } from "react-router-dom";
@@ -63,10 +64,11 @@ const TableRekap = ({
 
     try {
       const response = await getKegDeskripsiPegawai(nip, tanggal);
+      const response3 = await getAllStatus();
+      console.log("ini pegawai yang TB: ");
+      console.log(response3);
+      console.log(response3);
 
-      console.log("ini respons" + response);
-      console.log(response);
-      console.log(response);
       setPopoverContent(response);
     } catch (error) {
       console.error("Gagal mengambil kegiatan:", error);
@@ -132,17 +134,17 @@ const TableRekap = ({
 
       const addedRow = worksheet.addRow(rowData);
 
-      // Warnai hijau sel ceklis
+      // Warnai ijo sel ceklis
       addedRow.eachCell((cell, colNumber) => {
         if (cell.value === "✅") {
           cell.font = {
-            color: { argb: "FF2E7D32" }, // Hijau tua (#2E7D32, seperti MUI success)
+            color: { argb: "FF2E7D32" }, 
           };
         }
       });
     });
 
-    // Pewarnaan kolom weekend
+    // warna kolom weekend
     for (let i = 1; i <= daysInMonth; i++) {
       const tanggal = dayjs(`${tahun}-${bulan + 1}-${i}`);
       const dayOfWeek = tanggal.day();
@@ -248,7 +250,7 @@ const TableRekap = ({
           const tanggal = dayjs(`${tahun}-${bulan + 1}-${day}`);
           const sekarang = dayjs().startOf("day");
 
-          // 👉 jika Tugas Belajar tampilkan icon 🎓
+          // kalo tb icon 
           if (value === "TB") {
             return (
               <Box
@@ -278,7 +280,7 @@ const TableRekap = ({
             );
           }
 
-          // 👉 jika ada huruf lain (cadangan)
+          // 
           if (typeof value === "string") {
             return (
               <Box
@@ -295,7 +297,7 @@ const TableRekap = ({
             );
           }
 
-          // 👉 jika boolean true → ✅
+          // kalo true ✅
           if (value === true) {
             return (
               <Box
@@ -325,13 +327,13 @@ const TableRekap = ({
             );
           }
 
-          // 👉 jika tanggal setelah hari ini → kosong
+          //  kalo setelah hari ini  kosong
           if (tanggal.isAfter(sekarang)) return null;
 
-          // 👉 jika weekend / libur → kosong
+          // kalo  weekend ataulibur atau kosong
           if (isLiburTotal) return null;
 
-          // 👉 selain itu tampilkan ❌
+          // kalo selain itu  ❌
           return (
             <Box
               sx={{
@@ -383,38 +385,47 @@ const TableRekap = ({
         kegiatan: pegawai.kegiatan,
         role: pegawai.role_id,
         status: pegawai.status,
+        tbl_status: pegawai.tbl_status
       };
 
-     const tanggalMulaiTB = dayjs("2025-08-01").startOf("day");
-const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
+      console.log("ini row")
+      console.log("ini row")
+      console.log(row.tbl_status)
+      console.log("ini row")
 
-for (let i = 1; i <= daysInMonth; i++) {
-  const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf("day");
-  const dayOfWeek = currentDate.day(); // 0 = Minggu, 6 = Sabtu
-  const tanggalStr = currentDate.format("DD-MM-YYYY");
 
-  // 👉 Kalau pegawai TB dan tanggal >= 1 Agustus → isi TB hanya di hari kerja
-  if (pegawai.status === "TB" && currentDate.isSameOrAfter(tanggalMulaiTB)) {
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const isHariLibur = semuaHariLibur.includes(tanggalStr);
+      const tanggalMulaiTB = row.tbl_status ? dayjs(row.tbl_status.pegawai_tgl_start).startOf("day"):'';
+      const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
 
-    if (!isWeekend && !isHariLibur) {
-      row[`day_${i}`] = "TB"; // 🎓 hanya hari kerja
-    } else {
-      row[`day_${i}`] = null; // kosong di weekend/libur
-    }
-    continue;
-  }
+      for (let i = 1; i <= daysInMonth; i++) {
+        const currentDate = dayjs(`${tahun}-${bulan + 1}-${i}`).startOf("day");
+        const dayOfWeek = currentDate.day(); // 0 = Minggu, 6 = Sabtu
+        const tanggalStr = currentDate.format("DD-MM-YYYY");
 
-  // 👉 Logika normal untuk pegawai biasa
-  const aktivitasHariIni = pegawai.kegiatan.some((keg) => {
-    const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
-    return currentDate.isSame(awal);
-  });
+        // kalo pegawai TB dan tanggal >= 1 Agustus → isi TB hanya di hari kerja
+        if (
+          pegawai.status === "TB" &&
+          currentDate.isSameOrAfter(tanggalMulaiTB)
+        ) {
+          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+          const isHariLibur = semuaHariLibur.includes(tanggalStr);
 
-  row[`day_${i}`] = aktivitasHariIni;
-}
+          if (!isWeekend && !isHariLibur) {
+            row[`day_${i}`] = "TB"; // 🎓 hanya hari kerja
+          } else {
+            row[`day_${i}`] = null; // kosong di weekend/libur
+          }
+          continue;
+        }
 
+        // 👉 Logika normal untuk pegawai biasa
+        const aktivitasHariIni = pegawai.kegiatan.some((keg) => {
+          const awal = dayjs(keg.keg_tanggal_awal).startOf("day");
+          return currentDate.isSame(awal);
+        });
+
+        row[`day_${i}`] = aktivitasHariIni;
+      }
 
       return row;
     });

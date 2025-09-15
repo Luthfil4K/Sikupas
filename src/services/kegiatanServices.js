@@ -15,15 +15,22 @@ export const getPegawaiKegiatan = async ({ wilayah, bulan, tahun }) => {
 
 export const getKegDeskripsiPegawai = async (nip,tanggal) => {
     const res = await api.get ('/kegiatan/deskripsi',{
-        params: {
-            nip: nip,
-            tanggal: tanggal,
-          },
+      params: {
+          nip: nip,
+          tanggal: tanggal,
+      },
     })
  
     return res.data
 
 }
+
+export const getAllStatus = async () => {
+  console.log("getAllStatuuuss")
+  const res = await api.get(`/status`);
+  return res.data;
+};
+
 
 export const getPegawaiKegiatanKabKo = async (wilayah) => {
     const res = await api.get ('/kegiatan/kabko',{

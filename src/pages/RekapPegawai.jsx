@@ -108,6 +108,8 @@ const TestingComponent = () => {
               tahun,
             });
 
+            console.log(response)
+
             setDataPegawaiKegiatan(response);
     
             setIsAllowedFilter(true);
