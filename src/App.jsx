@@ -7,6 +7,7 @@ import ProfilePages from "./pages/ProfilePages";
 import OrganisasiPages from "./pages/OrganisasiPages";
 import ApiTest from "./pages/ApiTest";
 import LoginPage from "./pages/LoginPage";
+import PegawaiStatus from "./pages/PegawaiStatus";
 import PrivateRoute from "./components/PrivateRoute";
 
 import Sidebar from "./components/Sidebar";
@@ -23,6 +24,7 @@ import ForbiddenPage from "./pages/ForbiddenPage";
 import LoadingPage from "./pages/LoadingPage";
 import RekapPegawai from "./pages/RekapPegawai";
 import RekapIndividu from "./pages/RekapIndividu";
+import ConfigurationProfilePages from "./pages/ConfigurationProfilePages";
 
 function App() {
   const location = useLocation();
@@ -133,6 +135,14 @@ function App() {
                     element={
                       <PrivateRoute>
                         <RekapIndividu />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/pegawaiStatus"
+                    element={
+                      <PrivateRoute>
+                        <PegawaiStatus />
                       </PrivateRoute>
                     }
                   />
