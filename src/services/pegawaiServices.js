@@ -37,10 +37,11 @@ export const getRekapSKP = async (nip) => {
   return response.data
 }
 
-export const getAllStatus = async()  => {
-  const response = await api.get('/pegawai/status')
-  console.log(response)
-  console.log("response")
+export const getAllStatus = async(filterRegion)  => {
+  const response = await api.get('/pegawai/status',{
+    params:{filterRegion}
+  })
+
   return response.data
 }
 

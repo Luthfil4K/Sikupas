@@ -44,39 +44,7 @@ const initialEmployees = [
     status: "Tugas Belajar",
     timeFrom: "2023-03-01",
     timeTo: "2024-08-30",
-  },
-  {
-    id: 3,
-    name: "Budi Santoso",
-    workUnit: "Jakarta Pusat",
-    status: "PNS",
-    timeFrom: "2022-06-10",
-    timeTo: "2024-06-09",
-  },
-  {
-    id: 4,
-    name: "Maya Sari",
-    workUnit: "Yogyakarta",
-    status: "PNS",
-    timeFrom: "2023-02-20",
-    timeTo: "2025-02-19",
-  },
-  {
-    id: 5,
-    name: "Dedi Kurniawan",
-    workUnit: "Medan",
-    status: "PNS",
-    timeFrom: "2023-05-01",
-    timeTo: "2024-04-30",
-  },
-  {
-    id: 6,
-    name: "Rina Wati",
-    workUnit: "Makassar",
-    status: "PNS",
-    timeFrom: "2022-11-15",
-    timeTo: "2024-11-14",
-  },
+  }
 ];
 
 const statusOptions = ["PNS", "TB", "CPNS", "PPPK"];
@@ -91,6 +59,7 @@ const theme = createTheme({
 });
 
 const PegawaiStatus = () => {
+  const [filterRegion, setFilterRegion] = useState("Semua");
   const [pegawaiStatus, setPegawaiStatus] = useState(null);
   const { userData, loadingUser } = useUser();
 
@@ -108,59 +77,46 @@ const PegawaiStatus = () => {
 
  useEffect(() => {
   const fetchData = async () => {
-    const getPegawaiStatus = await getAllStatus();
-
-    // Mapping untuk menambahkan id dan memanipulasi tanggal
+    const getPegawaiStatus = await getAllStatus(filterRegion);
     const withModifiedDates = getPegawaiStatus.map((pegawai) => {
-      // 1. Tambahkan id = nip ke objek pegawai
+   
       const newPegawai = {
         ...pegawai,
         id: pegawai.nip,
       };
 
-      // 2. Pastikan tbl_status ada sebelum memproses tanggal
-      if (newPegawai.tbl_status) {
-        // --- Modifikasi pegawai_tgl_start ---
-        let startDate = new Date(newPegawai.tbl_status.pegawai_tgl_start);
-        
-        // Tambahkan 1 hari
-        startDate.setDate(startDate.getDate() );
-        
-        // Konversi kembali ke string ISO format (diakhiri 'Z' untuk UTC)
-        newPegawai.tbl_status.pegawai_tgl_start = startDate.toISOString();
-
-        // --- Modifikasi pegawai_tgl_end ---
-        let endDate = new Date(newPegawai.tbl_status.pegawai_tgl_end);
-        
-        // Tambahkan 1 hari
-        endDate.setDate(endDate.getDate() );
-        
-        // Konversi kembali ke string ISO format
-        newPegawai.tbl_status.pegawai_tgl_end = endDate.toISOString();
-      } 
-      // Jika tbl_status tidak ada, newPegawai akan dikembalikan tanpa modifikasi tanggal, 
-      // tetapi tetap memiliki properti 'id'.
-
       return newPegawai;
     });
 
+    console.log("withModifiedDates")
+    console.log(withModifiedDates)
+    console.log(withModifiedDates)
+    console.log("withModifiedDates")
     setPegawaiStatus(withModifiedDates);
-    // console.log(withModifiedDates);
+    
   };
 
   fetchData();
-}, []);
+}, [filterRegion]);
 
   const [employees, setEmployees] = useState(initialEmployees);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterRegion, setFilterRegion] = useState("Semua");
   const [editRow, setEditRow] = useState(null); // track row yang sedang di-edit
 
   // Ambil daftar unik workUnit
-  const regions = useMemo(() => {
-    const unique = [...new Set(initialEmployees.map((e) => e.workUnit))];
-    return ["Semua", ...unique];
-  }, []);
+  const regions = [
+    { label: "Semua", value: "Semua" },
+    { label: "BPS Provinsi Bali", value: "5100" },
+    { label: "BPS Kab Jembrana", value: "5101" },
+    { label: "BPS Kab Tabanan", value: "5102" },
+    { label: "BPS Kab Badung", value: "5103" },
+    { label: "BPS Kab Gianyar", value: "5104" },
+    { label: "BPS Kab Klungkung", value: "5105" },
+    { label: "BPS Kab Bangli", value: "5106" },
+    { label: "BPS Kab Karangasem", value: "5107" },
+    { label: "BPS Kab Buleleng", value: "5108" },
+    { label: "BPS Kota Denpasar", value: "5171" },
+  ];
 
   // Simpan perubahan
   const handleSave = (id) => {
@@ -180,9 +136,7 @@ const PegawaiStatus = () => {
 
   // Filter employees berdasarkan pencarian + filter daerah
   const filteredEmployees = useMemo(() => {
-    pegawaiStatus
-      ? console.log("filled")
-      : console.log("null ");
+  
     return pegawaiStatus
       ? pegawaiStatus.filter((employee) => {
           const matchSearch =
@@ -192,7 +146,7 @@ const PegawaiStatus = () => {
             employee.status.toLowerCase().includes(searchTerm.toLowerCase());
 
           const matchRegion =
-            filterRegion === "Semua" || employee.workUnit === filterRegion;
+            filterRegion === "Semua" || employee.wilayah === filterRegion;
 
           return matchSearch && matchRegion;
         })
@@ -397,8 +351,8 @@ const PegawaiStatus = () => {
                       onChange={(e) => setFilterRegion(e.target.value)}
                     >
                       {regions.map((region) => (
-                        <MenuItem key={region} value={region}>
-                          {region}
+                        <MenuItem key={region.value} label={region.label} value={region.value}>
+                          {region.label}
                         </MenuItem>
                       ))}
                     </Select>
