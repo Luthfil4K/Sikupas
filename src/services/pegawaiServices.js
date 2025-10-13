@@ -36,3 +36,23 @@ export const getRekapSKP = async (nip) => {
 
   return response.data
 }
+
+export const getAllStatus = async()  => {
+  const response = await api.get('/pegawai/status')
+  console.log(response)
+  console.log("response")
+  return response.data
+}
+
+export const changePegawaiStatusById = async (id,field,value) => {
+  console.log(id,field,value)
+  const response = await api.post('/pegawai/status',{
+    id,
+    field,
+    value
+  }, {
+    headers: { "Content-Type": "application/json" }
+  })
+  return response.data
+}
+
