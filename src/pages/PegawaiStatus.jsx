@@ -124,7 +124,7 @@ const PegawaiStatus = () => {
         let startDate = new Date(newPegawai.tbl_status.pegawai_tgl_start);
         
         // Tambahkan 1 hari
-        startDate.setDate(startDate.getDate() + 1);
+        startDate.setDate(startDate.getDate() );
         
         // Konversi kembali ke string ISO format (diakhiri 'Z' untuk UTC)
         newPegawai.tbl_status.pegawai_tgl_start = startDate.toISOString();
@@ -133,7 +133,7 @@ const PegawaiStatus = () => {
         let endDate = new Date(newPegawai.tbl_status.pegawai_tgl_end);
         
         // Tambahkan 1 hari
-        endDate.setDate(endDate.getDate() + 1);
+        endDate.setDate(endDate.getDate() );
         
         // Konversi kembali ke string ISO format
         newPegawai.tbl_status.pegawai_tgl_end = endDate.toISOString();
