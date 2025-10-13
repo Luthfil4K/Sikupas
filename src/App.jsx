@@ -24,7 +24,6 @@ import ForbiddenPage from "./pages/ForbiddenPage";
 import LoadingPage from "./pages/LoadingPage";
 import RekapPegawai from "./pages/RekapPegawai";
 import RekapIndividu from "./pages/RekapIndividu";
-import ConfigurationProfilePages from "./pages/ConfigurationProfilePages";
 
 function App() {
   const location = useLocation();
