@@ -65,9 +65,7 @@ const TableRekap = ({
     try {
       const response = await getKegDeskripsiPegawai(nip, tanggal);
       const response3 = await getAllStatus();
-      console.log("ini pegawai yang TB: ");
-      console.log(response3);
-      console.log(response3);
+   
 
       setPopoverContent(response);
     } catch (error) {
@@ -388,11 +386,7 @@ const TableRekap = ({
         tbl_status: pegawai.tbl_status
       };
 
-      console.log("ini row")
-      console.log("ini row")
-      console.log(row.tbl_status)
-      console.log("ini row")
-
+      
 
       const tanggalMulaiTB = row.tbl_status ? dayjs(row.tbl_status.pegawai_tgl_start).startOf("day"):'';
       const semuaHariLibur = [...hariLiburNasional, ...hariLiburBali];
@@ -437,10 +431,8 @@ const TableRekap = ({
   useEffect(() => {
     if (selectedWilayah != "5100") {
       setSortModel([{ field: "role", sort: "asc" }]);
-      console.log("tidak sama dengan 5100");
     } else {
       setSortModel([{ field: "role", sort: "asc" }]);
-      console.log(" sama dengan 5100");
     }
   }, [selectedWilayah]);
 

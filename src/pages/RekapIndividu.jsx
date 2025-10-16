@@ -122,7 +122,6 @@ const RekapIndividu = () => {
     const today = startOfDay(new Date());
     const date = startOfDay(info.date);
     const tanggal = new Date(info.date)
-    console.log(tanggal)
     
     const dd = String(tanggal.getDate()).padStart(2, "0");
     const mm = String(tanggal.getMonth() + 1).padStart(2, "0"); // bulan 0–11

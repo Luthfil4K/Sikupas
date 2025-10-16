@@ -67,7 +67,6 @@ const TableIdentity = ({ pegawai }) => {
   const today = new Date();
 
 
-  console.log(pegawai)
   const [selectedMonth, setSelectedMonth] = useState(
     bulanIndonesia[today.getMonth()]
   );

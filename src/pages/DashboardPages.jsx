@@ -54,7 +54,7 @@ const DashboardPages = () => {
     fetchUserData();
   }, []);
 
-  // --- Hook lainnya tetap di sini
+  // 
 
   useEffect(() => {
     const fetchPegawai = async () => {
@@ -86,15 +86,11 @@ const DashboardPages = () => {
     const fetchPegawai = async () => {
       try {
         const data = await getAllCkp();
-        console.log(data);
         setCkp(data);
-
-        console.log("ckp");
-        console.log(ckp);
       } catch (err) {
         console.log(err);
       } finally {
-        console.log("final");
+        console.log("");
       }
     };
 
@@ -109,7 +105,7 @@ const DashboardPages = () => {
       } catch (err) {
         console.log(err);
       } finally {
-        console.log("final");
+        console.log("");
       }
     };
 
@@ -317,9 +313,6 @@ const DashboardPages = () => {
     };
   }, [dataClearCkp, activeFilter, skp]);
 
-  console.log("dashboardStatsCkp");
-  console.log(dashboardStatsCkp);
-  console.log("dashboardStatsCkp");
   const isLoading = !userData;
 
   return (

@@ -96,9 +96,7 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
 
         const aktivitasCount = aktivitasList.length;
 
-        // console.log(
-        //   `(${index + 1}) ${skpItem.realisasi} ➜ ${aktivitasCount} aktivitas`
-        // );
+       
 
         if (isToday(date)) {
           hariIni += aktivitasCount;
@@ -113,8 +111,6 @@ const Identity = ({ nama, jabatan, wilayah, pegawai, nip }) => {
           tahunIni += aktivitasCount;
         }
       });
-      // console.log("mingguini:" + mingguIni);
-      // console.log("bulan ini:" + bulanIni);
 
       setJumlahAktivitasHariIni(hariIni);
       setJumlahAktivitasMingguIni(mingguIni);

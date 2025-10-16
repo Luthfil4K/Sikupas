@@ -26,7 +26,6 @@ export const getKegDeskripsiPegawai = async (nip,tanggal) => {
 }
 
 export const getAllStatus = async () => {
-  console.log("getAllStatuuuss")
   const res = await api.get(`/pegawai/status`);
   return res.data;
 };

@@ -88,10 +88,7 @@ const PegawaiStatus = () => {
       return newPegawai;
     });
 
-    console.log("withModifiedDates")
-    console.log(withModifiedDates)
-    console.log(withModifiedDates)
-    console.log("withModifiedDates")
+  
     setPegawaiStatus(withModifiedDates);
     
   };
@@ -229,9 +226,7 @@ const PegawaiStatus = () => {
           : null;
 
         const handleDateChange = (id, field, value) => {
-          console.log("value (Dayjs) :", value);
-          console.log("ISO string   :", value?.toISOString());
-          console.log("Formatted    :", value?.format("YYYY-MM-DD"));
+   
 
           handleStatus(id, field, value?.format("YYYY-MM-DD"));
           setPegawaiStatus((prev) =>

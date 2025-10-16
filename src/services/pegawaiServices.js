@@ -13,7 +13,6 @@ export const getPegawaiById = async (id) => {
 };
 
 export const changePasswordPegawai = async ({ nip, oldPassword, newPassword }) => {
-  console.log("api fe")
   return await api.post(`/pegawai/changePassword`, {
     nip,
     oldPassword,
@@ -46,7 +45,6 @@ export const getAllStatus = async(filterRegion)  => {
 }
 
 export const changePegawaiStatusById = async (id,field,value) => {
-  console.log(id,field,value)
   const response = await api.post('/pegawai/status',{
     id,
     field,

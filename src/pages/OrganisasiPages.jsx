@@ -90,7 +90,6 @@ const OrganisasiPages = () => {
             setTimKerja(tim);
             setPegawai(peg);
           } else if (userData.role.id === Role.KEPALA_KABKO) {
-            console.log("role: kepala kabko");
             const peg = await getPegawaiKabko(userData?.wilayah);
             const tim = await getTimKerjaKabko(userData?.wilayah);
             setTimKerja(tim);
@@ -123,10 +122,7 @@ const OrganisasiPages = () => {
   }, [role, nipLama, userData]);
 
 
-  console.log("pegawai")
-  console.log(pegawai)
-  console.log(pegawai)
-  console.log("pegawai")
+
 
   // fortabb
   const [tabIndex, setTabIndex] = useState(0);

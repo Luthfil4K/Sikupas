@@ -108,7 +108,6 @@ const TestingComponent = () => {
               tahun,
             });
 
-            console.log(response)
 
             setDataPegawaiKegiatan(response);
     
@@ -117,29 +116,25 @@ const TestingComponent = () => {
             userData.role.id === Role.KETUA_TIM_PROVINSI ||
             userData.role.id === Role.KETUA_TIM_KABKO
           ) {
-            console.log("role ketua tim");
           } else if (
             userData.role.id === Role.ANGGOTA_TIM_PROVINSI ||
             userData.role.id === Role.ANGGOTA_TIM_KABKO
           ) {
-            console.log("role pegawai");
           } else if (
             userData.role.id === Role.KEPALA_KABKO ||
             userData.role.id === Role.KEPALA_BAGIAN_UMUM_KABKO
           ) {
-            console.log("role pimpinan kabko");
             const pegawaiKegiatan = await getPegawaiKegiatanKabKo(
               userData.wilayah
             );
 
-            console.log(pegawaiKegiatan)
             const filteredPegawai = pegawaiKegiatan.dataPegawai.filter(
               (pegawai) => pegawai.nip !== "197806121999121001"
             );
             setIsAllowedFilter(false)
             setDataPegawaiKegiatan(filteredPegawai);
           } else {
-            console.log("gamasuk mana mana ");
+            console.log("");
           }
         } catch (error) {
           console.error("Gagal mengambil data:", error);
