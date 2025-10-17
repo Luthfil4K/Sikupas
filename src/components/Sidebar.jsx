@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, Users, LogOut, House,Network ,CalendarDays  ,User} from "lucide-react";
+import { Menu, Users, LogOut, House,Network ,CalendarDays  ,User,School} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -61,6 +61,12 @@ const Sidebar = () => {
             icon: CalendarDays ,
             color: '#6EE7B7',
             path: '/rekapPegawai',
+          },
+          {
+            name: 'Status Pegawai',
+            icon: School,
+            color: '#a51b67ff',
+            path: '/pegawaiStatus',
           },
         ]),
     {

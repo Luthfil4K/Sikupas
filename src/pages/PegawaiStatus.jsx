@@ -27,6 +27,13 @@ import {
   changePegawaiStatusById,
 } from "../services/pegawaiServices";
 
+// router
+import { Navigate } from "react-router-dom";
+
+// utils/types
+import Role from "../types/roles"; //  pathnya didididisini
+
+
 // Mock employee data
 const initialEmployees = [
   {
@@ -59,9 +66,26 @@ const theme = createTheme({
 });
 
 const PegawaiStatus = () => {
+  const [isAllowed, setIsAllowed] = useState(null);
   const [filterRegion, setFilterRegion] = useState("Semua");
   const [pegawaiStatus, setPegawaiStatus] = useState(null);
   const { userData, loadingUser } = useUser();
+
+   useEffect(() => {
+      if (userData) {
+        const role = localStorage.getItem("role");
+        if (
+          [
+            Role.PIMPINAN_PROVINSI,
+            Role.KEPALA_BAGIAN_UMUM_PROVINSI,
+          ].includes(userData.role.id)
+        ) {
+          setIsAllowed(true);
+        } else {
+          setIsAllowed(false);
+        }
+      }
+    }, [userData]);
 
   const handleStatus = (id, field, value) => {
     const fetchData = async () => {
@@ -297,6 +321,11 @@ const PegawaiStatus = () => {
       },
     },
   ];
+
+    if (isAllowed === false) {
+      return <Navigate to="/forbidden" replace />;
+    }
+  
 
   return (
     <main className="w-full px-4">
