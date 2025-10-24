@@ -4,7 +4,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { format, isBefore, startOfDay, addDays } from "date-fns";
 import { useParams } from "react-router-dom";
-
+// router
+import { Navigate } from "react-router-dom";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
@@ -19,18 +20,53 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-
+import Role from "../types/roles"; // sesuaikan pathnya
 import { getPegawaiById } from "../services/pegawaiServices";
 
 import LoadingPage from "./LoadingPage";
+// req user login infor
+import { useUser } from "../context/UserContext";
 
 const RekapIndividu = () => {
+  const { userData, loadingUser } = useUser();
+  const [isAllowed, setIsAllowed] = useState(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const [pegawai, setPegawai] = useState(null);
   const [events, setEvents] = useState([]);
+  const nip = localStorage.getItem("nip");
   const [refreshKey, setRefreshKey] = useState(0);
   const calendarRef = useRef(null);
+   const role = localStorage.getItem("role");
+  const cleanedNip = nip?.replace(/^"+|"+$/g, "");
+
+   useEffect(() => {
+    if (userData) {
+      if (
+        role === "ketua_tim" ||
+        role === "admin" ||
+        role == "pimpinan" ||
+        [
+          Role.PIMPINAN_PROVINSI,
+          Role.KEPALA_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_PROVINSI,
+        ].includes(userData.role.id)
+      ) {
+        setIsAllowed(true);
+      } else if (cleanedNip === id) {
+        setIsAllowed(true);
+        console.log("ini di set true")
+        console.log(isAllowed+": isAllowed")
+      } else {
+        setIsAllowed(false);
+        console.log("id :"+id)
+        console.log("nip :"+nip)
+        console.log("cleanedNip:"+cleanedNip)
+        console.log("cleanedNip :"+cleanedNip)
+      }
+    }
+  }, [role, cleanedNip, id, userData]);
 
   useEffect(() => {
     const fetchPegawai = async () => {
@@ -199,7 +235,15 @@ const RekapIndividu = () => {
     });
   };
 
-  
+ // sebelum return
+if (loading || isAllowed === null || loadingUser) {
+  return <LoadingPage />;
+}
+
+if (isAllowed === false) {
+  return <Navigate to="/forbidden" replace />;
+}
+
 
   if (loading) {
     return <LoadingPage />;
