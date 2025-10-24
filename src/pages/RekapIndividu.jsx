@@ -43,7 +43,7 @@ const RekapIndividu = () => {
    useEffect(() => {
     if (userData) {
       if (
-        role === "ketua_tim" ||
+       
         role === "admin" ||
         role == "pimpinan" ||
         [

@@ -57,7 +57,6 @@ const ProfilePages = () => {
   useEffect(() => {
     if (userData) {
       if (
-        role === "ketua_tim" ||
         role === "admin" ||
         role == "pimpinan" ||
         [
@@ -79,7 +78,7 @@ const ProfilePages = () => {
   useEffect(() => {
     if (userData) {
       if (
-        role === "ketua_tim" ||
+      
         role === "admin" ||
         role === "pimpinan" ||
         [
@@ -89,6 +88,12 @@ const ProfilePages = () => {
           Role.KEPALA_BAGIAN_UMUM_PROVINSI,
         ].includes(userData.role.id)
       ) {
+        console.log("di set true")
+        console.log("di set true")
+        console.log("di set true")
+        console.log("di set true")
+        console.log("di set true")
+        console.log(role)
         setIsAllowedSearch(true);
       } else if (cleanedNip === id) {
         setIsAllowedSearch(false);
