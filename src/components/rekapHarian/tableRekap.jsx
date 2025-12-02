@@ -180,6 +180,7 @@ const TableRekap = ({
     "18-11-2025",
     "19-11-2025",
     "20-11-2025",
+    "28-11-2025",
   ];
 
   const hariLiburNasional = [
