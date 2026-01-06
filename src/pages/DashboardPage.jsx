@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Box, Card } from "@mui/material";
+import { Box, Card, CardMedia, Grid, Typography, Button } from "@mui/material";
 import { getMetabaseUrl } from "../services/metabaseServices";
-
+import { Link, useNavigate } from "react-router-dom";
 
 import { Navigate } from "react-router-dom";
 
@@ -12,66 +12,159 @@ import { useUser } from "../context/UserContext";
 // utils/types
 import Role from "../types/roles"; // sesuaikan pathnya
 
-
 const DashboardPages = () => {
+  const navigate = useNavigate();
   const [iframeUrl, setIframeUrl] = useState("");
-  const {userData, loadingUser } = useUser();
+  const { userData, loadingUser } = useUser();
   const role = localStorage.getItem("role");
   const [isAllowed, setIsAllowed] = useState(true);
   const nip = localStorage.getItem("nip");
   const cleanedNip = nip?.replace(/^"+|"+$/g, "");
 
   useEffect(() => {
-  const fetchUrl = async () => {
-    try {
-      const url = await getMetabaseUrl();
-      setIframeUrl(url);
-    } catch (err) {
-      console.error("Gagal load iframe:", err);
-    }
-  };
-  fetchUrl();
-}, []);
-
-
+    const fetchUrl = async () => {
+      try {
+        const url = await getMetabaseUrl();
+        setIframeUrl(url);
+      } catch (err) {
+        console.error("Gagal load iframe:", err);
+      }
+    };
+    fetchUrl();
+  }, []);
 
   useEffect(() => {
-      if (userData) {
-        if (
-          role === "ketua_tim" ||
-          role === "admin" ||
-          role == "pimpinan" ||
-          [
-            Role.PIMPINAN_PROVINSI,
-            Role.KEPALA_KABKO,
-            Role.KEPALA_BAGIAN_UMUM_KABKO,
-            Role.KEPALA_BAGIAN_UMUM_PROVINSI,
-          ].includes(userData.role.id)
-        ) {
-          setIsAllowed(true);
-        } else {
-          setIsAllowed(false);
-        }
+    if (userData) {
+      if (
+        role === "ketua_tim" ||
+        role === "admin" ||
+        role == "pimpinan" ||
+        [
+          Role.PIMPINAN_PROVINSI,
+          Role.KEPALA_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_KABKO,
+          Role.KEPALA_BAGIAN_UMUM_PROVINSI,
+        ].includes(userData.role.id)
+      ) {
+        setIsAllowed(true);
+      } else {
+        setIsAllowed(false);
       }
-    }, [role, cleanedNip, userData]);
+    }
+  }, [role, cleanedNip, userData]);
 
   if (!isAllowed) {
-      return <Navigate to="/forbidden" replace />;
-    }
+    return <Navigate to="/forbidden" replace />;
+  }
 
   return (
     <main className="w-full p-6">
-      <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", mb: 2 }} />
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          mb: 2,
+        }}
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      />
       <Card sx={{ width: "100%", height: "730px" }}>
-       
-          <iframe
+        <Grid sx={{ backgroundColor: "white" }} container>
+          <Grid
+            item
+            md={12}
+            sx={{
+              height: 140,
+              backgroundColor: "white",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#42454d",
+                fontWeight: 700,
+                fontSize: 24,
+                fontFamily: "Poppins, sans-serif",
+              }}
+            >
+              Closed For Maintenance
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            md={12}
+            sx={{
+              height: 450,
+              justifyContent: "center",
+              display: "flex",
+              alignItems: "center",
+              paddingTop: 0,
+            }}
+          >
+            <CardMedia
+              component="img"
+              sx={{ height: "400px", width: "100%", objectFit: "contain" }}
+              image={`/assets/1x/Maintenance_1-8.png`}
+              title="Maintenance"
+            />
+          </Grid>
+          <Grid
+            item
+            md={12}
+            sx={{
+              height: 30,
+              backgroundColor: "white",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "start",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#42454d",
+                fontWeight: 400,
+                fontSize: 14,
+                fontFamily: "Poppins, sans-serif",
+              }}
+            >
+              Halaman ini sedang dalam perbaikan dan akan kembali{" "}
+              <em>online</em> dalam beberapa hari.
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            md={12}
+            sx={{
+              height: 80,
+              backgroundColor: "white",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "start",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => navigate("/rekapPegawai")}
+            >
+              Pergi ke Halaman Lain
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* <iframe
             src={iframeUrl}
             frameBorder={0}
             width="100%"
             height="100%"
           />
-       
+        */}
       </Card>
     </main>
   );
