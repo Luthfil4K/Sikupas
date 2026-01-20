@@ -72,8 +72,8 @@ const DashboardPages = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       />
-      <Card sx={{ width: "100%", height: "730px" }}>
-        <Grid sx={{ backgroundColor: "white" }} container>
+      <Card sx={{ width: "100%", height: "830px" }}>
+        {/* <Grid sx={{ backgroundColor: "white" }} container>
           <Grid
             item
             md={12}
@@ -117,6 +117,7 @@ const DashboardPages = () => {
           <Grid
             item
             md={12}
+            xs={12  }
             sx={{
               height: 30,
               backgroundColor: "white",
@@ -156,15 +157,16 @@ const DashboardPages = () => {
               Pergi ke Halaman Lain
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
 
-        {/* <iframe
-            src={iframeUrl}
+        <iframe
+            src={"http://metabase.statsbali.id/public/dashboard/376b6585-8e91-44a4-ae62-1da0904023d7"}
+            // src={iframeUrl}
             frameBorder={0}
             width="100%"
             height="100%"
           />
-        */}
+       
       </Card>
     </main>
   );
