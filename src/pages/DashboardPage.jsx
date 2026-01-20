@@ -159,9 +159,8 @@ const DashboardPages = () => {
           </Grid>
         </Grid> */}
 
-        <iframe
-            src={"http://metabase.statsbali.id/public/dashboard/376b6585-8e91-44a4-ae62-1da0904023d7"}
-            // src={iframeUrl}
+          <iframe
+            src={iframeUrl}
             frameBorder={0}
             width="100%"
             height="100%"
