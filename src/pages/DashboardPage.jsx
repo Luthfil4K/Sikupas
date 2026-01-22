@@ -21,20 +21,39 @@ const DashboardPages = () => {
   const nip = localStorage.getItem("nip");
   const cleanedNip = nip?.replace(/^"+|"+$/g, "");
 
+  console.log(userData);
+  console.log(userData);
+
+ 
+
+
   useEffect(() => {
     const fetchUrl = async () => {
-      try {
-        const url = await getMetabaseUrl();
-        setIframeUrl(url);
-      } catch (err) {
-        console.error("Gagal load iframe:", err);
+       
+      if (userData) {
+
+        try {
+          const url = await getMetabaseUrl(
+            userData?.role.id,
+            userData?.satker.kode_satker,
+            userData?.jabatan
+          );
+          setIframeUrl(url);
+        } catch (err) {
+          console.error("Gagal load iframe:", err);
+        }
       }
     };
     fetchUrl();
-  }, []);
+  }, [userData]);
 
   useEffect(() => {
     if (userData) {
+      let isMadya = false;
+
+      if (userData.jabatan?.toLowerCase().includes("madya")) {
+        isMadya = true;
+      }
       if (
         role === "ketua_tim" ||
         role === "admin" ||
@@ -45,6 +64,11 @@ const DashboardPages = () => {
           Role.KEPALA_BAGIAN_UMUM_KABKO,
           Role.KEPALA_BAGIAN_UMUM_PROVINSI,
         ].includes(userData.role.id)
+        ||
+        ([
+          Role.KETUA_TIM_PROVINSI,
+          Role.ANGGOTA_TIM_PROVINSI
+        ].includes(userData.role.id)&&isMadya)
       ) {
         setIsAllowed(true);
       } else {
@@ -159,13 +183,7 @@ const DashboardPages = () => {
           </Grid>
         </Grid> */}
 
-          <iframe
-            src={iframeUrl}
-            frameBorder={0}
-            width="100%"
-            height="100%"
-          />
-       
+        <iframe src={iframeUrl} frameBorder={0} width="100%" height="100%" />
       </Card>
     </main>
   );

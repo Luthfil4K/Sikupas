@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Menu, Users, LogOut, House,Network ,CalendarDays  ,User,School} from "lucide-react";
+import {
+  Menu,
+  Users,
+  LogOut,
+  House,
+  Network,
+  CalendarDays,
+  User,
+  School,
+} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -9,71 +18,78 @@ import { useUser } from "../context/UserContext";
 // utils/types
 import Role from "../types/roles"; // sesuaikan pathnya
 
-
-
-
 const Sidebar = () => {
   const { userData, loadingUser } = useUser();
-  const role = localStorage.getItem('role');
-  const nip = localStorage.getItem('nip'); // pastikan ini disimpan saat login
-  const cleanedNip = nip.replace(/^"+|"+$/g, '');
+  const role = localStorage.getItem("role");
+  const nip = localStorage.getItem("nip"); // pastikan ini disimpan saat login
+  const cleanedNip = nip.replace(/^"+|"+$/g, "");
+  let isMadya = false;
+
+  if (userData?.jabatan.toLowerCase().includes("madya")) {
+    isMadya = true;
+  }
+
   const SIDEBAR_ITEMS = [
     ...(userData?.role.id === Role.ANGGOTA_TIM_PROVINSI ||
-      userData?.role.id === Role.ANGGOTA_TIM_KABKO
+    userData?.role.id === Role.ANGGOTA_TIM_KABKO
       ? [
+          userData?.role.id === Role.ANGGOTA_TIM_PROVINSI && isMadya
+            ? {
+                name: "Dashboard",
+                icon: House,
+                color: "#3B82F6",
+                path: `/dashboard`,
+              }
+            : {
+                name: "Aktivitas Saya",
+                icon: User,
+                color: "#EC4899",
+                path: `/profile/${cleanedNip}`,
+              },
           {
-            name: 'Aktivitas Saya',
-            icon: User,
-            color: '#EC4899',
-            path: `/profile/${cleanedNip}`,
-          },
-          {
-            name: 'Rekap Individu',
-            icon: CalendarDays ,
-            color: '#6EE7B7',
+            name: "Rekap Individu",
+            icon: CalendarDays,
+            color: "#6EE7B7",
             path: `/rekapIndividu/${cleanedNip}`,
           },
         ]
-        
-      : 
-      
-        [
+      : [
           {
-            name: 'Dashboard',
+            name: "Dashboard",
             icon: House,
-            color: '#3B82F6',
+            color: "#3B82F6",
             path: `/dashboard`,
           },
           {
-            name: 'Aktivitas Saya',
+            name: "Aktivitas Saya",
             icon: User,
-            color: '#EC4899',
+            color: "#EC4899",
             path: `/profile/${cleanedNip}`,
           },
           {
-            name: 'Organisasi',
+            name: "Organisasi",
             icon: Network,
-            color: '#FFAF76',
-            path: '/organisasi',
+            color: "#FFAF76",
+            path: "/organisasi",
           },
           {
-            name: 'Rekap Pegawai',
-            icon: CalendarDays ,
-            color: '#6EE7B7',
-            path: '/rekapPegawai',
+            name: "Rekap Pegawai",
+            icon: CalendarDays,
+            color: "#6EE7B7",
+            path: "/rekapPegawai",
           },
           {
-            name: 'Status Pegawai',
+            name: "Status Pegawai",
             icon: School,
-            color: '#a51b67ff',
-            path: '/pegawaiStatus',
+            color: "#a51b67ff",
+            path: "/pegawaiStatus",
           },
         ]),
     {
-      name: 'Logout',
+      name: "Logout",
       icon: LogOut,
-      color: '#3B82F6',
-      action: 'logout',
+      color: "#3B82F6",
+      action: "logout",
     },
   ];
   const [isOpen, setIsOpen] = useState(false);
@@ -89,9 +105,9 @@ const Sidebar = () => {
 
   return (
     <motion.div
-    className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isOpen ? "w-64" : "w-20"} h-screen`}
-    animate={{ width: isOpen ? 256 : 100 }}
-  >
+      className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isOpen ? "w-64" : "w-20"} h-screen`}
+      animate={{ width: isOpen ? 256 : 100 }}
+    >
       <div className="h-full bg-gray-700 bg-opacity-50 backdrop-blur-md flex p-4 flex-col border-r border-gray-600">
         {/* Tombol burger */}
         <motion.button
