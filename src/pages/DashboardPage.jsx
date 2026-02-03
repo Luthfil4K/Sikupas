@@ -10,9 +10,11 @@ import { Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
 // utils/types
-import Role from "../types/roles"; // sesuaikan pathnya
+import Role from "../types/roles"; // sesuain pathnya
+import { useTheme } from '@mui/material/styles';
 
 const DashboardPages = () => {
+  const theme = useTheme()
   const navigate = useNavigate();
   const [iframeUrl, setIframeUrl] = useState("");
   const { userData, loadingUser } = useUser();
@@ -51,7 +53,7 @@ const DashboardPages = () => {
     if (userData) {
       let isMadya = false;
 
-      if (userData.jabatan?.toLowerCase().includes("madya")) {
+      if (userData?.jabatan?.toLowerCase().includes("madya")) {
         isMadya = true;
       }
       if (
@@ -97,7 +99,7 @@ const DashboardPages = () => {
         transition={{ duration: 0.5 }}
       />
       <Card sx={{ width: "100%", height: "830px" }}>
-        {/* <Grid sx={{ backgroundColor: "white" }} container>
+        <Grid sx={{ backgroundColor: "white" }} container>
           <Grid
             item
             md={12}
@@ -175,15 +177,15 @@ const DashboardPages = () => {
           >
             <Button
               variant="contained"
-              color="info"
+              sx={{ marginTop: 2, backgroundColor: theme.palette.primary.dark,color:"white" }}
               onClick={() => navigate("/rekapPegawai")}
             >
               Pergi ke Halaman Lain
             </Button>
           </Grid>
-        </Grid> */}
+        </Grid>
 
-        <iframe src={iframeUrl} frameBorder={0} width="100%" height="100%" />
+        {/* <iframe src={iframeUrl} frameBorder={0} width="100%" height="100%" /> */}
       </Card>
     </main>
   );
