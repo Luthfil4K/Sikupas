@@ -99,7 +99,7 @@ const DashboardPages = () => {
         transition={{ duration: 0.5 }}
       />
       <Card sx={{ width: "100%", height: "830px" }}>
-        <Grid sx={{ backgroundColor: "white" }} container>
+        {/* <Grid sx={{ backgroundColor: "white" }} container>
           <Grid
             item
             md={12}
@@ -183,9 +183,9 @@ const DashboardPages = () => {
               Pergi ke Halaman Lain
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
 
-        {/* <iframe src={iframeUrl} frameBorder={0} width="100%" height="100%" /> */}
+        <iframe src={iframeUrl} frameBorder={0} width="100%" height="100%" />
       </Card>
     </main>
   );
